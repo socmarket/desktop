@@ -1,0 +1,46 @@
+{
+  "private": true,
+  "name": "socmag-electro",
+  "version": "1.0.0",
+  "description": "SocMag POS",
+  "main": "src/app/main.ts",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
+    "@babel/register": "^7.8.6",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^5.1.0",
+    "cross-env": "^7.0.2",
+    "css-loader": "^3.4.2",
+    "electron": "^8.1.1",
+    "electron-webpack": "^2.7.4",
+    "file-loader": "^5.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "react-refresh": "^0.8.0",
+    "style-loader": "^1.1.3",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-env-plugin": "^0.0.2",
+    "webpack-merge": "^4.2.2"
+  },
+  "scripts": {
+    "dev": "yarn start-rend-dev",
+    "prod": "yarn start-main-prod",
+    "start-main-prod": "cross-env NODE_ENV=production electron ./dist/main.js",
+    "start-main-dev": "cross-env NODE_ENV=development electron -r ./utl/babel-register ./src/app/main.ts",
+    "start-rend-dev": "cross-env NODE_ENV=development webpack-dev-server --config cnf/webpack.conf.rend.dev.babel.js --colors",
+    "build": "concurrently \"yarn build-main\" \"yarn build-rend\"",
+    "build-main": "cross-env NODE_ENV=production webpack --config ./cnf/webpack.conf.main.prod.babel.js --colors",
+    "build-rend": "cross-env NODE_ENV=production webpack --config ./cnf/webpack.conf.rend.prod.babel.js --colors"
+  }
+}
