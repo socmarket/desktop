@@ -7,7 +7,6 @@ interface HomeProps {
 
 const HomePage: React.FunctionComponent<HomeProps> = ({ items }) => (
   <div>
-    <strong>Hello, strongly</strong>
     <Counter />
   </div>
 );

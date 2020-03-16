@@ -16,14 +16,49 @@ module.exports = {
             cacheDirectory: true
           }
         }
-      }, {
+      },
+      {
         test: /\.css$/,
-        exclude: /node_modules/,
-        use: [ "css-loader", "style-loader" ]
-      }, {
+        use: [ "style-loader", "css-loader" ]
+      },
+      {
         test: /\.(png|svg|jpg|gif)$/,
-        use: [ "file-loader" ]
-      }
+        use: "file-loader"
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        use: 'file-loader'
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            mimetype: 'application/octet-stream'
+          }
+        }
+      },
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            mimetype: 'application/font-woff'
+          }
+        }
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            mimetype: 'application/font-woff'
+          }
+        }
+      },
     ]
   },
   resolve: {
