@@ -1,7 +1,9 @@
 import path from "path";
+import webpack from "webpack";
 import merge from "webpack-merge";
 import baseConf from "./webpack.conf";
 import { spawn, execSync } from "child_process";
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 export default merge.smart(baseConf, {
   mode: "development",
@@ -13,6 +15,12 @@ export default merge.smart(baseConf, {
   output: {
     filename: "rend.dev.js"
   },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new ReactRefreshWebpackPlugin({
+      disableRefreshCheck: true
+    })
+  ],
   devServer: {
     hot: true,
     compress: true,

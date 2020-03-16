@@ -1,16 +1,17 @@
-const path = require('path');
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const path = require("path");
+import HtmlWebpackPlugin from "html-webpack-plugin";
+
 
 module.exports = {
-  entry: './src/app/main.ts',
-  target: 'electron-main',
+  entry: "./src/app/main.ts",
+  target: "electron-main",
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
           options: {
             cacheDirectory: true
           }
@@ -18,19 +19,19 @@ module.exports = {
       }, {
         test: /\.css$/,
         exclude: /node_modules/,
-        use: [ 'css-loader', 'style-loader' ]
+        use: [ "css-loader", "style-loader" ]
       }, {
         test: /\.(png|svg|jpg|gif)$/,
-        use: [ 'file-loader' ]
+        use: [ "file-loader" ]
       }
     ]
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
-    modules: ['node_modules']
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+    modules: ["node_modules"]
   },
   output: {
-    path: path.resolve(__dirname, '..', 'dist'),
+    path: path.resolve(__dirname, "..", "dist"),
   },
   plugins: [
     new HtmlWebpackPlugin({
