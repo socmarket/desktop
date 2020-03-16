@@ -7,6 +7,7 @@ import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 
 export default merge.smart(baseConf, {
   mode: "development",
+  devtool: 'inline-source-map',
   entry: [
     "webpack-dev-server/client?http://localhost:8080/",
     "./src/app/app.tsx"
