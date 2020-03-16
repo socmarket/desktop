@@ -1,4 +1,5 @@
 import React from "react";
+import Counter from "../comp/counter";
 
 interface HomeProps {
   items: Array<string>
@@ -7,6 +8,7 @@ interface HomeProps {
 const HomePage: React.FunctionComponent<HomeProps> = ({ items }) => (
   <div>
     <strong>Hello, strongly</strong>
+    <Counter />
   </div>
 );
 
