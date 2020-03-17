@@ -10,7 +10,8 @@ module.exports = api => {
       require("@babel/preset-typescript"),
     ],
     plugins: [
-      ...(isProd ? [] : [ "react-refresh/babel" ])
+      ...(isProd ? [] : [ "react-refresh/babel" ]),
+      [ "@babel/plugin-transform-runtime", { "regenerator": true } ]
     ],
   };
 };

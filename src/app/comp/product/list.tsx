@@ -33,7 +33,7 @@ class ProductList extends React.Component {
   render() {
     return (
       <Container>
-        <Input fluid attached />
+        <Input fluid />
         {this.table()}
       </Container>
     );

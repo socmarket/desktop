@@ -59,8 +59,15 @@ module.exports = {
           }
         }
       },
+      {
+        test: /\.sql$/,
+        use: {
+          loader: "raw-loader",
+        }
+      },
     ]
   },
+  externals: { 'sqlite3':'commonjs sqlite3' },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
     modules: ["./src/app", "node_modules"]
