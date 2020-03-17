@@ -59,8 +59,8 @@ class ProductList extends React.Component {
         </Menu.Item>
         <Menu.Item position="right">
           <Button.Group>
-            <Button icon="angle down" />
-            <Button icon="angle up" />
+            <Button icon="angle down" onClick={() => this.props.showProductForm()}/>
+            <Button icon="angle up" onClick={() => this.props.hideProductForm()} />
           </Button.Group>
         </Menu.Item>
       </Menu>
@@ -71,9 +71,11 @@ class ProductList extends React.Component {
     return (
       <Container>
         {this.menu()}
-        <Segment>
-          <ProductCard />
-        </Segment>
+        { this.props.productList.showForm &&
+          <Segment>
+            <ProductCard />
+          </Segment>
+        }
         {this.table()}
       </Container>
     );
