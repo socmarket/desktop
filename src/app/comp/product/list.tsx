@@ -1,32 +1,28 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { ProductActions } from "serv/product"
-import { Grid, Input, Button, Segment, Table, Container } from "semantic-ui-react"
+import { Menu, Input, Button, Table, Segment, Container } from "semantic-ui-react"
+
+import ProductCard from "./card"
 
 class ProductList extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      filter: ""
-    };
     this.handleFilterChange = this.handleFilterChange.bind(this);
   }
 
   componentDidMount() {
-    this.props.getList("");
+    this.props.setProductListFilter(this.props.productList.filterPattern);
   }
 
   handleFilterChange(event) {
-    this.setState(Object.assign({}, this.state, {
-      filter: event.target.value
-    }));
-    this.props.getList(event.target.value);
+    this.props.setProductListFilter(event.target.value);
   }
 
   private table() {
     return (
-      <Table compact>
+      <Table compact celled selectable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Штрихкод</Table.HeaderCell>
@@ -35,7 +31,7 @@ class ProductList extends React.Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          { this.props.product.products.map(product => (
+          { this.props.productList.items.map(product => (
             <Table.Row key={product.id}>
               <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell>{product.title}</Table.Cell>
@@ -47,10 +43,37 @@ class ProductList extends React.Component {
     );
   }
 
+  private menu() {
+    return (
+      <Menu>
+        <Menu.Item>
+          <h4>Номенклатура</h4>
+        </Menu.Item>
+        <Menu.Item style={{ flexGrow: 1 }}>
+          <Input
+            className="icon"
+            icon="search"
+            value={this.props.productList.filterPattern}
+            onChange={this.handleFilterChange}
+          />
+        </Menu.Item>
+        <Menu.Item position="right">
+          <Button.Group>
+            <Button icon="angle down" />
+            <Button icon="angle up" />
+          </Button.Group>
+        </Menu.Item>
+      </Menu>
+    );
+  }
+
   render() {
     return (
       <Container>
-        <Input fluid value={this.state.filter} onChange={this.handleFilterChange} />
+        {this.menu()}
+        <Segment>
+          <ProductCard />
+        </Segment>
         {this.table()}
       </Container>
     );
@@ -58,7 +81,7 @@ class ProductList extends React.Component {
 }
 
 const stateMap = (state) => {
-  return { product: state.product };
+  return { productList: state.productList };
 }
 
 export default connect(stateMap, ProductActions)(ProductList);

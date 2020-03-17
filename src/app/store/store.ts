@@ -18,13 +18,13 @@ class DbService {
     });
   }
 
-  query(sql, params) {
+  query(sql, params, extra) {
     return new Promise((resolve, reject) => {
       db.all(sql, params, function (err, rows) {
         if (err) {
           reject(err);
         } else {
-          resolve(rows);
+          resolve({ rows: rows, ...extra });
         }
       })
     });
@@ -42,7 +42,7 @@ function createRootReducer() {
   return combineReducers({
     app: AppReducer,
     counter: CounterReducer,
-    product: ProductReducer,
+    productList: ProductReducer,
   });
 }
 

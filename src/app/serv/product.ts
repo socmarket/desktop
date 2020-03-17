@@ -1,9 +1,10 @@
 export interface ProductRefState {
-  products: Array
+  items: Array,
+  filterPattern: string
 }
 
 const ProductActions = {
-  getList: (pattern) => {
+  setProductListFilter: (pattern) => {
     return {
       types: [
         "PRODUCT_BEFORE_GET_LIST",
@@ -16,17 +17,19 @@ const ProductActions = {
             "%" + pattern + "%",
             "%" + pattern + "%",
             "%" + pattern + "%",
-          ]
+          ], {
+            pattern: pattern
+          }
         )
       )
     }
   },
 }
 
-function ProductReducer (state = { products: [] }, action) {
+function ProductReducer (state = { items: [], filterPattern: "" }, action) {
   switch (action.type) {
     case 'PRODUCT_GET_LIST':
-      return Object.assign({}, state, { products: action.data });
+      return Object.assign({}, state, { items: action.data.rows, filterPattern: action.data.pattern });
     default:
       return state
   }
