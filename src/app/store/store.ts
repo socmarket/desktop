@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux"
 import { AppReducer } from "../serv/app"
-import { CounterReducer } from "../serv/counter"
-import { ProductReducer } from "../serv/product"
+import { CounterActions, CounterReducer } from "../serv/counter"
+import { ProductActions, ProductReducer } from "../serv/product"
 import migrate from "db/migration";
 
 class DbService {
@@ -33,7 +33,9 @@ class DbService {
 
 
 let sqlite3 = require("sqlite3").verbose();
-let db = new sqlite3.Database("socmag.db");
+let db = (process.env.NODE_ENV === "development") ?
+  new sqlite3.Database("socmag.dev.db") :
+    new sqlite3.Database("socmag.db");
 let dbService = new DbService(db);
 
 function createRootReducer() {
@@ -76,15 +78,28 @@ function promiseMiddleware(store) {
 	}
 }
 
-const middleware = [promiseMiddleware];
-
-if (process.env.NODE_ENV === "development") {
+function devCreateStore() {
   const { logger } = require("redux-logger");
+  const middleware = [promiseMiddleware];
+  const enhancers = [];
   middleware.push(logger);
+  const actionCreators = {
+    ...CounterActions,
+    ...ProductActions,
+  };
+  const composeEnhancers = 
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ actionCreators }): compose;
+  enhancers.push(applyMiddleware(...middleware));
+  const enhancer = composeEnhancers(...enhancers);
+  return createStore(createRootReducer(), undefined, enhancer);
 }
 
-const store = applyMiddleware(...middleware)(createStore)(createRootReducer());
+function prodCreateStore() {
+  const middleware = [promiseMiddleware];
+  return applyMiddleware(...middleware)(createStore)(createRootReducer());
+}
 
+const store = (process.env.NODE_ENV === "development") ? devCreateStore() : prodCreateStore();
 migrate(db).catch(err => console.log(err));
-
 export default store;

@@ -30,6 +30,8 @@
     "cross-env": "^7.0.2",
     "css-loader": "^3.4.2",
     "electron": "^8.1.1",
+    "electron-debug": "^3.0.1",
+    "electron-devtools-installer": "^2.2.4",
     "electron-rebuild": "^1.10.1",
     "electron-webpack": "^2.7.4",
     "file-loader": "^5.1.0",
@@ -57,6 +59,7 @@
     "start-rend-dev": "cross-env NODE_ENV=development webpack-dev-server --config cnf/webpack.conf.rend.dev.babel.js --colors",
     "build": "concurrently \"yarn build-main\" \"yarn build-rend\"",
     "build-main": "cross-env NODE_ENV=production webpack --config ./cnf/webpack.conf.main.prod.babel.js --colors",
-    "build-rend": "cross-env NODE_ENV=production webpack --config ./cnf/webpack.conf.rend.prod.babel.js --colors"
+    "build-rend": "cross-env NODE_ENV=production webpack --config ./cnf/webpack.conf.rend.prod.babel.js --colors",
+    "rebuild-sqlite": "yarn electron-rebuild -w sqlite3 -p"
   }
 }
