@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { CounterActions } from "../serv/counter"
+import { CounterActions } from "serv/counter"
 import { Button, Menu } from "semantic-ui-react"
 
 class Counter extends React.Component {

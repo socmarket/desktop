@@ -1,8 +1,10 @@
 import { createStore, combineReducers, applyMiddleware } from "redux"
+import { AppReducer } from "../serv/app"
 import { CounterReducer } from "../serv/counter"
 
 function createRootReducer() {
   return combineReducers({
+    app: AppReducer,
     counter: CounterReducer
   });
 }

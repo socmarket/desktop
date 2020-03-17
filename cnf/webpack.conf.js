@@ -63,7 +63,7 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
-    modules: ["node_modules"]
+    modules: ["./src/app", "node_modules"]
   },
   output: {
     path: path.resolve(__dirname, "..", "dist"),
