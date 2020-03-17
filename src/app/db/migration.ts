@@ -91,15 +91,10 @@ function init(db, steps): Promise<string> {
   ;
 }
 
-export default function migrate(): Promise<string>  {
-  let sqlite3 = require("sqlite3").verbose();
-  let db = new sqlite3.Database("socmag.db");
+export default function migrate(db): Promise<string>  {
   const steps = file.keys().map(key => ({
     key: path.basename(key),
     content: file(key).default
   })).sort((a, b) => a.key.localeCompare(b.key))
-  return init(db, steps)
-    .than(res => Promise.resolve(db.close()))
-    .catch(res => Promise.reject(db.close()))
-  ;
+  return init(db, steps);
 }

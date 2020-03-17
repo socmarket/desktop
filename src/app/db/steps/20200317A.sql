@@ -1,4 +1,4 @@
-create table products(
+create table product(
   id integer primary key autoincrement,
   barcode varchar(255),
   code varchar(255),
