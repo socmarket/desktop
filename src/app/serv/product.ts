@@ -4,6 +4,13 @@ export interface ProductRefState {
   showForm: boolean
 }
 
+const productListUpdated = (pattern, rows) => ({
+  type: "PRODUCT_GET_LIST",
+  rows: rows,
+  pattern: pattern
+});
+
+
 const ProductActions = {
   showProductForm: () => ({
     type: 'PRODUCT_SHOW_FORM'
@@ -11,25 +18,19 @@ const ProductActions = {
   hideProductForm: () => ({
     type: 'PRODUCT_HIDE_FORM'
   }),
+
   setProductListFilter: (pattern) => {
-    return {
-      types: [
-        "PRODUCT_BEFORE_GET_LIST",
-        "PRODUCT_GET_LIST",
-        "PRODUCT_GET_LIST_FAILED",
-      ]
-      , promise: (store, db) => (
-        db.query("select * from product where (title like ?) or (code like ?) or (barcode like ?)",
-          [
-            "%" + pattern + "%",
-            "%" + pattern + "%",
-            "%" + pattern + "%",
-          ], {
-            pattern: pattern
-          }
-        )
-      )
-    }
+    return function (dispatch, getState, { db }) {
+      db.select("select * from product where (title like ?) or (code like ?) or (barcode like ?)",
+        [
+          "%" + pattern + "%",
+          "%" + pattern + "%",
+          "%" + pattern + "%",
+        ], {
+          pattern: pattern
+        }
+      ).then(rows => dispatch(productListUpdated(pattern, rows)))
+    };
   },
 }
 
@@ -40,7 +41,8 @@ function ProductReducer (state = {
 }, action) {
   switch (action.type) {
     case 'PRODUCT_GET_LIST':
-      return Object.assign({}, state, { items: action.data.rows, filterPattern: action.data.pattern });
+      console.log(action);
+      return Object.assign({}, state, { items: action.rows, filterPattern: action.pattern });
     case 'PRODUCT_SHOW_FORM':
       return Object.assign({}, state, { showForm: true });
     case 'PRODUCT_HIDE_FORM':

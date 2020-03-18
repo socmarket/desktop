@@ -1,4 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from "redux"
+import thunk from "redux-thunk";
 import { AppReducer } from "../serv/app"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { ProductActions, ProductReducer } from "../serv/product"
@@ -18,13 +19,25 @@ class DbService {
     });
   }
 
-  query(sql, params, extra) {
+  select(sql, params, extra) {
     return new Promise((resolve, reject) => {
       db.all(sql, params, function (err, rows) {
         if (err) {
           reject(err);
         } else {
-          resolve({ rows: rows, ...extra });
+          resolve(rows);
+        }
+      })
+    });
+  }
+
+  selectOne(sql, params, extra) {
+    return new Promise((resolve, reject) => {
+      db.get(sql, params, function (err, rows) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
         }
       })
     });
@@ -38,6 +51,10 @@ let db = (process.env.NODE_ENV === "development") ?
     new sqlite3.Database("socmag.db");
 let dbService = new DbService(db);
 
+const thunkM = thunk.withExtraArgument({
+  db: dbService
+});
+
 function createRootReducer() {
   return combineReducers({
     app: AppReducer,
@@ -46,41 +63,9 @@ function createRootReducer() {
   });
 }
 
-function promiseMiddleware(store) {
-	return (next) => (action) => {
-		const { promise, types, ...rest } = action  // eslint-disable-line
-		if (!promise) {
-			return next(action)
-		}
-		const [REQUEST, SUCCESS, FAILURE] = types
-		next({...rest, type: REQUEST})
-		return promise(store, dbService).then(
-			(result) => {
-				if (result && result.hasOwnProperty("status")) {
-          if (result.status === 0) {
-            if (result.hasOwnProperty("data")) {
-              next({...rest, data: result.data, type: SUCCESS})
-            } else {
-              next({...rest, data: result, type: SUCCESS})
-            }
-          } else {
-            next({...rest, data: result, type: FAILURE})
-          }
-				} else {
-					next({...rest, data: result, type: SUCCESS})
-        }
-			},
-			(error) => {
-				const err = { code: -1, msg: error.message, data: [] }
-				next({...rest, data: err, type: FAILURE})
-			}
-		)
-	}
-}
-
 function devCreateStore() {
   const { logger } = require("redux-logger");
-  const middleware = [promiseMiddleware];
+  const middleware = [thunkM];
   const enhancers = [];
   middleware.push(logger);
   const actionCreators = {
@@ -96,7 +81,7 @@ function devCreateStore() {
 }
 
 function prodCreateStore() {
-  const middleware = [promiseMiddleware];
+  const middleware = [thunkM];
   return applyMiddleware(...middleware)(createStore)(createRootReducer());
 }
 
