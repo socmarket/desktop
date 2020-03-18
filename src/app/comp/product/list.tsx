@@ -59,8 +59,8 @@ class ProductList extends React.Component {
         </Menu.Item>
         <Menu.Item position="right">
           <Button.Group>
-            <Button icon="angle down" onClick={() => this.props.showProductForm()}/>
-            <Button icon="angle up" onClick={() => this.props.hideProductForm()} />
+            { !this.props.productList.showForm && <Button icon="angle down" onClick={() => this.props.showProductForm()} /> }
+            { this.props.productList.showForm && <Button icon="angle up" onClick={() => this.props.hideProductForm()} /> }
           </Button.Group>
         </Menu.Item>
       </Menu>

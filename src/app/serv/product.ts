@@ -1,13 +1,27 @@
+export interface Product {
+  id: int;
+  barcode: string;
+  code: string;
+  title: string;
+  notes: string;
+}
+
 export interface ProductRefState {
   items: Array,
   filterPattern: string,
-  showForm: boolean
+  showForm: boolean,
+  currentProduct: Product
 }
 
 const productListUpdated = (pattern, rows) => ({
-  type: "PRODUCT_GET_LIST",
+  type: "PRODUCT_LIST_UPDATED",
   rows: rows,
   pattern: pattern
+});
+
+const currentProductUpdated = (product) => ({
+  type: "PRODUCT_UPDATED",
+  product: product
 });
 
 
@@ -32,15 +46,43 @@ const ProductActions = {
       ).then(rows => dispatch(productListUpdated(pattern, rows)))
     };
   },
+
+  changeCurrentProduct: (product) => {
+    return function (dispatch, getState, { db }) {
+      const { productList: { currentProduct } } = getState();
+      if (currentProduct.barcode !== product.barcode) {
+        db.selectOne("select * from product where barcode = ?", [ product.barcode ])
+          .then(row => {
+            if (row) {
+              dispatch(currentProductUpdated(row));
+            } else {
+              dispatch(currentProductUpdated(Object.assign({}, product, { id: -1 })));
+            }
+          })
+      } else {
+        dispatch(currentProductUpdated(Object.assign({}, product, { id: currentProduct.id })));
+      }
+    };
+  },
 }
 
 function ProductReducer (state = {
   items: [],
   filterPattern: "",
-  showForm: false
+  showForm: false,
+  currentProduct: {
+    id: -1,
+    code: "",
+    barcode: "",
+    title: "",
+    notes: "",
+  }
 }, action) {
   switch (action.type) {
-    case 'PRODUCT_GET_LIST':
+    case 'PRODUCT_UPDATED':
+      console.log(action);
+      return Object.assign({}, state, { currentProduct: action.product });
+    case 'PRODUCT_LIST_UPDATED':
       console.log(action);
       return Object.assign({}, state, { items: action.rows, filterPattern: action.pattern });
     case 'PRODUCT_SHOW_FORM':
