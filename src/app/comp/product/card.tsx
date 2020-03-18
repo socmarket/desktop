@@ -16,6 +16,7 @@ class ProductCard extends React.Component {
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleNotesChange = this.handleNotesChange.bind(this);
+    this.handleUnitChange = this.handleUnitChange.bind(this);
   }
 
   private updateForm() {
@@ -34,10 +35,15 @@ class ProductCard extends React.Component {
     this.setState({ notes: event.target.value }, this.updateForm);
   }
 
+  handleUnitChange(event, data) {
+    this.setState({ unitId: data.value }, this.updateForm);
+  }
+
   render() {
     const currentProduct: Product = this.props.productList.currentProduct;
     const isNewProduct: boolean = currentProduct.id <= 0;
     const isEmpty: boolean = currentProduct.barcode === "" ||  currentProduct.title === "";
+    const unitOptions = this.props.unitList.selectOptions;
     return (
       <Grid columns={2}>
         <Grid.Row>
@@ -52,7 +58,11 @@ class ProductCard extends React.Component {
                   value={currentProduct.barcode}
                   onChange={this.handleBarcodeChange}
                 />
-                <Form.Select width={6} label="Ед. изм." options={options} fluid />
+                <Form.Select width={6} label="Ед. изм." fluid
+                  options={unitOptions}
+                  value={currentProduct.unitId}
+                  onChange={this.handleUnitChange}
+                />
               </Form.Group>
               <Form.Group>
                 <Form.Input width={16} label="Наименование"
@@ -88,7 +98,10 @@ class ProductCard extends React.Component {
 }
 
 const stateMap = (state) => {
-  return { productList: state.productList };
+  return {
+    unitList: state.unitList,
+    productList: state.productList,
+  };
 }
 
 export default connect(stateMap, ProductActions)(ProductCard);

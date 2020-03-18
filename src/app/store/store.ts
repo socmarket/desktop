@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux"
 import thunk from "redux-thunk";
 import { AppReducer } from "../serv/app"
+import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { ProductActions, ProductReducer } from "../serv/product"
 import migrate from "db/migration";
@@ -58,6 +59,7 @@ const thunkM = thunk.withExtraArgument({
 function createRootReducer() {
   return combineReducers({
     app: AppReducer,
+    unitList: UnitReducer,
     counter: CounterReducer,
     productList: ProductReducer,
   });
@@ -69,6 +71,7 @@ function devCreateStore() {
   const enhancers = [];
   middleware.push(logger);
   const actionCreators = {
+    ...UnitActions,
     ...CounterActions,
     ...ProductActions,
   };
@@ -86,5 +89,12 @@ function prodCreateStore() {
 }
 
 const store = (process.env.NODE_ENV === "development") ? devCreateStore() : prodCreateStore();
-migrate(db).catch(err => console.log(err));
+
+migrate(db)
+  .then(res => {
+    store.dispatch(UnitActions.loadUnitList());
+    Promise.resolve("OK");
+  })
+  .catch(err => console.log(err));
+
 export default store;

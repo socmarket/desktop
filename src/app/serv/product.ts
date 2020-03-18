@@ -4,9 +4,10 @@ export interface Product {
   code: string;
   title: string;
   notes: string;
+  unitId: int;
 }
 
-export interface ProductRefState {
+export interface ProductState {
   items: Array,
   filterPattern: string,
   showForm: boolean,
@@ -66,7 +67,7 @@ const ProductActions = {
   },
 }
 
-function ProductReducer (state = {
+function ProductReducer (state: ProductState = {
   items: [],
   filterPattern: "",
   showForm: false,
