@@ -27,7 +27,8 @@ class ProductList extends React.Component {
           <Table.Row>
             <Table.HeaderCell>Штрихкод</Table.HeaderCell>
             <Table.HeaderCell>Название</Table.HeaderCell>
-            <Table.HeaderCell>Артикул</Table.HeaderCell>
+            <Table.HeaderCell>№</Table.HeaderCell>
+            <Table.HeaderCell>Описание</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -36,6 +37,7 @@ class ProductList extends React.Component {
               <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell>{product.title}</Table.Cell>
               <Table.Cell>{product.code}</Table.Cell>
+              <Table.Cell>{product.notes}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -76,7 +78,9 @@ class ProductList extends React.Component {
             <ProductCard />
           </Segment>
         }
-        {this.table()}
+        <Container style={{ minHeight: 200, maxHeight: 200, overflowY: "scroll"}}>
+          {this.table()}
+        </Container>
       </Container>
     );
   }

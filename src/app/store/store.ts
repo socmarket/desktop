@@ -10,7 +10,7 @@ class DbService {
 
   exec(sql, params) {
     return new Promise((resolve, reject) => {
-      db.exec(sql, params, function (err, res) {
+      db.run(sql, params, function (err, res) {
         if (err) {
           reject(err);
         } else {
@@ -20,7 +20,7 @@ class DbService {
     });
   }
 
-  select(sql, params, extra) {
+  select(sql, params) {
     return new Promise((resolve, reject) => {
       db.all(sql, params, function (err, rows) {
         if (err) {
@@ -32,7 +32,7 @@ class DbService {
     });
   }
 
-  selectOne(sql, params, extra) {
+  selectOne(sql, params) {
     return new Promise((resolve, reject) => {
       db.get(sql, params, function (err, rows) {
         if (err) {

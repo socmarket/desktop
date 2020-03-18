@@ -8,7 +8,7 @@ import ProductList from "./list"
 class ProductDialog extends React.Component {
   render() {
     return (
-      <Modal open size="small" closeIcon onClose={() => this.props.closeProducts()}>
+      <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closeProducts()}>
         <Modal.Content>
           <ProductList />
         </Modal.Content>
