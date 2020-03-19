@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { AppActions } from "serv/app"
 import MainMenu from "./menu";
 import ProductDialog from "comp/product/dialog";
+import SaleCheck from "comp/salecheck/salecheck";
 
 class HomePage extends React.Component {
   render() {
@@ -10,6 +11,7 @@ class HomePage extends React.Component {
       <Fragment>
         <MainMenu />
         { this.props.app.showProductsDialog && <ProductDialog /> }
+        <SaleCheck />
       </Fragment>
     );
   }

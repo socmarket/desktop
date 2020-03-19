@@ -4,6 +4,7 @@ import { AppReducer } from "../serv/app"
 import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { ProductActions, ProductReducer } from "../serv/product"
+import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import migrate from "db/migration";
 
 class DbService {
@@ -62,6 +63,7 @@ function createRootReducer() {
     unitList: UnitReducer,
     counter: CounterReducer,
     productList: ProductReducer,
+    saleCheck: SaleCheckReducer,
   });
 }
 
@@ -74,6 +76,7 @@ function devCreateStore() {
     ...UnitActions,
     ...CounterActions,
     ...ProductActions,
+    ...SaleCheckActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
