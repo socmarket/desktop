@@ -43,8 +43,24 @@ function addSaleCheckItem(barcode) {
   };
 }
 
+function decSaleCheckItemQuantity(barcode) {
+  return {
+    type: "SALECHECK_ITEM_DEC",
+    barcode: barcode,
+  };
+}
+
+function incSaleCheckItemQuantity(barcode) {
+  return {
+    type: "SALECHECK_ITEM_INC",
+    barcode: barcode,
+  };
+}
+
 const SaleCheckActions = {
   addSaleCheckItem: addSaleCheckItem,
+  incSaleCheckItemQuantity: incSaleCheckItemQuantity,
+  decSaleCheckItemQuantity: decSaleCheckItemQuantity,
 }
 
 const emptySaleCheckItem = {
@@ -96,6 +112,28 @@ function SaleCheckReducer (state: SaleCheckState = {
       });
     case 'SALECHECK_PRODUCT_NOT_FOUND':
       return Object.assign({}, state, { currentSaleCheckItem: emptySaleCheckItem });
+    case 'SALECHECK_ITEM_DEC': {
+      const newItems = state.items.map(i =>
+        (i.barcode == action.barcode) ?
+          Object.assign({}, i, { quantity: i.quantity - 1 }) : i
+      ).filter(i => (i.quantity > 0))
+      const sum = (newItems.length > 0) ? newItems.map(i => i.price * i.quantity).reduce((a, b) => a + b) : 0.00;
+      return Object.assign({}, state, {
+        items: newItems,
+        itemsCost: Math.round((sum + Number.EPSILON) * 100) / 100,
+      });
+    }
+    case 'SALECHECK_ITEM_INC': {
+      const newItems = state.items.map(i =>
+        (i.barcode == action.barcode) ?
+          Object.assign({}, i, { quantity: i.quantity + 1 }) : i
+      )
+      const sum = newItems.map(i => i.price * i.quantity).reduce((a, b) => a + b);
+      return Object.assign({}, state, {
+        items: newItems,
+        itemsCost: Math.round((sum + Number.EPSILON) * 100) / 100,
+      });
+    }
     default:
       return state
   }

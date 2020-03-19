@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { AppActions } from "serv/app"
 import MainMenu from "./menu";
 import ProductDialog from "comp/product/dialog";
-import SaleCheck from "comp/salecheck/salecheck";
+import SaleCheck from "comp/salecheck/salecheck.tsx";
 
 class HomePage extends React.Component {
   render() {
