@@ -1,5 +1,6 @@
 import Product from "./product.ts"
-import salecheckFindProduct from "./sql/salecheckFindProduct.sql"
+import saleCheckFindProduct from "./sql/salecheckFindProduct.sql"
+import saleCheckInsertItem from "./sql/salecheckInsertItem.sql"
 
 export interface SaleCheckItem {
   productId: int;
@@ -14,7 +15,6 @@ export interface SaleCheckState {
   items: Array[SaleCheckItem];
   itemsCost: number;
   currentItem: SaleCheckItem;
-  currentProduct: Product;
 }
 
 const currentSaleCheckProductFound = (product) => ({
@@ -24,6 +24,10 @@ const currentSaleCheckProductFound = (product) => ({
 
 const currentSaleCheckProductNotFound = () => ({
   type: "SALECHECK_PRODUCT_NOT_FOUND",
+});
+
+const saleCheckClosed = () => ({
+  type: "SALECHECK_CLOSED",
 });
 
 function addSaleCheckItem(barcode) {
@@ -40,6 +44,39 @@ function addSaleCheckItem(barcode) {
     } else {
       dispatch(currentSaleCheckProductNotFound());
     }
+  };
+}
+
+function toMoney(num) {
+  return Math.round(num * 100 + Number.EPSILON);
+}
+
+function closeSaleCheck(cash, change) {
+  return function (dispatch, getState, { db }) {
+    const { saleCheck: { items } } = getState();
+    return Promise.resolve()
+      .then(_ => db.exec("begin"))
+      .then(_ => db.exec("insert into salecheck(cash, change) values(?, ?)", [ cash, change ]))
+      .then(_ => db.selectOne("select id as saleCheckId from salecheck where id in (select max(id) from salecheck)"))
+      .then(({ saleCheckId }) => (
+        Promise.all(items.map(item => (
+          db.exec(saleCheckInsertItem, {
+            $saleCheckId: saleCheckId,
+            $productId: item.productId,
+            $quantity: item.quantity,
+            $price: toMoney(item.price),
+            $discount: 0,
+            $unitId: item.unitId,
+            $currencyId: item.currencyId
+          }).then(_ => saleCheckId)
+        )))))
+      .then(saleCheckId => db.exec("update salecheck set closed = true where id = ?", [ saleCheckId ]))
+      .then(_ => db.exec("commit"))
+      .then(_ => dispatch(saleCheckClosed()))
+      .catch(err => {
+        console.log(err);
+        return db.exec("rollback");
+      })
   };
 }
 
@@ -61,6 +98,7 @@ const SaleCheckActions = {
   addSaleCheckItem: addSaleCheckItem,
   incSaleCheckItemQuantity: incSaleCheckItemQuantity,
   decSaleCheckItemQuantity: decSaleCheckItemQuantity,
+  closeSaleCheck: closeSaleCheck,
 }
 
 const emptySaleCheckItem = {
@@ -76,14 +114,6 @@ function SaleCheckReducer (state: SaleCheckState = {
   items: [],
   itemsCost: 0.00,
   currentSaleCheckItem: emptySaleCheckItem,
-  currentProduct: {
-    id: -1,
-    code: "",
-    barcode: "",
-    title: "",
-    notes: "",
-    unitId: -1,
-  }
 }, action) {
   switch (action.type) {
     case 'SALECHECK_PRODUCT_FOUND':
@@ -132,6 +162,13 @@ function SaleCheckReducer (state: SaleCheckState = {
       return Object.assign({}, state, {
         items: newItems,
         itemsCost: Math.round((sum + Number.EPSILON) * 100) / 100,
+      });
+    }
+    case 'SALECHECK_CLOSED': {
+      return Object.assign({}, state, {
+        currentSaleCheckItem: emptySaleCheckItem,
+        items: [],
+        itemsCost: 0.00,
       });
     }
     default:

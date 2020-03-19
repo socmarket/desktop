@@ -25,6 +25,7 @@ class SaleCheck extends React.Component {
     this.handleCashAmountFocus = this.handleCashAmountFocus.bind(this);
     this.handleIncQuantity = this.handleIncQuantity.bind(this);
     this.handleDecQuantity = this.handleDecQuantity.bind(this);
+    this.handleSaleCheckClose = this.handleSaleCheckClose.bind(this);
   }
 
   private addSaleCheckItem() {
@@ -58,6 +59,8 @@ class SaleCheck extends React.Component {
     if (event.key && event.key === "Enter") {
       if (this.state.barcode.length > 0) {
         this.addSaleCheckItem();
+      } else {
+        this.handleSaleCheckClose();
       }
     }
   }
@@ -93,9 +96,18 @@ class SaleCheck extends React.Component {
   handleIncQuantity() {
     const idx = this.state.currentItemIdx;
     const items = this.props.saleCheck.items;
-    console.log(idx, items.length);
     if (idx >= 0 && idx < items.length) {
       this.props.incSaleCheckItemQuantity(items[idx].barcode);
+    }
+  }
+
+  handleSaleCheckClose() {
+    console.log(this.state.cashAmount, this.props.saleCheck.itemsCost);
+    if (this.state.cashAmount > this.props.saleCheck.itemsCost) {
+      this.props.closeSaleCheck(this.state.cashAmount, this.state.cashAmount - this.props.itemsCost);
+      this.setState({
+        cashAmount: 0.00
+      });
     }
   }
 
@@ -193,7 +205,7 @@ class SaleCheck extends React.Component {
             <Form.Select width={16} label="Клиент" options={[]} />
           </Form.Group>
         </Form>
-        <Button positive fluid>Оплатить</Button>
+        <Button positive fluid onClick={this.handleSaleCheckClose}>Оплатить</Button>
       </Segment>
     );
   }
