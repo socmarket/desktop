@@ -9,11 +9,23 @@ class ProductList extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      formHeight: 0,
+    };
     this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.productForm = React.createRef(); 
   }
 
   componentDidMount() {
     this.props.setProductListFilter(this.props.productList.filterPattern);
+  }
+
+  componentDidUpdate() {
+    if (this.productForm.current && this.state.formHeight !== this.productForm.current.clientHeight + 15) {
+      this.setState({
+        formHeight: this.productForm.current.clientHeight + 15,
+      });
+    }
   }
 
   handleFilterChange(event) {
@@ -70,15 +82,18 @@ class ProductList extends React.Component {
   }
 
   render() {
+    const formVisible = this.props.productList.showForm;
+    const minHeight = 200;
+    const maxHeight = formVisible ? 200 : 200 + this.state.formHeight;
     return (
       <Container>
         {this.menu()}
         { this.props.productList.showForm &&
-          <Segment>
-            <ProductCard />
-          </Segment>
+          <div ref={this.productForm} className="ui segment">
+            <ProductCard/>
+          </div>
         }
-        <Container style={{ minHeight: 200, maxHeight: 200, overflowY: "scroll"}}>
+        <Container style={{ minHeight: minHeight, maxHeight: maxHeight, overflowY: "scroll"}}>
           {this.table()}
         </Container>
       </Container>

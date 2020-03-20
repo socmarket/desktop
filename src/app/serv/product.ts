@@ -115,7 +115,7 @@ const ProductActions = {
 function ProductReducer (state: ProductState = {
   items: [],
   filterPattern: "",
-  showForm: false,
+  showForm: true,
   currentProduct: {
     id: -1,
     code: "",

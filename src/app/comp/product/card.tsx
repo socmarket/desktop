@@ -3,11 +3,6 @@ import { connect } from "react-redux";
 import { Product, ProductActions } from "serv/product"
 import { Grid, Form, Input, Select, TextArea, Button, Segment, Image, Label } from "semantic-ui-react"
 
-const options = [
-  { key: 'kg', text: 'кг', value: 'kg' },
-  { key: 'item', text: 'шт.', value: 'item' },
-]
-
 class ProductCard extends React.Component {
 
   constructor(props) {
@@ -118,7 +113,6 @@ class ProductCard extends React.Component {
                 <Form.Input width={16} label="Наименование"
                   value={this.state.title}
                   onChange={this.handleTitleChange}
-                  ref={this.titleInput}
                 />
               </Form.Group>
               <Form.Group>
