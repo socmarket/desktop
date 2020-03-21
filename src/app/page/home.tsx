@@ -4,6 +4,7 @@ import { AppActions } from "serv/app"
 import MainMenu from "./menu";
 import ProductDialog from "comp/product/dialog";
 import SaleCheck from "comp/salecheck/salecheck.tsx";
+import Consignment from "comp/consignment/consignment.tsx";
 
 class HomePage extends React.Component {
   render() {
@@ -11,7 +12,8 @@ class HomePage extends React.Component {
       <Fragment>
         <MainMenu />
         { this.props.app.showProductsDialog && <ProductDialog /> }
-        <SaleCheck />
+        { this.props.app.showSaleCheck && <SaleCheck /> }
+        { this.props.app.showConsignment && <Consignment /> }
       </Fragment>
     );
   }

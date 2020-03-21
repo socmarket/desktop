@@ -5,6 +5,7 @@ import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { ProductActions, ProductReducer } from "../serv/product"
 import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
+import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
 import migrate from "db/migration";
 
 class DbService {
@@ -64,6 +65,7 @@ function createRootReducer() {
     counter: CounterReducer,
     productList: ProductReducer,
     saleCheck: SaleCheckReducer,
+    consignment: ConsignmentReducer,
   });
 }
 
@@ -77,6 +79,7 @@ function devCreateStore() {
     ...CounterActions,
     ...ProductActions,
     ...SaleCheckActions,
+    ...ConsignmentActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
