@@ -6,6 +6,7 @@
   "main": "src/app/main.ts",
   "license": "MIT",
   "dependencies": {
+    "moment": "^2.24.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-redux": "^7.2.0",

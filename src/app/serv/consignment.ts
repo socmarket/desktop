@@ -1,6 +1,7 @@
 import Product from "./product.ts"
 import consignmentFindProduct from "./sql/consignmentFindProduct.sql"
 import consignmentInsertItem from "./sql/consignmentInsertItem.sql"
+import consignmentListSimple from "./sql/consignmentListSimple.sql"
 
 export interface ConsignmentItem {
   productId: int;
@@ -12,6 +13,7 @@ export interface ConsignmentItem {
 }
 
 export interface ConsignmentState {
+  list: Array,
   items: Array[ConsignmentItem];
   itemsCost: number;
   currentConsignmentItem: ConsignmentItem;
@@ -34,6 +36,11 @@ const consignmentClosed = () => ({
 const addConsignmentItem = (item) => ({
   type: "CONSIGNMENT_ADD_ITEM",
   item: item,
+})
+
+const consignmentListUpdated = (list) => ({
+  type: "CONSIGNMENT_LIST_UPDATED",
+  list: list,
 })
 
 function findProduct(barcode) {
@@ -78,9 +85,22 @@ function closeConsignment(supplierId) {
       .then(consignmentId => db.exec("update consignment set closed = true where id = ?", [ consignmentId ]))
       .then(_ => db.exec("commit"))
       .then(_ => dispatch(consignmentClosed()))
+      .then(_ => db.select(consignmentListSimple))
+      .then(list => dispatch(consignmentListUpdated(list)))
       .catch(err => {
         console.log(err);
         return db.exec("rollback");
+      })
+  };
+}
+
+function updateConsignmentList() {
+  return function (dispatch, getState, { db }) {
+    return Promise.resolve()
+      .then(_ => db.select(consignmentListSimple))
+      .then(list => dispatch(consignmentListUpdated(list)))
+      .catch(err => {
+        console.log(err);
       })
   };
 }
@@ -105,6 +125,7 @@ const ConsignmentActions = {
   decConsignmentItemQuantity: decConsignmentItemQuantity,
   closeConsignment: closeConsignment,
   findProduct: findProduct,
+  updateConsignmentList: updateConsignmentList,
 }
 
 const emptyConsignmentItem = {
@@ -117,6 +138,7 @@ const emptyConsignmentItem = {
 };
 
 function ConsignmentReducer (state: ConsignmentState = {
+  list: [],
   items: [],
   itemsCost: 0.00,
   currentConsignmentItem: emptyConsignmentItem,
@@ -195,6 +217,11 @@ function ConsignmentReducer (state: ConsignmentState = {
       return Object.assign({}, state, {
         items: newItems,
         itemsCost: Math.round((sum + Number.EPSILON) * 100) / 100,
+      });
+    }
+    case 'CONSIGNMENT_LIST_UPDATED': {
+      return Object.assign({}, state, {
+        list: action.list,
       });
     }
     case 'CONSIGNMENT_CLOSED': {

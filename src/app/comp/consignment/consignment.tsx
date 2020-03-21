@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import { ConsignmentActions } from "serv/consignment"
 import {
   Header, Grid, Table, Form, Input, Select,
@@ -144,7 +145,30 @@ class Consignment extends React.Component {
     }
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
+    this.props.updateConsignmentList();
+  }
+
+  private list() {
+    const list = this.props.consignment.list;
+    return (
+      <Table compact celled selectable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Дата</Table.HeaderCell>
+            <Table.HeaderCell>Сумма</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          { list.map( (item, idx) => (
+            <Table.Row key={idx}>
+              <Table.Cell>{moment.utc(item.acceptedAt).local().format("DD-MM-YYYY HH:mm")}</Table.Cell>
+              <Table.Cell>{item.total}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    );
   }
 
   private table() {
@@ -290,6 +314,7 @@ class Consignment extends React.Component {
       <Grid columns={2} padded onKeyDown={this.handleNavigation}>
         <Grid.Column width={5}>
           {this.form()}
+          {this.list()}
         </Grid.Column>
         <Grid.Column width={11}>
           <Container>
