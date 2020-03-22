@@ -2,6 +2,14 @@ import Product from "./product.ts"
 import saleCheckFindProduct from "./sql/salecheckFindProduct.sql"
 import saleCheckInsertItem from "./sql/salecheckInsertItem.sql"
 import saleCheckListSimple from "./sql/saleCheckListSimple.sql"
+import selectProductWithPrice from "./sql/selectProductWithPrice.sql"
+
+export interface ProductWithPrice {
+  productId: int;
+  barcode: string;
+  title: string;
+  price: number;
+}
 
 export interface SaleCheckItem {
   productId: int;
@@ -17,6 +25,9 @@ export interface SaleCheckState {
   items: Array[SaleCheckItem];
   itemsCost: number;
   currentItem: SaleCheckItem;
+  priceNotSet: boolean;
+  lastItemTitle: string;
+  lastItemBarcode: string;
 }
 
 const currentSaleCheckProductFound = (product) => ({
@@ -40,7 +51,7 @@ const saleCheckListUpdated = (list) => ({
 function addSaleCheckItem(barcode) {
   return function (dispatch, getState, { db }) {
     if (barcode.length > 0) {
-      db.selectOne("select * from product where barcode = ?", [ barcode ])
+      db.selectOne(selectProductWithPrice, [ barcode ])
         .then(foundProduct => {
           if (foundProduct) {
             dispatch(currentSaleCheckProductFound(foundProduct));
@@ -131,11 +142,21 @@ const emptySaleCheckItem = {
   createdAt: null,
 };
 
+const emptyProductWithPrice = {
+  id: -1,
+  barcode: "",
+  title: "",
+  price: -1,
+}
+
 function SaleCheckReducer (state: SaleCheckState = {
   list: [],
   items: [],
   itemsCost: 0.00,
   currentSaleCheckItem: emptySaleCheckItem,
+  priceNotSet: false,
+  lastItemTitle: "",
+  lastItemBarcode: "",
 }, action) {
   switch (action.type) {
     case 'SALECHECK_PRODUCT_FOUND':
@@ -146,7 +167,7 @@ function SaleCheckReducer (state: SaleCheckState = {
         barcode: product.barcode,
         title: product.title,
         quantity: 1,
-        price: Math.round((Math.random() * 1000 + Number.EPSILON) * 100) / 100,
+        price: product.price,
         unitId: 1,
         currencyId: 1,
       }
@@ -157,10 +178,14 @@ function SaleCheckReducer (state: SaleCheckState = {
         [ ... items, saleCheckItem ]
       ;
       const sum = newItems.map(i => i.price * i.quantity).reduce((a, b) => a + b);
+      const priceNotSet = product.price <= 0;
       return Object.assign({}, state, {
         currentSaleCheckItem: saleCheckItem,
-        items: newItems,
+        items: priceNotSet ? state.items : newItems,
         itemsCost: Math.round((sum + Number.EPSILON) * 100) / 100,
+        priceNotSet: priceNotSet,
+        lastItemTitle: saleCheckItem.title,
+        lastItemBarcode: saleCheckItem.barcode,
       });
     case 'SALECHECK_PRODUCT_NOT_FOUND':
       return Object.assign({}, state, { currentSaleCheckItem: emptySaleCheckItem });

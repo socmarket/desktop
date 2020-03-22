@@ -17,6 +17,8 @@ class SaleCheck extends React.Component {
       cashAmount: 0.00,
       searched: false,
       currentItemIdx: -1,
+      lastTitle: "",
+      lastBarcode: "",
     }
     this.handleBarcodeActivate = this.handleBarcodeActivate.bind(this);
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
@@ -297,6 +299,11 @@ class SaleCheck extends React.Component {
   }
 
   render() {
+    const lastTitle = this.props.saleCheck.lastItemTitle;
+    const lastBarcode = this.props.saleCheck.lastItemBarcode;
+    const lastProduct = "[ " + lastBarcode + " ] : " + lastTitle;
+    const priceNotSet = this.props.saleCheck.priceNotSet;
+    const priceNotSetMsg = "Цена на товар " + lastProduct + " не установлена. Товар не добавлен. Установите цену."
     return (
       <Grid columns={2} padded onKeyDown={this.handleNavigation}>
         <Grid.Column width={5}>
@@ -306,6 +313,7 @@ class SaleCheck extends React.Component {
         <Grid.Column width={11}>
           <Container>
             {this.editor()}
+            { priceNotSet && (<Message error header="Ошибка" content={priceNotSetMsg} />) }
             {this.table()}
           </Container>
         </Grid.Column>
