@@ -77,9 +77,11 @@ class PriceDialog extends React.Component {
   }
 
   handlePriceChange(event) {
-    this.setState({
-      price: +event.target.value,
-    });
+    if (!isNaN(Number(event.target.value))) {
+      this.setState({
+        price: event.target.value,
+      });
+    }
   }
 
   table() {

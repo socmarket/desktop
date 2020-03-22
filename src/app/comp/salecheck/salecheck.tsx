@@ -148,6 +148,8 @@ class SaleCheck extends React.Component {
           <Table.Row>
             <Table.HeaderCell>Дата</Table.HeaderCell>
             <Table.HeaderCell>Сумма</Table.HeaderCell>
+            <Table.HeaderCell>Оплата</Table.HeaderCell>
+            <Table.HeaderCell>Сдача</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -155,6 +157,8 @@ class SaleCheck extends React.Component {
             <Table.Row key={idx}>
               <Table.Cell>{moment.utc(item.soldAt).local().format("DD-MM-YYYY HH:mm")}</Table.Cell>
               <Table.Cell>{item.total}</Table.Cell>
+              <Table.Cell>{item.cash}</Table.Cell>
+              <Table.Cell>{item.change}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

@@ -4,7 +4,7 @@ select
   product.title     as title,
 
   coalesce((select
-    round(price / 100, 2)
+    round(price / 100.00, 2)
    from price
    where productId = product.id
    order by setAt desc

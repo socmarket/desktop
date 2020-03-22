@@ -1,6 +1,6 @@
 select
   id,
-  round(price / 100, 2) as price,
+  round(price / 100.00, 2) as price,
   setAt,
   currencyId
 from
