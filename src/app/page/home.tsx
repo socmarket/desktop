@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { AppActions } from "serv/app"
 import MainMenu from "./menu";
 import ProductDialog from "comp/product/dialog";
+import PriceDialog from "comp/price/dialog";
 import SaleCheck from "comp/salecheck/salecheck.tsx";
 import Consignment from "comp/consignment/consignment.tsx";
 
@@ -12,6 +13,7 @@ class HomePage extends React.Component {
       <Fragment>
         <MainMenu />
         { this.props.app.showProductsDialog && <ProductDialog /> }
+        { this.props.app.showPricesDialog && <PriceDialog /> }
         { this.props.app.showSaleCheck && <SaleCheck /> }
         { this.props.app.showConsignment && <Consignment /> }
       </Fragment>

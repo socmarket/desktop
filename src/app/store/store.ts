@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import { AppReducer } from "../serv/app"
 import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
+import { PriceActions, PriceReducer } from "../serv/price"
 import { ProductActions, ProductReducer } from "../serv/product"
 import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
@@ -63,6 +64,7 @@ function createRootReducer() {
     app: AppReducer,
     unitList: UnitReducer,
     counter: CounterReducer,
+    priceList: PriceReducer,
     productList: ProductReducer,
     saleCheck: SaleCheckReducer,
     consignment: ConsignmentReducer,
@@ -76,6 +78,7 @@ function devCreateStore() {
   middleware.push(logger);
   const actionCreators = {
     ...UnitActions,
+    ...PriceActions,
     ...CounterActions,
     ...ProductActions,
     ...SaleCheckActions,

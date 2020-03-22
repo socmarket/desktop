@@ -8,6 +8,7 @@ class MainMenu extends React.Component {
     return (
       <Menu>
         <Menu.Item><Button primary onClick={() => this.props.openProducts()}>Номенклатура</Button></Menu.Item>
+        <Menu.Item><Button primary onClick={() => this.props.openPrices()}>Цены</Button></Menu.Item>
         <Menu.Item><Button primary onClick={() => this.props.openSaleCheck()}>Продажа</Button></Menu.Item>
         <Menu.Item><Button primary onClick={() => this.props.openConsignment()}>Склад</Button></Menu.Item>
       </Menu>
