@@ -1,6 +1,7 @@
 import Product from "./product.ts"
 import saleCheckFindProduct from "./sql/salecheckFindProduct.sql"
 import saleCheckInsertItem from "./sql/salecheckInsertItem.sql"
+import saleCheckListSimple from "./sql/saleCheckListSimple.sql"
 
 export interface SaleCheckItem {
   productId: int;
@@ -12,6 +13,7 @@ export interface SaleCheckItem {
 }
 
 export interface SaleCheckState {
+  list: Array,
   items: Array[SaleCheckItem];
   itemsCost: number;
   currentItem: SaleCheckItem;
@@ -29,6 +31,11 @@ const currentSaleCheckProductNotFound = () => ({
 const saleCheckClosed = () => ({
   type: "SALECHECK_CLOSED",
 });
+
+const saleCheckListUpdated = (list) => ({
+  type: "SALECHECK_LIST_UPDATED",
+  list: list,
+})
 
 function addSaleCheckItem(barcode) {
   return function (dispatch, getState, { db }) {
@@ -73,9 +80,22 @@ function closeSaleCheck(cash, change) {
       .then(saleCheckId => db.exec("update salecheck set closed = true where id = ?", [ saleCheckId ]))
       .then(_ => db.exec("commit"))
       .then(_ => dispatch(saleCheckClosed()))
+      .then(_ => db.select(saleCheckListSimple))
+      .then(list => dispatch(saleCheckListUpdated(list)))
       .catch(err => {
         console.log(err);
         return db.exec("rollback");
+      })
+  };
+}
+
+function updateSaleCheckList() {
+  return function (dispatch, getState, { db }) {
+    return Promise.resolve()
+      .then(_ => db.select(saleCheckListSimple))
+      .then(list => dispatch(saleCheckListUpdated(list)))
+      .catch(err => {
+        console.log(err);
       })
   };
 }
@@ -99,6 +119,7 @@ const SaleCheckActions = {
   incSaleCheckItemQuantity: incSaleCheckItemQuantity,
   decSaleCheckItemQuantity: decSaleCheckItemQuantity,
   closeSaleCheck: closeSaleCheck,
+  updateSaleCheckList: updateSaleCheckList,
 }
 
 const emptySaleCheckItem = {
@@ -111,6 +132,7 @@ const emptySaleCheckItem = {
 };
 
 function SaleCheckReducer (state: SaleCheckState = {
+  list: [],
   items: [],
   itemsCost: 0.00,
   currentSaleCheckItem: emptySaleCheckItem,
@@ -162,6 +184,11 @@ function SaleCheckReducer (state: SaleCheckState = {
       return Object.assign({}, state, {
         items: newItems,
         itemsCost: Math.round((sum + Number.EPSILON) * 100) / 100,
+      });
+    }
+    case 'SALECHECK_LIST_UPDATED': {
+      return Object.assign({}, state, {
+        list: action.list,
       });
     }
     case 'SALECHECK_CLOSED': {

@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import { SaleCheckActions } from "serv/salecheck"
 import {
   Header, Grid, Table, Form, Input, Select,
@@ -119,6 +120,10 @@ class SaleCheck extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this.props.updateSaleCheckList();
+  }
+
   componentDidUpdate() {
     const id = this.props.saleCheck.currentSaleCheckItem.productId;
     if (id > 0 && this.state.barcode.length > 0) {
@@ -131,6 +136,28 @@ class SaleCheck extends React.Component {
         currentItemIdx: -1
       });
     }
+  }
+
+  private list() {
+    const list = this.props.saleCheck.list;
+    return (
+      <Table compact celled selectable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Дата</Table.HeaderCell>
+            <Table.HeaderCell>Сумма</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          { list.map( (item, idx) => (
+            <Table.Row key={idx}>
+              <Table.Cell>{moment.utc(item.soldAt).local().format("DD-MM-YYYY HH:mm")}</Table.Cell>
+              <Table.Cell>{item.total}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    );
   }
 
   private table() {
@@ -274,6 +301,7 @@ class SaleCheck extends React.Component {
       <Grid columns={2} padded onKeyDown={this.handleNavigation}>
         <Grid.Column width={5}>
           {this.form()}
+          {this.list()}
         </Grid.Column>
         <Grid.Column width={11}>
           <Container>
