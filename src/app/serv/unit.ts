@@ -13,6 +13,30 @@ const unitListUpdated = (rows) => ({
   rows: rows
 });
 
+function updateUnit(unit) {
+  return function (dispatch, getState, { db }) {
+    db.select("update unit set title=$title, notation=$notation where id=$id", {
+      $id: unit.id,
+      $title: unit.title,
+      $notation: unit.notation,
+    })
+    .then(_ => {
+      return db.select("select * from unit")
+        .then(rows => dispatch(unitListUpdated(rows)))
+    })
+  };
+}
+
+function addUnit(unit) {
+  return function (dispatch, getState, { db }) {
+    db.select("insert into unit(title, notation) values('', '')")
+    .then(_ => {
+      return db.select("select * from unit")
+        .then(rows => dispatch(unitListUpdated(rows)))
+    })
+  };
+}
+
 const UnitActions = {
 
   loadUnitList: () => {
@@ -21,6 +45,9 @@ const UnitActions = {
         .then(rows => dispatch(unitListUpdated(rows)))
     };
   },
+
+  updateUnit: updateUnit,
+  addUnit: addUnit,
 
 }
 
@@ -33,7 +60,7 @@ function UnitReducer (state: UnitState = {
       const selectOptions = action.rows.map(row => ({
         key: row.id,
         value: row.id,
-        text: row.title,
+        text: row.notation,
       }));
       return Object.assign({}, state, { items: action.rows, selectOptions: selectOptions });
     default:

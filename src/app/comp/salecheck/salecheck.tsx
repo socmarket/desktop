@@ -176,6 +176,7 @@ class SaleCheck extends React.Component {
             <Table.HeaderCell>Название</Table.HeaderCell>
             <Table.HeaderCell>Цена</Table.HeaderCell>
             <Table.HeaderCell>Кол-во</Table.HeaderCell>
+            <Table.HeaderCell>Ед. изм.</Table.HeaderCell>
             <Table.HeaderCell>Сумма</Table.HeaderCell>
             <Table.HeaderCell>Штрихкод</Table.HeaderCell>
           </Table.Row>
@@ -186,6 +187,7 @@ class SaleCheck extends React.Component {
               <Table.Cell>{item.title}</Table.Cell>
               <Table.Cell>{item.price}</Table.Cell>
               <Table.Cell>{item.quantity}</Table.Cell>
+              <Table.Cell>{item.unitTitle}</Table.Cell>
               <Table.Cell>{Math.round((item.price * item.quantity + Number.EPSILON) * 100) / 100}</Table.Cell>
               <Table.Cell>{item.barcode}</Table.Cell>
             </Table.Row>

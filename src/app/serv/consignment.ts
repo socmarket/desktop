@@ -1,5 +1,5 @@
 import Product from "./product.ts"
-import consignmentFindProduct from "./sql/consignmentFindProduct.sql"
+import selectProductWithPrice from "./sql/selectProductWithPrice.sql"
 import consignmentInsertItem from "./sql/consignmentInsertItem.sql"
 import consignmentListSimple from "./sql/consignmentListSimple.sql"
 
@@ -8,6 +8,8 @@ export interface ConsignmentItem {
   quantity: long;
   price: long;
   unitId: int;
+  unitTitle: string;
+  unitNotation: string;
   currencyId: int;
   createdAt: datetime;
 }
@@ -46,7 +48,7 @@ const consignmentListUpdated = (list) => ({
 function findProduct(barcode) {
   return function (dispatch, getState, { db }) {
     if (barcode.length > 0) {
-      db.selectOne("select * from product where barcode = ?", [ barcode ])
+      db.selectOne(selectProductWithPrice, [ barcode ])
         .then(foundProduct => {
           if (foundProduct) {
             dispatch(currentConsignmentProductFound(foundProduct));
@@ -133,8 +135,19 @@ const emptyConsignmentItem = {
   quantity: 0,
   price: 0,
   unitId: -1,
+  unitTitle: "",
+  unitNotation: "",
   currencyId: -1,
   createdAt: null,
+};
+
+const emptyProduct = {
+  id: -1,
+  barcode: "",
+  title: "",
+  unitId: -1,
+  unitTitle: "",
+  unitNotation: "",
 };
 
 function ConsignmentReducer (state: ConsignmentState = {
@@ -142,11 +155,7 @@ function ConsignmentReducer (state: ConsignmentState = {
   items: [],
   itemsCost: 0.00,
   currentConsignmentItem: emptyConsignmentItem,
-  currentProduct: {
-    id: -1,
-    barcode: "",
-    title: "",
-  }
+  currentProduct: emptyProduct,
 }, action) {
   switch (action.type) {
     case 'CONSIGNMENT_PRODUCT_FOUND':
@@ -155,7 +164,9 @@ function ConsignmentReducer (state: ConsignmentState = {
         productId: product.id,
         quantity: 1,
         price: Math.round((Math.random() * 1000 + Number.EPSILON) * 100) / 100,
-        unitId: 1,
+        unitId: product.unitId,
+        unitTitle: product.unitTitle,
+        unitNotation: product.unitNotation,
         currencyId: 1,
       }
       return Object.assign({}, state, {
@@ -165,11 +176,7 @@ function ConsignmentReducer (state: ConsignmentState = {
     case 'CONSIGNMENT_PRODUCT_NOT_FOUND':
       return Object.assign({}, state, {
         currentConsignmentItem: emptyConsignmentItem,
-        currentProduct: {
-          id: -1,
-          barcode: "",
-          title: "",
-        },
+        currentProduct: emptyProduct,
       });
     case 'CONSIGNMENT_ADD_ITEM': {
       const items = state.items;
@@ -181,7 +188,9 @@ function ConsignmentReducer (state: ConsignmentState = {
         title: product.title,
         quantity: +citem.quantity,
         price: +citem.price,
-        unitId: -1,
+        unitId: product.unitId,
+        unitTitle: product.unitTitle,
+        unitNotation: product.unitNotation,
         currencyId: -1,
       }
       /* If product is in the check, then just increase quantity */
@@ -226,11 +235,7 @@ function ConsignmentReducer (state: ConsignmentState = {
     }
     case 'CONSIGNMENT_CLOSED': {
       return Object.assign({}, state, {
-        currentProduct: {
-          id: -1,
-          barcode: "",
-          title: "",
-        },
+        currentProduct: emptyProduct,
         currentConsignmentItem: emptyConsignmentItem,
         items: [],
         itemsCost: 0.00,

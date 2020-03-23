@@ -147,6 +147,9 @@ const emptyProductWithPrice = {
   barcode: "",
   title: "",
   price: -1,
+  unitId: -1,
+  unitTitle: "",
+  unitNotation: "",
 }
 
 function SaleCheckReducer (state: SaleCheckState = {
@@ -168,7 +171,9 @@ function SaleCheckReducer (state: SaleCheckState = {
         title: product.title,
         quantity: 1,
         price: product.price,
-        unitId: 1,
+        unitId: product.unitId,
+        unitTitle: product.unitTitle,
+        unitNotation: product.unitNotation,
         currencyId: 1,
       }
       /* If product is in the check, then just increase quantity */

@@ -9,8 +9,13 @@ select
    where productId = product.id
    order by setAt desc
    limit 1
-  ), 0)             as price
+  ), 0)             as price,
+
+  unit.id           as unitId,
+  unit.title        as unitTitle,
+  unit.notation     as unitNotation
 from
   product
+  left join unit on (unit.id = product.unitId)
 where
   product.barcode = ?
