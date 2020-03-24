@@ -8,6 +8,10 @@ export interface AppState {
 
 const AppActions = {
 
+  openDashboard: () => ({
+    type: 'APP_OPEN_DASHBOARD',
+  }),
+
   openProducts: () => ({
     type: 'APP_SHOW_PRODUCTS_DIALOG',
   }),
@@ -51,10 +55,11 @@ const AppActions = {
 }
 
 function AppReducer (state: AppState = {
-  showPriceDialog: true,
+  showPriceDialog: false,
   showProductsDialog: false,
   showSaleCheck: false,
-  showConsignment: true,
+  showConsignment: false,
+  showDashboard: true,
 }, action) {
   switch (action.type) {
     case 'APP_SHOW_PRODUCTS_DIALOG':
@@ -69,13 +74,21 @@ function AppReducer (state: AppState = {
       return Object.assign({}, state, { showUnitsDialog: true });
     case 'APP_HIDE_UNITS_DIALOG':
       return Object.assign({}, state, { showUnitsDialog: false });
+    case 'APP_OPEN_DASHBOARD':
+      return Object.assign({}, state, {
+        showDashboard: true,
+        showSaleCheck: false,
+        showConsignment: false,
+      });
     case 'APP_OPEN_CONSIGNMENT':
       return Object.assign({}, state, {
+        showDashboard: false,
         showSaleCheck: false,
         showConsignment: true,
       });
     case 'APP_OPEN_SALECHECK':
       return Object.assign({}, state, {
+        showDashboard: false,
         showSaleCheck: true,
         showConsignment: false,
       });

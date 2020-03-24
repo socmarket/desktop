@@ -8,6 +8,13 @@ class MainMenu extends React.Component {
     return (
       <Menu attached="top">
         <Menu.Item
+          active={this.props.app.showDashboard}
+          onClick={() => this.props.openDashboard()}
+        >
+          Главная
+        </Menu.Item>
+
+        <Menu.Item
           active={this.props.app.showSaleCheck}
           onClick={() => this.props.openSaleCheck()}
         >

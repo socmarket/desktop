@@ -4,6 +4,7 @@ import { AppReducer } from "../serv/app"
 import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { PriceActions, PriceReducer } from "../serv/price"
+import { DashboardActions, DashboardReducer } from "../serv/dashboard"
 import { ProductActions, ProductReducer } from "../serv/product"
 import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
@@ -64,6 +65,7 @@ function createRootReducer() {
     app: AppReducer,
     unitList: UnitReducer,
     counter: CounterReducer,
+    dashboard: DashboardReducer,
     priceList: PriceReducer,
     productList: ProductReducer,
     saleCheck: SaleCheckReducer,
@@ -80,6 +82,7 @@ function devCreateStore() {
     ...UnitActions,
     ...PriceActions,
     ...CounterActions,
+    ...DashboardActions,
     ...ProductActions,
     ...SaleCheckActions,
     ...ConsignmentActions,

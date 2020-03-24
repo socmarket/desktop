@@ -8,6 +8,7 @@ import UnitDialog from "comp/unit/unit";
 import PriceDialog from "comp/price/dialog";
 import ProductDialog from "comp/product/dialog";
 
+import Dashboard from "comp/dashboard";
 import SaleCheck from "comp/salecheck/salecheck.tsx";
 import Consignment from "comp/consignment/consignment.tsx";
 
@@ -16,6 +17,7 @@ class HomePage extends React.Component {
     return (
       <Fragment>
         <MainMenu />
+        { this.props.app.showDashboard && <Dashboard /> }
         { this.props.app.showUnitsDialog && <UnitDialog /> }
         { this.props.app.showPricesDialog && <PriceDialog /> }
         { this.props.app.showProductsDialog && <ProductDialog /> }

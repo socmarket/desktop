@@ -6,7 +6,9 @@
   "main": "src/app/main.ts",
   "license": "MIT",
   "dependencies": {
+    "@nivo/pie": "^0.61.1",
     "moment": "^2.24.0",
+    "nivo": "^0.31.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-redux": "^7.2.0",
