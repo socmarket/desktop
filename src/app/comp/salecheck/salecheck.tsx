@@ -15,6 +15,7 @@ class SaleCheck extends React.Component {
     this.state = {
       barcode: "",
       cashAmount: 0.00,
+      clientId: -1,
       searched: false,
       currentItemIdx: -1,
       lastTitle: "",
@@ -23,6 +24,7 @@ class SaleCheck extends React.Component {
     this.handleBarcodeActivate = this.handleBarcodeActivate.bind(this);
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
     this.handleCashAmountChange = this.handleCashAmountChange.bind(this);
+    this.handleClientChange = this.handleClientChange.bind(this);
     this.handleNavigation = this.handleNavigation.bind(this);
     this.handleIncQuantity = this.handleIncQuantity.bind(this);
     this.handleDecQuantity = this.handleDecQuantity.bind(this);
@@ -79,6 +81,10 @@ class SaleCheck extends React.Component {
     this.setState({ cashAmount: event.target.value });
   }
 
+  handleClientChange(event, data) {
+    this.setState({ clientId: data.value });
+  }
+
   handleDecQuantity() {
     const idx = this.state.currentItemIdx;
     const items = this.props.saleCheck.items;
@@ -97,9 +103,10 @@ class SaleCheck extends React.Component {
 
   handleSaleCheckClose() {
     if (this.props.saleCheck.items.length > 0 && this.state.cashAmount >= this.props.saleCheck.itemsCost) {
-      this.props.closeSaleCheck(this.state.cashAmount, this.state.cashAmount - this.props.itemsCost);
+      this.props.closeSaleCheck(this.state.cashAmount, this.state.cashAmount - this.props.itemsCost, this.state.clientId);
       this.setState({
-        cashAmount: 0.00
+        cashAmount: 0.00,
+        clientId: -1,
       }, () => {
         setTimeout(() => this.inputBarcode.current.focus(), 100);
       });
@@ -136,6 +143,7 @@ class SaleCheck extends React.Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Дата</Table.HeaderCell>
+            <Table.HeaderCell>Клиент</Table.HeaderCell>
             <Table.HeaderCell>Сумма</Table.HeaderCell>
             <Table.HeaderCell>Оплата</Table.HeaderCell>
             <Table.HeaderCell>Сдача</Table.HeaderCell>
@@ -145,6 +153,7 @@ class SaleCheck extends React.Component {
           { list.map( (item, idx) => (
             <Table.Row key={idx}>
               <Table.Cell>{moment.utc(item.soldAt).local().format("DD-MM-YYYY HH:mm")}</Table.Cell>
+              <Table.Cell>{item.clientName}</Table.Cell>
               <Table.Cell>{item.total}</Table.Cell>
               <Table.Cell>{item.cash}</Table.Cell>
               <Table.Cell>{item.change}</Table.Cell>
@@ -254,7 +263,13 @@ class SaleCheck extends React.Component {
         <br />
         <Form error={productNotFound}>
           <Form.Group>
-            <Form.Select width={16} label="Клиент" options={[]} />
+            <Form.Select
+              width={16}
+              label="Клиент"
+              value={this.state.clientId}
+              options={this.props.clientOptions}
+              onChange={this.handleClientChange}
+            />
           </Form.Group>
           <Form.Group>
             <Form.Input width={16}
@@ -320,7 +335,10 @@ class SaleCheck extends React.Component {
 }
 
 const stateMap = (state) => {
-  return { saleCheck: state.saleCheck };
+  return {
+    saleCheck: state.saleCheck,
+    clientOptions: state.registry.clientOptions,
+  };
 }
 
 export default connect(stateMap, SaleCheckActions)(SaleCheck);

@@ -1,6 +1,7 @@
 import selectUnits from "./sql/registrySelectUnits.sql"
 import selectCategories from "./sql/registrySelectCategories.sql"
 import selectSuppliers from "./sql/registrySelectSuppliers.sql"
+import selectClients from "./sql/registrySelectClients.sql"
 
 export interface RegistryState {
   units: Array,
@@ -9,6 +10,8 @@ export interface RegistryState {
   categoryOptions: Array,
   suppliers: Array,
   supplierOptions: Array,
+  clients: Array,
+  clientOptions: Array,
 }
 
 const registryUnitsReloaded = (rows) => ({
@@ -23,6 +26,11 @@ const registryCategoriesReloaded = (rows) => ({
 
 const registrySuppliersReloaded = (rows) => ({
   type: "REGISTRY_SUPPLIERS_RELOADED",
+  rows: rows
+});
+
+const registryClientsReloaded = (rows) => ({
+  type: "REGISTRY_CLIENTS_RELOADED",
   rows: rows
 });
 
@@ -46,6 +54,13 @@ const RegistryActions = {
     return function (dispatch, getState, { db }) {
       db.select(selectSuppliers)
         .then(rows => dispatch(registrySuppliersReloaded(rows)))
+    };
+  },
+
+  reloadClients: () => {
+    return function (dispatch, getState, { db }) {
+      db.select(selectClients)
+        .then(rows => dispatch(registryClientsReloaded(rows)))
     };
   },
 
@@ -83,6 +98,14 @@ function RegistryReducer (state: RegistryState = {
         text: row.name,
       }));
       return Object.assign({}, state, { suppliers: action.rows, supplierOptions: options });
+    }
+    case 'REGISTRY_CLIENTS_RELOADED': {
+      const options = action.rows.map(row => ({
+        key: row.id,
+        value: row.id,
+        text: row.name,
+      }));
+      return Object.assign({}, state, { clients: action.rows, clientOptions: options });
     }
     default:
       return state

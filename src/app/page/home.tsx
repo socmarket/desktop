@@ -9,6 +9,7 @@ import PriceDialog from "comp/price/dialog";
 import ProductDialog from "comp/product/dialog";
 import CategoryDialog from "comp/category";
 import SupplierDialog from "comp/supplier";
+import ClientDialog from "comp/client";
 
 import Dashboard from "comp/dashboard";
 import SaleCheck from "comp/salecheck/salecheck.tsx";
@@ -25,6 +26,7 @@ class HomePage extends React.Component {
         { this.props.app.showProductsDialog && <ProductDialog /> }
         { this.props.app.showCategoriesDialog && <CategoryDialog /> }
         { this.props.app.showSuppliersDialog && <SupplierDialog /> }
+        { this.props.app.showClientsDialog && <ClientDialog /> }
         { this.props.app.showSaleCheck && <SaleCheck /> }
         { this.props.app.showConsignment && <Consignment /> }
       </Fragment>

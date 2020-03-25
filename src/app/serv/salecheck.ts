@@ -69,12 +69,12 @@ function toMoney(num) {
   return Math.round(num * 100 + Number.EPSILON);
 }
 
-function closeSaleCheck(cash, change) {
+function closeSaleCheck(cash, change, clientId) {
   return function (dispatch, getState, { db }) {
     const { saleCheck: { items } } = getState();
     return Promise.resolve()
       .then(_ => db.exec("begin"))
-      .then(_ => db.exec("insert into salecheck(cash, change) values(?, ?)", [ cash, change ]))
+      .then(_ => db.exec("insert into salecheck(cash, change, clientId) values(?, ?, ?)", [ cash, change, clientId ]))
       .then(_ => db.selectOne("select id as saleCheckId from salecheck where id in (select max(id) from salecheck)"))
       .then(({ saleCheckId }) => (
         Promise.all(items.map(item => (
