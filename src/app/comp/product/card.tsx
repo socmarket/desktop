@@ -13,6 +13,7 @@ class ProductCard extends React.Component {
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleNotesChange = this.handleNotesChange.bind(this);
     this.handleUnitChange = this.handleUnitChange.bind(this);
+    this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handleCreateProduct = this.handleCreateProduct.bind(this);
     this.handleUpdateProduct = this.handleUpdateProduct.bind(this);
     this.handleResetProduct = this.handleResetProduct.bind(this);
@@ -66,6 +67,10 @@ class ProductCard extends React.Component {
     this.setState({ unitId: data.value });
   }
 
+  handleCategoryChange(event, data) {
+    this.setState({ categoryId: data.value });
+  }
+
   handleCreateProduct() {
     this.props.createProduct(this.state);
     this.setState({
@@ -84,7 +89,6 @@ class ProductCard extends React.Component {
   render() {
     const isNewProduct: boolean = this.state.id <= 0;
     const isEmpty: boolean = this.state.barcode === "" ||  this.state.title === "";
-    const unitOptions = this.props.unitList.selectOptions;
     return (
       <Grid columns={2}>
         <Grid.Row>
@@ -104,9 +108,16 @@ class ProductCard extends React.Component {
                   autoFocus
                 />
                 <Form.Select width={6} label="Ед. изм." fluid
-                  options={unitOptions}
+                  options={this.props.unitOptions}
                   value={this.state.unitId}
                   onChange={this.handleUnitChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Select width={16} label="Категория товара" fluid
+                  options={this.props.categoryOptions}
+                  value={this.state.categoryId}
+                  onChange={this.handleCategoryChange}
                 />
               </Form.Group>
               <Form.Group>
@@ -152,7 +163,8 @@ class ProductCard extends React.Component {
 
 const stateMap = (state) => {
   return {
-    unitList: state.unitList,
+    unitOptions: state.registry.unitOptions,
+    categoryOptions: state.registry.categoryOptions,
     productList: state.productList,
   };
 }

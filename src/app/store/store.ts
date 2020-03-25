@@ -5,7 +5,9 @@ import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { PriceActions, PriceReducer } from "../serv/price"
 import { DashboardActions, DashboardReducer } from "../serv/dashboard"
+import { RegistryActions, RegistryReducer } from "../serv/registry"
 import { ProductActions, ProductReducer } from "../serv/product"
+import { CategoryActions, CategoryReducer } from "../serv/category"
 import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
 import migrate from "db/migration";
@@ -68,8 +70,10 @@ function createRootReducer() {
     dashboard: DashboardReducer,
     priceList: PriceReducer,
     productList: ProductReducer,
+    categoryList: CategoryReducer,
     saleCheck: SaleCheckReducer,
     consignment: ConsignmentReducer,
+    registry: RegistryReducer,
   });
 }
 
@@ -84,6 +88,8 @@ function devCreateStore() {
     ...CounterActions,
     ...DashboardActions,
     ...ProductActions,
+    ...CategoryActions,
+    ...RegistryActions,
     ...SaleCheckActions,
     ...ConsignmentActions,
   };
@@ -104,7 +110,8 @@ const store = (process.env.NODE_ENV === "development") ? devCreateStore() : prod
 
 migrate(db)
   .then(res => {
-    store.dispatch(UnitActions.loadUnitList());
+    store.dispatch(RegistryActions.reloadUnits());
+    store.dispatch(RegistryActions.reloadCategories());
     Promise.resolve("OK");
   })
   .catch(err => console.log(err));

@@ -5,6 +5,7 @@ export interface Product {
   title: string;
   notes: string;
   unitId: int;
+  categoryId: int;
 }
 
 export interface ProductState {
@@ -60,12 +61,13 @@ function changeCurrentProduct(product) {
 function createProduct(product: Product) {
   return function (dispatch, getState, { db }) {
     const { productList: { filterPattern } } = getState();
-    db.exec("insert into product(barcode, title, notes, unitId) values(?, ?, ?, ?)",
+    db.exec("insert into product(barcode, title, notes, unitId, categoryId) values(?, ?, ?, ?, ?)",
       [
         product.barcode,
         product.title,
         product.notes,
-        product.unitId
+        product.unitId,
+        product.categoryId
       ], {
         product: product
       }
@@ -78,6 +80,7 @@ function createProduct(product: Product) {
         code: "",
         notes: "",
         unitId: 1,
+        categoryid: -1,
       })(dispatch, getState, { db }))
   };
 }
@@ -85,12 +88,13 @@ function createProduct(product: Product) {
 function updateProduct(product) {
   return function (dispatch, getState, { db }) {
     const { productList: { filterPattern } } = getState();
-    db.exec("update product set barcode = $barcode, title = $title, notes = $notes, unitId = $unitId where id = $id",
+    db.exec("update product set barcode = $barcode, title = $title, notes = $notes, unitId = $unitId, categoryId = $categoryId where id = $id",
       {
         $barcode: product.barcode,
         $title: product.title,
         $notes: product.notes,
         $unitId: product.unitId,
+        $categoryId: product.categoryId,
         $id: product.id
       }, {
         product: product
@@ -122,6 +126,8 @@ function ProductReducer (state: ProductState = {
     barcode: "",
     title: "",
     notes: "",
+    unitId: -1,
+    categoryId: -1,
   }
 }, action) {
   switch (action.type) {

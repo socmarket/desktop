@@ -50,6 +50,13 @@ class MainMenu extends React.Component {
             Ед. измерения
           </Menu.Item>
 
+          <Menu.Item
+            active={this.props.app.showCategoriesDialog}
+            onClick={() => this.props.openCategories()}
+          >
+            Категории
+          </Menu.Item>
+
         </Menu.Menu>
 
       </Menu>
