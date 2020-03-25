@@ -27,6 +27,10 @@ class UnitDialog extends React.Component {
     this.inputNotation = React.createRef();
   }
 
+  componentDidMount() {
+    this.props.loadUnitList();
+  }
+
   handleNavigation(event) {
     const items = this.props.unitList.items;
     const count = this.props.unitList.items.length;

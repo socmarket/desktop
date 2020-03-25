@@ -1,4 +1,5 @@
 import selectCategoryList from "./sql/categoryList.sql"
+import { RegistryActions } from "./registry"
 
 export interface Category {
   id: int;
@@ -26,6 +27,8 @@ function updateCategory(category) {
     .then(_ => {
       return db.select(selectCategoryList)
         .then(rows => dispatch(categoryListUpdated(rows)))
+        .then(_ => dispatch(RegistryActions.reloadCategories()))
+      ;
     })
   };
 }

@@ -38,6 +38,7 @@ class ProductCard extends React.Component {
       title: "",
       notes: "",
       unitId: 1,
+      categoryId: -1,
     }, this.updateForm);
   }
 
@@ -79,6 +80,7 @@ class ProductCard extends React.Component {
       title: "",
       notes: "",
       unitId: 1,
+      categoryId: -1,
     });
   }
 
