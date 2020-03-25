@@ -24,8 +24,6 @@ class SaleCheck extends React.Component {
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
     this.handleCashAmountChange = this.handleCashAmountChange.bind(this);
     this.handleNavigation = this.handleNavigation.bind(this);
-    this.handleBarcodeFocus = this.handleBarcodeFocus.bind(this);
-    this.handleCashAmountFocus = this.handleCashAmountFocus.bind(this);
     this.handleIncQuantity = this.handleIncQuantity.bind(this);
     this.handleDecQuantity = this.handleDecQuantity.bind(this);
     this.handleSaleCheckClose = this.handleSaleCheckClose.bind(this);
@@ -81,18 +79,6 @@ class SaleCheck extends React.Component {
     this.setState({ cashAmount: event.target.value });
   }
 
-  handleBarcodeFocus() {
-    this.setState({
-      focus: "barcode"
-    });
-  }
-
-  handleCashAmountFocus() {
-    this.setState({
-      focus: "cashAmount"
-    });
-  }
-
   handleDecQuantity() {
     const idx = this.state.currentItemIdx;
     const items = this.props.saleCheck.items;
@@ -110,15 +96,18 @@ class SaleCheck extends React.Component {
   }
 
   handleSaleCheckClose() {
-    if (this.state.cashAmount > this.props.saleCheck.itemsCost) {
+    if (this.props.saleCheck.items.length > 0 && this.state.cashAmount >= this.props.saleCheck.itemsCost) {
       this.props.closeSaleCheck(this.state.cashAmount, this.state.cashAmount - this.props.itemsCost);
       this.setState({
         cashAmount: 0.00
+      }, () => {
+        setTimeout(() => this.inputBarcode.current.focus(), 100);
       });
-      this.inputBarcode.current.focus();
-    } else if (this.props.saleCheck.itemsCost > 0) {
+    } else if (this.props.saleCheck.items.length > 0) {
       this.inputCash.current.focus();
       this.inputCash.current.select();
+    } else {
+      this.inputBarcode.current.focus();
     }
   }
 
@@ -199,14 +188,20 @@ class SaleCheck extends React.Component {
 
   private createCashInput(props) {
     return (
-      <div className="ui input">
-        <input ref={this.inputCash} style={{ textAlign: "right" }} {...props} style={{ textAlign: "right" }} />
+      <div className="ui input action">
+        <input ref={this.inputCash} style={{ textAlign: "right" }} {...props} />
+        <Button positive onClick={this.handleSaleCheckClose}>Оплатить</Button>
       </div>
     );
   }
 
   private createBarcodeInput(props) {
-    return (<Input ref={this.inputBarcode} style={{ textAlign: "right" }} {...props} />);
+    return (
+      <div className="ui input action">
+        <input autoFocus ref={this.inputBarcode} {...props} />
+        <Button primary onClick={this.handleBarcodeActivate}>Добавить</Button>
+      </div>
+    );
   }
 
   private form() {
@@ -218,40 +213,49 @@ class SaleCheck extends React.Component {
     const itemsCost = this.props.saleCheck.itemsCost;
     return (
       <Segment onKeyPress={this.handleBarcodeActivate}>
-        <Grid>
-          <Grid.Column width={16}>
-            <Form error={productNotFound}>
-              <Form.Group>
-                <Form.Input width={16}
-                  autoFocus
-                  label="Штрихкод"
-                  value={this.state.barcode}
-                  onFocus={this.handleBarcodeFocus}
-                  onChange={this.handleBarcodeChange}
-                  control={this.createBarcodeInput}
-                />
-              </Form.Group>
-              <Message error header='Товар не найден' content="Проверьте штрихкод или вбейте его вручную." />
-              <Button primary fluid onClick={this.handleBarcodeActivate}>В чек</Button>
-            </Form>
-          </Grid.Column>
-        </Grid>
+        <Form error={productNotFound}>
+          <Form.Group>
+            <Form.Input width={16}
+              autoFocus
+              label="Штрихкод"
+              value={this.state.barcode}
+              onFocus={this.handleBarcodeFocus}
+              onChange={this.handleBarcodeChange}
+              control={this.createBarcodeInput}
+            />
+          </Form.Group>
+          <Message error header='Товар не найден' content="Проверьте штрихкод или вбейте его вручную." />
+        </Form>
+        <br />
         <Grid>
           <Grid.Row>
-            <Grid.Column width={6}><Header as="h2" dividing>Сумма: </Header></Grid.Column>
+            <Grid.Column width={6}><Header as="h2" >Сумма: </Header></Grid.Column>
             <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{itemsCost}</Header></Grid.Column>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width={6}><Header as="h2" dividing>Скидка: </Header></Grid.Column>
+            <Grid.Column width={6}><Header as="h2" >Скидка: </Header></Grid.Column>
             <Grid.Column width={10}><Header as="h2" dividing textAlign="right">0.00</Header></Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={6}><Header as="h1">Итог: </Header></Grid.Column>
-            <Grid.Column width={10}><Header as="h1" textAlign="right">{this.props.saleCheck.itemsCost}</Header></Grid.Column>
+            <Grid.Column width={10}>
+              <Header dividing as="h1" textAlign="right">{this.props.saleCheck.itemsCost}</Header>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={6}><Header as="h2">Сдача: </Header></Grid.Column>
+            <Grid.Column width={10}>
+              <Header dividing as="h2" textAlign="right">
+                {cashAmount > itemsCost ? Math.round((cashAmount - itemsCost + Number.EPSILON) * 100) / 100 : "0.00" }
+              </Header>
+            </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Divider />
+        <br />
         <Form error={productNotFound}>
+          <Form.Group>
+            <Form.Select width={16} label="Клиент" options={[]} />
+          </Form.Group>
           <Form.Group>
             <Form.Input width={16}
               label="Наличными"
@@ -261,20 +265,7 @@ class SaleCheck extends React.Component {
               control={this.createCashInput}
             />
           </Form.Group>
-          <Form.Group>
-            <Form.Select width={16} label="Клиент" options={[]} />
-          </Form.Group>
-          <Grid>
-            <Grid.Column width={6}><Header as="h2">Сдача: </Header></Grid.Column>
-            <Grid.Column width={10}>
-              <Header as="h2" textAlign="right">
-                {cashAmount > itemsCost ? Math.round((cashAmount - itemsCost + Number.EPSILON) * 100) / 100 : "0.00" }
-              </Header>
-            </Grid.Column>
-          </Grid>
-          <Divider />
         </Form>
-        <Button positive fluid onClick={this.handleSaleCheckClose}>Оплатить</Button>
       </Segment>
     );
   }

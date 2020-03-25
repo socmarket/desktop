@@ -88,7 +88,7 @@ class Consignment extends React.Component {
   }
 
   handleActivate(event) {
-    if (event.key && event.key === "Enter") {
+    const act = () => {
       if (this.state.barcode.length > 0) {
         if (this.state.barcode !== this.props.consignment.currentProduct.barcode) {
           this.props.findProduct(this.state.barcode);
@@ -101,6 +101,13 @@ class Consignment extends React.Component {
       } else {
         this.inputBarcode.current.focus();
       }
+    }
+    if (event.key) {
+      if (event.key === "Enter") {
+        act();
+      }
+    } else {
+      act();
     }
   }
 
@@ -203,7 +210,11 @@ class Consignment extends React.Component {
   }
 
   private createBarcodeInput(props) {
-    return (<Input ref={this.inputBarcode} style={{ textAlign: "right" }} {...props} />);
+    return (
+      <div className="ui input">
+        <input ref={this.inputBarcode} {...props} />
+      </div>
+    );
   }
 
   private createQuantityInput(props) {
@@ -216,8 +227,9 @@ class Consignment extends React.Component {
 
   private createPriceInput(props) {
     return (
-      <div className="ui input">
-        <input ref={this.inputPrice} style={{ textAlign: "right" }} {...props} style={{ textAlign: "right" }} />
+      <div className="ui input action">
+        <input fluid ref={this.inputPrice} style={{ textAlign: "right" }} {...props} style={{ textAlign: "right" }} />
+        <Button primary onClick={this.handleActivate}>Добавить</Button>
       </div>
     );
   }
@@ -234,43 +246,41 @@ class Consignment extends React.Component {
     const foundProductTitle = productNotFound ? "| Товар не найден" : "| " + currentProduct.title + foundProductUnit
     return (
       <Segment onKeyPress={this.handleActivate}>
-        <Grid>
-          <Grid.Column width={16}>
-            <Form error={productNotFound} success={!productNotFound}>
-              <Form.Group>
-                <Form.Input width={16}
-                  autoFocus
-                  label="Штрихкод"
-                  error={productNotFound}
-                  value={this.state.barcode}
-                  onFocus={this.handleBarcodeFocus}
-                  onChange={this.handleBarcodeChange}
-                  control={this.createBarcodeInput}
-                />
-              </Form.Group>
-              <Message
-                error={productNotFound}
-                success={!productNotFound}
-                content={foundProductTitle}
-              />
-              <Form.Group>
-                <Form.Input width={16}
-                  label="Кол-во"
-                  value={this.state.quantity}
-                  onChange={this.handleQuantityChange}
-                  control={this.createQuantityInput}
-                />
-                <Form.Input width={16}
-                  label="Цена за ед."
-                  value={this.state.price}
-                  onChange={this.handlePriceChange}
-                  control={this.createPriceInput}
-                />
-              </Form.Group>
-              <Button primary fluid onClick={this.handleActivate}>В партию</Button>
-            </Form>
-          </Grid.Column>
-        </Grid>
+        <Form error={productNotFound} success={!productNotFound}>
+          <Form.Group>
+            <Form.Input width={16}
+              autoFocus
+              label="Штрихкод"
+              error={productNotFound}
+              value={this.state.barcode}
+              onFocus={this.handleBarcodeFocus}
+              onChange={this.handleBarcodeChange}
+              control={this.createBarcodeInput}
+            />
+          </Form.Group>
+          <Message
+            error={productNotFound}
+            success={!productNotFound}
+            content={foundProductTitle}
+          />
+          <Form.Group>
+            <Form.Input
+              width={6}
+              label="Кол-во"
+              value={this.state.quantity}
+              onChange={this.handleQuantityChange}
+              control={this.createQuantityInput}
+            />
+            <Form.Input
+              width={10}
+              label="Цена за ед."
+              value={this.state.price}
+              onChange={this.handlePriceChange}
+              control={this.createPriceInput}
+            />
+          </Form.Group>
+        </Form>
+        <Divider />
         <Grid>
           <Grid.Row>
             <Grid.Column width={6}><Header as="h1">Сумма: </Header></Grid.Column>
