@@ -16,6 +16,7 @@ class Consignment extends React.Component {
       barcode: "",
       quantity: "",
       price: "",
+      supplierId: -1,
       searched: false,
       currentItemIdx: -1,
     }
@@ -29,6 +30,7 @@ class Consignment extends React.Component {
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
     this.handleQuantityChange = this.handleQuantityChange.bind(this);
     this.handlePriceChange = this.handlePriceChange.bind(this);
+    this.handleSupplierChange = this.handleSupplierChange.bind(this);
 
     this.createBarcodeInput = this.createBarcodeInput.bind(this);
     this.createQuantityInput = this.createQuantityInput.bind(this);
@@ -46,6 +48,7 @@ class Consignment extends React.Component {
         barcode: "",
         quantity: 0,
         price: 0,
+        supplierId: -1,
       }, () => {
         this.inputBarcode.current.focus();
       });
@@ -123,6 +126,12 @@ class Consignment extends React.Component {
     this.setState({ price: event.target.value });
   }
 
+  handleSupplierChange(event, data) {
+    this.setState({
+      supplierId: data.value
+    });
+  }
+
   handleBarcodeFocus() {
     this.setState({
       focus: "barcode"
@@ -146,9 +155,15 @@ class Consignment extends React.Component {
   }
 
   handleConsignmentClose() {
-    if (this.props.consignment.itemsCost) {
-      this.props.closeConsignment();
-      this.inputBarcode.current.focus();
+    if (this.props.consignment.itemsCost > 0) {
+      this.props.closeConsignment(this.state.supplierId);
+      setTimeout(() => {
+        this.setState({
+          supplierId: -1
+        }, () => {
+          this.inputBarcode.current.focus();
+        });
+      }, 100);
     }
   }
 
@@ -163,6 +178,7 @@ class Consignment extends React.Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Дата</Table.HeaderCell>
+            <Table.HeaderCell>Поставщик</Table.HeaderCell>
             <Table.HeaderCell>Сумма</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -170,6 +186,7 @@ class Consignment extends React.Component {
           { list.map( (item, idx) => (
             <Table.Row key={idx}>
               <Table.Cell>{moment.utc(item.acceptedAt).local().format("DD-MM-YYYY HH:mm")}</Table.Cell>
+              <Table.Cell>{item.supplierName}</Table.Cell>
               <Table.Cell>{item.total}</Table.Cell>
             </Table.Row>
           ))}
@@ -228,7 +245,7 @@ class Consignment extends React.Component {
   private createPriceInput(props) {
     return (
       <div className="ui input action">
-        <input fluid ref={this.inputPrice} style={{ textAlign: "right" }} {...props} style={{ textAlign: "right" }} />
+        <input ref={this.inputPrice} style={{ textAlign: "right" }} {...props} style={{ textAlign: "right" }} />
         <Button primary onClick={this.handleActivate}>Добавить</Button>
       </div>
     );
@@ -290,7 +307,13 @@ class Consignment extends React.Component {
         <Divider />
         <Form error={productNotFound}>
           <Form.Group>
-            <Form.Select width={16} label="Поставщик" options={[]} />
+            <Form.Select
+              width={16}
+              label="Поставщик"
+              value={this.state.supplierId}
+              options={this.props.supplierOptions}
+              onChange={this.handleSupplierChange}
+            />
           </Form.Group>
         </Form>
         <Button positive fluid onClick={this.handleConsignmentClose}>Принять партию</Button>
@@ -342,7 +365,10 @@ class Consignment extends React.Component {
 }
 
 const stateMap = (state) => {
-  return { consignment: state.consignment };
+  return {
+    consignment: state.consignment,
+    supplierOptions: state.registry.supplierOptions,
+  };
 }
 
 export default connect(stateMap, ConsignmentActions)(Consignment);

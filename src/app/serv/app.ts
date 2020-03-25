@@ -3,6 +3,7 @@ export interface AppState {
   showPriceDialog: boolean;
   showProductsDialog: boolean;
   showCategoriesDialog: boolean;
+  showSuppliersDialog: boolean;
   showSaleCheck: boolean;
   showConsignment: boolean;
 }
@@ -27,6 +28,14 @@ const AppActions = {
 
   closeCategories: () => ({
     type: 'APP_HIDE_CATEGORIES_DIALOG',
+  }),
+
+  openSuppliers: () => ({
+    type: 'APP_SHOW_SUPPLIERS_DIALOG',
+  }),
+
+  closeSuppliers: () => ({
+    type: 'APP_HIDE_SUPPLIERS_DIALOG',
   }),
 
   openPrices: () => ({
@@ -67,11 +76,16 @@ function AppReducer (state: AppState = {
   showPriceDialog: false,
   showProductsDialog: false,
   showCategoriesDialog: false,
+  showSuppliersDialog: false,
   showSaleCheck: false,
   showConsignment: false,
   showDashboard: true,
 }, action) {
   switch (action.type) {
+    case 'APP_SHOW_SUPPLIERS_DIALOG':
+      return Object.assign({}, state, { showSuppliersDialog: true });
+    case 'APP_HIDE_SUPPLIERS_DIALOG':
+      return Object.assign({}, state, { showSuppliersDialog: false });
     case 'APP_SHOW_CATEGORIES_DIALOG':
       return Object.assign({}, state, { showCategoriesDialog: true });
     case 'APP_HIDE_CATEGORIES_DIALOG':
@@ -112,4 +126,3 @@ function AppReducer (state: AppState = {
 }
 
 export { AppActions, AppReducer };
-

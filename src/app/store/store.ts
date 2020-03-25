@@ -10,6 +10,7 @@ import { ProductActions, ProductReducer } from "../serv/product"
 import { CategoryActions, CategoryReducer } from "../serv/category"
 import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
+import { SupplierActions, SupplierReducer } from "../serv/supplier"
 import migrate from "db/migration";
 
 class DbService {
@@ -74,6 +75,7 @@ function createRootReducer() {
     saleCheck: SaleCheckReducer,
     consignment: ConsignmentReducer,
     registry: RegistryReducer,
+    supplier: SupplierReducer,
   });
 }
 
@@ -92,6 +94,7 @@ function devCreateStore() {
     ...RegistryActions,
     ...SaleCheckActions,
     ...ConsignmentActions,
+    ...SupplierActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
@@ -112,6 +115,7 @@ migrate(db)
   .then(res => {
     store.dispatch(RegistryActions.reloadUnits());
     store.dispatch(RegistryActions.reloadCategories());
+    store.dispatch(RegistryActions.reloadSuppliers());
     Promise.resolve("OK");
   })
   .catch(err => console.log(err));

@@ -57,6 +57,13 @@ class MainMenu extends React.Component {
             Категории
           </Menu.Item>
 
+          <Menu.Item
+            active={this.props.app.showSuppliersDialog}
+            onClick={() => this.props.openSuppliers()}
+          >
+            Поставщики
+          </Menu.Item>
+
         </Menu.Menu>
 
       </Menu>
