@@ -12,6 +12,7 @@ import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
 import { SupplierActions, SupplierReducer } from "../serv/supplier"
 import { ClientActions, ClientReducer } from "../serv/client"
+import { AclActions, AclReducer } from "../serv/acl"
 import migrate from "db/migration";
 
 class DbService {
@@ -78,6 +79,7 @@ function createRootReducer() {
     registry: RegistryReducer,
     supplier: SupplierReducer,
     client: ClientReducer,
+    acl: AclReducer,
   });
 }
 
@@ -98,6 +100,7 @@ function devCreateStore() {
     ...ConsignmentActions,
     ...SupplierActions,
     ...ClientActions,
+    ...AclActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?

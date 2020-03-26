@@ -4,12 +4,12 @@ import { Provider } from "react-redux";
 
 import "semantic-ui-css/semantic.min.css"
 
-import HomePage from "./page/home";
 import Store from "./store/store";
+import StartPage from "./page/start";
 
 ReactDom.render(
   <Provider store={Store}>
-    <HomePage />
+    <StartPage />
   </Provider>,
   document.getElementById("root")
 );

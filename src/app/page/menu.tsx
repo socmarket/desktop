@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { AppActions } from "../serv/app"
 import { Button, Menu } from "semantic-ui-react"
+import { AclActions } from "../serv/acl"
+import { AppActions } from "../serv/app"
 
 class MainMenu extends React.Component {
   render() {
@@ -71,6 +72,12 @@ class MainMenu extends React.Component {
             Клиенты
           </Menu.Item>
 
+          <Menu.Item
+            onClick={this.props.signOut}
+          >
+            Выйти
+          </Menu.Item>
+
         </Menu.Menu>
 
       </Menu>
@@ -84,5 +91,5 @@ const stateMap = (state) => {
   };
 }
 
-export default connect(stateMap, AppActions)(MainMenu);
+export default connect(stateMap, { ...AppActions, ...AclActions })(MainMenu);
 

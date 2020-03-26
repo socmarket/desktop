@@ -41,7 +41,6 @@ function setPrice(price, currencyId) {
   return function (dispatch, getState, { db }) {
     const { priceList: { currentProduct } } = getState();
     if (currentProduct.id > 0) {
-      console.log(Math.round(price * 100 + Number.EPSILON));
       return db.exec("insert into price(productId, price) values(?, ?)", [
         currentProduct.id,
         Math.round(price * 100 + Number.EPSILON)

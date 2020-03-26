@@ -16,7 +16,7 @@ function getLastKey(db) {
 const createMig = (db): Promise => {
   return new Promise<string>( (resolve, reject) => {
     console.log("Migrations metadata not found, initializing...");
-    db.get("create table migration(mkey varchar(255), mdate datetime default current_datetime)", (err, row) => {
+    db.get("create table migration(mkey varchar(255), mdate datetime default current_timestamp)", (err, row) => {
       if (err) {
         reject(err);
       } else {
