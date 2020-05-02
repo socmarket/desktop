@@ -3,11 +3,16 @@
   "name": "socmag-electro",
   "version": "1.0.0",
   "description": "SocMag POS",
-  "main": "src/app/main.ts",
+  "main": "dist/main.js",
   "license": "MIT",
+  "author": {
+    "name": "sherzod",
+    "email": "sherzod.gapirov@mail.ru"
+  },
   "dependencies": {
     "@nivo/pie": "^0.61.1",
     "crypto-js": "^4.0.0",
+    "electron-squirrel-startup": "^1.0.0",
     "moment": "^2.24.0",
     "nivo": "^0.31.0",
     "react": "^16.13.0",
@@ -27,6 +32,11 @@
     "@babel/preset-typescript": "^7.8.3",
     "@babel/register": "^7.8.6",
     "@babel/runtime": "^7.8.7",
+    "@electron-forge/cli": "6.0.0-beta.51",
+    "@electron-forge/maker-deb": "6.0.0-beta.51",
+    "@electron-forge/maker-rpm": "6.0.0-beta.51",
+    "@electron-forge/maker-squirrel": "6.0.0-beta.51",
+    "@electron-forge/maker-zip": "6.0.0-beta.51",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.2.0",
     "@types/redux-logger": "^3.0.7",
     "babel-loader": "^8.0.6",
@@ -65,6 +75,36 @@
     "build": "concurrently \"yarn build-main\" \"yarn build-rend\"",
     "build-main": "cross-env NODE_ENV=production webpack --config ./cnf/webpack.conf.main.prod.babel.js --colors",
     "build-rend": "cross-env NODE_ENV=production webpack --config ./cnf/webpack.conf.rend.prod.babel.js --colors",
-    "rebuild-sqlite": "yarn electron-rebuild -w sqlite3 -p"
+    "rebuild-sqlite": "yarn electron-rebuild -w sqlite3 -p",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "socmag_electro"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }
