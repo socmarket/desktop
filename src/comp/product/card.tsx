@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Product, ProductActions } from "serv/product"
 import { Grid, Form, Input, Select, TextArea, Button, Segment, Image, Label } from "semantic-ui-react"
+import { Product, ProductActions } from "../../serv/product"
 
 class ProductCard extends React.Component {
 

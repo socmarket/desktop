@@ -1,12 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
-import { SaleCheckActions } from "serv/salecheck"
 import {
   Header, Grid, Table, Form, Input, Select,
   TextArea, Button, Segment, Image,
   Label, Container, Menu, Message, Divider
 } from "semantic-ui-react"
+import { SaleCheckActions } from "../../serv/salecheck"
 
 class SaleCheck extends React.Component {
 

@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { ResponsivePie } from '@nivo/pie'
 import { Container, Grid, Form, Input, Table, Button, Segment, Image, Label } from "semantic-ui-react"
-import { AppActions } from "serv/app"
-import { DashboardActions } from "serv/dashboard"
+import { AppActions } from "../../serv/app"
+import { DashboardActions } from "../../serv/dashboard"
 
 class Dashboard extends React.Component {
 

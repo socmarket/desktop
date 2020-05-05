@@ -86,8 +86,8 @@
               "config": "./cnf/webpack.conf.rend.js",
               "entryPoints": [
                 {
-                  "html": "./src/app/index.html",
-                  "js": "./src/app/app.tsx",
+                  "html": "./src/index.html",
+                  "js": "./src/app.tsx",
                   "name": "main_window"
                 }
               ]

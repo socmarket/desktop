@@ -1,19 +1,20 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { AppActions } from "serv/app"
+
+import { AppActions } from "../serv/app"
 
 import MainMenu from "./menu";
 
-import UnitDialog from "comp/unit/unit";
-import PriceDialog from "comp/price/dialog";
-import ProductDialog from "comp/product/dialog";
-import CategoryDialog from "comp/category";
-import SupplierDialog from "comp/supplier";
-import ClientDialog from "comp/client";
+import UnitDialog from "../comp/unit/unit";
+import PriceDialog from "../comp/price/dialog";
+import ProductDialog from "../comp/product/dialog";
+import CategoryDialog from "../comp/category";
+import SupplierDialog from "../comp/supplier";
+import ClientDialog from "../comp/client";
 
-import Dashboard from "comp/dashboard";
-import SaleCheck from "comp/salecheck/salecheck.tsx";
-import Consignment from "comp/consignment/consignment.tsx";
+import Dashboard from "../comp/dashboard";
+import SaleCheck from "../comp/salecheck/salecheck.tsx";
+import Consignment from "../comp/consignment/consignment.tsx";
 
 class HomePage extends React.Component {
   render() {

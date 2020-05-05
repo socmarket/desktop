@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
-import { AppActions } from "serv/app"
-import { AclActions } from "serv/acl"
+import { AppActions } from "../serv/app"
+import { AclActions } from "../serv/acl"
 
 class LoginPage extends React.Component {
   render() {

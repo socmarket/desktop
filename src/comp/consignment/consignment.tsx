@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
-import { ConsignmentActions } from "serv/consignment"
+import { ConsignmentActions } from "../../serv/consignment"
 import {
   Header, Grid, Table, Form, Input, Select,
   TextArea, Button, Segment, Image,

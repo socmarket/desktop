@@ -2,10 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import { Header, Modal, Select, Grid, Form, Input, Table, Button, Segment, Image, Label, Container, Menu } from "semantic-ui-react"
-import { AppActions } from "serv/app"
-import { ClientActions } from "serv/client"
+import { AppActions } from "../../serv/app"
+import { SupplierActions } from "../../serv/supplier"
 
-class ClientDialog extends React.Component {
+class SupplierDialog extends React.Component {
 
   constructor(props) {
     super(props);
@@ -21,15 +21,15 @@ class ClientDialog extends React.Component {
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleContactsChange = this.handleContactsChange.bind(this);
     this.handleNotesChange = this.handleNotesChange.bind(this);
-    this.selectClient = this.selectClient.bind(this);
+    this.selectSupplier = this.selectSupplier.bind(this);
   }
 
   componentDidMount() {
-    this.props.setClientListFilter("");
+    this.props.setSupplierListFilter("");
   }
 
   handleFilterChange(event) {
-    this.props.setClientListFilter(event.target.value);
+    this.props.setSupplierListFilter(event.target.value);
   }
 
   handleNameChange(event) {
@@ -62,9 +62,9 @@ class ClientDialog extends React.Component {
   activate(event) {
     const act = () => {
       if (this.state.id < 0) {
-        this.createClient();
+        this.createSupplier();
       } else {
-        this.updateClient();
+        this.updateSupplier();
       }
     }
     if (event.key) {
@@ -76,9 +76,9 @@ class ClientDialog extends React.Component {
     }
   }
 
-  createClient() {
+  createSupplier() {
     if (this.state.id < 0 && this.state.name.length > 0) {
-      this.props.createClient(this.state);
+      this.props.createSupplier(this.state);
       setTimeout(() => {
         this.setState({
           id: -1,
@@ -90,9 +90,9 @@ class ClientDialog extends React.Component {
     }
   }
 
-  updateClient() {
+  updateSupplier() {
     if (this.state.id > 0 && this.state.name.length > 0) {
-      this.props.updateClient(this.state);
+      this.props.updateSupplier(this.state);
       setTimeout(() => {
         this.setState({
           id: -1,
@@ -104,8 +104,8 @@ class ClientDialog extends React.Component {
     }
   }
 
-  selectClient(idx) {
-    const items = this.props.client.items;
+  selectSupplier(idx) {
+    const items = this.props.supplier.items;
     if (idx >= 0 && idx < items.length) {
       const sup = items[idx];
       this.setState({
@@ -129,8 +129,8 @@ class ClientDialog extends React.Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          { this.props.client.items.map( (sup, idx) => (
-            <Table.Row key={sup.id} onClick={() => this.selectClient(idx)}>
+          { this.props.supplier.items.map( (sup, idx) => (
+            <Table.Row key={sup.id} onClick={() => this.selectSupplier(idx)}>
               <Table.Cell>{sup.id}</Table.Cell>
               <Table.Cell>{sup.name}</Table.Cell>
               <Table.Cell>{sup.contacts}</Table.Cell>
@@ -152,13 +152,13 @@ class ClientDialog extends React.Component {
           <Input
             className="icon"
             icon="search"
-            value={this.props.client.filterPattern}
+            value={this.props.supplier.filterPattern}
             onChange={this.handleFilterChange}
           />
         </Menu.Item>
         <Menu.Item position="right">
-          { !this.props.client.showForm && <Button icon="angle down" onClick={() => this.props.showClientForm()} /> }
-          { this.props.client.showForm && <Button icon="angle up" onClick={() => this.props.hideClientForm()} /> }
+          { !this.props.supplier.showForm && <Button icon="angle down" onClick={() => this.props.showSupplierForm()} /> }
+          { this.props.supplier.showForm && <Button icon="angle up" onClick={() => this.props.hideSupplierForm()} /> }
         </Menu.Item>
       </Menu>
     );
@@ -210,13 +210,13 @@ class ClientDialog extends React.Component {
   }
 
   private content() {
-    const formVisible = this.props.client.showForm;
+    const formVisible = this.props.supplier.showForm;
     const minHeight = 200;
     const maxHeight = formVisible ? 200 : 200 + this.state.formHeight;
     return (
       <Container>
         {this.menu()}
-        { this.props.client.showForm &&
+        { this.props.supplier.showForm &&
           <div className="ui segment">
             {this.card()}
           </div>
@@ -230,7 +230,7 @@ class ClientDialog extends React.Component {
 
   render() {
     return (
-      <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closeClients()}>
+      <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closeSuppliers()}>
         <Modal.Content>
           {this.content()}
         </Modal.Content>
@@ -242,9 +242,8 @@ class ClientDialog extends React.Component {
 const stateMap = (state) => {
   return {
     app: state.app,
-    client: state.client,
+    supplier: state.supplier,
   };
 }
 
-export default connect(stateMap, { ...AppActions, ...ClientActions })(ClientDialog);
-
+export default connect(stateMap, { ...AppActions, ...SupplierActions })(SupplierDialog);

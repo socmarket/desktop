@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Menu, Modal, Button, Input, Grid } from "semantic-ui-react"
-import { AppActions } from "serv/app"
+import { AppActions } from "../../serv/app"
 import ProductCard from "./card"
 import ProductList from "./list"
 

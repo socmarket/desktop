@@ -13,7 +13,7 @@ import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
 import { SupplierActions, SupplierReducer } from "../serv/supplier"
 import { ClientActions, ClientReducer } from "../serv/client"
 import { AclActions, AclReducer } from "../serv/acl"
-import migrate from "db/migration";
+import migrate from "../db/migration";
 
 class DbService {
 

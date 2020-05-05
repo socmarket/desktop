@@ -3,7 +3,6 @@ const path = require("path");
 module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
-    modules: ["./src/app", "./node_modules"]
   },
   module: {
     rules: [

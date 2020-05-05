@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import { Modal, Grid, Form, Input, Table, Button, Segment, Image, Label } from "semantic-ui-react"
-import { AppActions } from "serv/app"
-import { PriceActions } from "serv/price"
+import { AppActions } from "../../serv/app"
+import { PriceActions } from "../../serv/price"
 
 class PriceDialog extends React.Component {
 

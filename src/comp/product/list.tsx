@@ -1,9 +1,9 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { ProductActions } from "serv/product"
 import { Menu, Input, Button, Table, Segment, Container } from "semantic-ui-react"
 
 import ProductCard from "./card"
+import { ProductActions } from "../../serv/product"
 
 class ProductList extends React.Component {
 

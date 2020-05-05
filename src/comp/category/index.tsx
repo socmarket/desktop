@@ -2,8 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import { Header, Modal, Select, Grid, Form, Input, Table, Button, Segment, Image, Label, Container, Menu } from "semantic-ui-react"
-import { AppActions } from "serv/app"
-import { CategoryActions } from "serv/category"
+import { AppActions } from "../../serv/app"
+import { CategoryActions } from "../../serv/category"
 
 class CategoryDialog extends React.Component {
 

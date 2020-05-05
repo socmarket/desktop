@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import { AppActions } from "serv/app";
-import { AclActions } from "serv/acl";
+import { AppActions } from "../serv/app";
+import { AclActions } from "../serv/acl";
 
 import HomePage from "./home"
 import LoginPage from "./login"
