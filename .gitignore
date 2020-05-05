@@ -1,6 +1,8 @@
 socmag.db
 socmag.dev.db
 
+.webpack
+
 # Logs
 logs
 *.log

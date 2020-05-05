@@ -1,10 +1,10 @@
 const path = require("path");
-import HtmlWebpackPlugin from "html-webpack-plugin";
-
 
 module.exports = {
-  entry: "./src/app/main.ts",
-  target: "electron-main",
+  resolve: {
+    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+    modules: ["./src/app", "./node_modules"]
+  },
   module: {
     rules: [
       {
@@ -65,19 +65,20 @@ module.exports = {
           loader: "raw-loader",
         }
       },
+      {
+        test: /\.node$/,
+        use: 'node-loader',
+      },
+      {
+        test: /\.(m?js|node)$/,
+        parser: { amd: false },
+        use: {
+          loader: '@marshallofsound/webpack-asset-relocator-loader',
+          options: {
+            outputAssetBase: 'native_modules',
+          },
+        },
+      },
     ]
   },
-  externals: { 'sqlite3':'commonjs sqlite3' },
-  resolve: {
-    extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
-    modules: ["./src/app", "node_modules"]
-  },
-  output: {
-    path: path.resolve(__dirname, "..", "dist"),
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "./src/app/index.html"
-    })
-  ]
 };

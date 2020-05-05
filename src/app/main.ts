@@ -25,14 +25,17 @@ const createWindow = async () => {
   let win = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: isDevelopment ? { nodeIntegration: true } : { }
+    webPreferences: isDevelopment ? {
+      nodeIntegration: true,
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    } : {
+      nodeIntegration: true,
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    }
   })
 
-  if (isDevelopment) {
-    win.loadURL(`http://localhost:8080`)
-  } else {
-    win.loadFile("index.html");
-  }
+  win.webContents.openDevTools();
+  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   Promise.resolve({});
 }
