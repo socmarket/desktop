@@ -5,7 +5,21 @@ module.exports = {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },
   module: {
-    rules: [
+   rules: [
+       {
+          test: /sqlite3\.js$/,
+          use: {
+              loader: "string-replace-loader",
+              options: {
+                  multiple: [
+                      {
+                        search  : "var sqlite3 = require('./sqlite3-binding.js');",
+                        replace : "var sqlite3 = require('./binding/electron-v8.2-linux-x64/node_sqlite3.node');"
+                      }
+                  ],
+              },
+          },
+      },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
