@@ -4,19 +4,6 @@ import { app, BrowserWindow } from "electron";
 
 const isDevelopment = process.env.NODE_ENV !== "production"
 
-if (isDevelopment) {
-  require('electron-debug')();
-}
-
-const installExtensions = async () => {
-  const installer = require('electron-devtools-installer');
-  const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
-  return Promise.all(
-    extensions.map(name => installer.default(installer[name], forceDownload))
-  ).catch(console.log);
-};
-
 const createWindow = async () => {
   if (isDevelopment) {
     await installExtensions();
@@ -34,7 +21,9 @@ const createWindow = async () => {
     }
   })
 
-  win.webContents.openDevTools();
+  if (isDevelopment) {
+    win.webContents.openDevTools();
+  }
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   Promise.resolve({});
