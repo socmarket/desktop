@@ -36,11 +36,13 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: "file-loader"
+        use: "file-loader",
+        publicPath: ".."
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader'
+        use: 'file-loader',
+        publicPath: ".."
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
@@ -48,7 +50,8 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/octet-stream'
+            mimetype: 'application/octet-stream',
+            publicPath: ".."
           }
         }
       },
@@ -58,7 +61,8 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff'
+            mimetype: 'application/font-woff',
+            publicPath: ".."
           }
         }
       },
@@ -68,7 +72,8 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff'
+            mimetype: 'application/font-woff',
+            publicPath: ".."
           }
         }
       },

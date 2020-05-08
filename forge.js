@@ -19,7 +19,7 @@ module.exports = {
             {
               js: "./src/app.tsx",
               html: "./src/index.html",
-              name: "main_window"
+              name: "main_window",
             }
           ]
         }
