@@ -1,4 +1,5 @@
 const path = require("path");
+const proc = require("process");
 
 module.exports = {
   resolve: {
@@ -14,7 +15,7 @@ module.exports = {
                   multiple: [
                       {
                         search  : "var sqlite3 = require('./sqlite3-binding.js');",
-                        replace : "var sqlite3 = require('./binding/electron-v8.2-linux-x64/node_sqlite3.node');"
+                        replace : `var sqlite3 = require('./binding/electron-v8.2-${proc.platform}-${proc.arch}/node_sqlite3.node');`
                       }
                   ],
               },
@@ -36,13 +37,15 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: "file-loader",
-        publicPath: ".."
+        use: {
+          loader: "file-loader",
+        }
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader',
-        publicPath: ".."
+        use: {
+          loader: 'file-loader',
+        }
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
@@ -51,7 +54,6 @@ module.exports = {
           options: {
             limit: 10000,
             mimetype: 'application/octet-stream',
-            publicPath: ".."
           }
         }
       },
@@ -62,7 +64,6 @@ module.exports = {
           options: {
             limit: 10000,
             mimetype: 'application/font-woff',
-            publicPath: ".."
           }
         }
       },
@@ -73,7 +74,6 @@ module.exports = {
           options: {
             limit: 10000,
             mimetype: 'application/font-woff',
-            publicPath: ".."
           }
         }
       },
