@@ -1,69 +1,24 @@
-import path from "path";
-const file = require.context("./steps", true, /\.sql$/);
-
 function getLastKey(db) {
-  return new Promise( (resolve, reject) => {
-    db.get("select max(mkey) as maxmkey from migration", (err, row) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(row["maxmkey"]);
-      }
-    });
-  });
+  return db.selectOne("select max(mkey) as maxmkey from migration")
+    .then(row => row["maxmkey"])
+  ;
 }
 
 const createMig = (db): Promise => {
-  return new Promise<string>( (resolve, reject) => {
-    console.log("Migrations metadata not found, initializing...");
-    db.get("create table migration(mkey varchar(255), mdate datetime default current_timestamp)", (err, row) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(row);
-      }
-    });
-  });
+  console.log("Migrations metadata not found, initializing...");
+  return db.exec("create table migration(mkey varchar(255), mdate datetime default current_timestamp)");
 }
 
 function runUpdate(db, step) {
-  return new Promise<string>( (resolve, reject) => {
-    console.log("Applying " + step.key);
-    console.log("SQL: " + step.content);
-    db.run("begin", (err, res) => {
-      if (err) {
-        reject(err);
-      } else {
-        db.exec(step.content, (err, res) => {
-          if (err) {
-            console.log("Failed to apply " + step.key);
-            console.log("Rolling back...");
-            console.log(err);
-            db.run("rollback", function (res, _err) {
-              reject(err);
-            });
-          } else {
-            db.run("insert into migration(mkey) values(?)", [ step.key ], (_res, _err) =>{
-              if (_err) {
-                db.run("rollback", function (res, _err) {
-                  reject(err);
-                });
-              } else {
-                db.run("commit", function (_res, err) {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    console.log("Applied " + step.key);
-                    resolve("OK");
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  });
+  return db.exec("begin")
+    .then(async () => console.log(`migration step: ${step.key}`))
+    .then(_ => db.batch(step.content))
+    .then(_ => db.exec("insert into migration(mkey) values(?)", [ step.key ]))
+    .then(_ => db.exec("commit"))
+    .catch(err => {
+      return db.exec("rollback");
+    })
+  ;
 }
 
 function runUpdates(db, lastKey, steps) {
@@ -74,7 +29,7 @@ function runUpdates(db, lastKey, steps) {
   } else {
     console.log(updates.length + " step(s) pending...");
   }
-  updates.reduce(async (prev, step) => {
+  return updates.reduce(async (prev, step) => {
     await prev;
     return runUpdate(db, step);
   }, Promise.resolve());
@@ -92,9 +47,23 @@ function init(db, steps): Promise<string> {
 }
 
 export default function migrate(db): Promise<string>  {
-  const steps = file.keys().map(key => ({
-    key: path.basename(key),
-    content: file(key).default
-  })).sort((a, b) => a.key.localeCompare(b.key))
+  const files = [
+    { key: "20200317A.sql", content: require("./steps/20200317A.sql").default },
+    { key: "20200317B.sql", content: require("./steps/20200317B.sql").default },
+    { key: "20200318A.sql", content: require("./steps/20200318A.sql").default },
+    { key: "20200318B.sql", content: require("./steps/20200318B.sql").default },
+    { key: "20200318C.sql", content: require("./steps/20200318C.sql").default },
+    { key: "20200318D.sql", content: require("./steps/20200318D.sql").default },
+    { key: "20200319A.sql", content: require("./steps/20200319A.sql").default },
+    { key: "20200319B.sql", content: require("./steps/20200319B.sql").default },
+    { key: "20200320A.sql", content: require("./steps/20200320A.sql").default },
+    { key: "20200322A.sql", content: require("./steps/20200322A.sql").default },
+    { key: "20200323A.sql", content: require("./steps/20200323A.sql").default },
+    { key: "20200323B.sql", content: require("./steps/20200323B.sql").default },
+    { key: "20200323C.sql", content: require("./steps/20200323C.sql").default },
+    { key: "20200325A.sql", content: require("./steps/20200325A.sql").default },
+    { key: "20200326A.sql", content: require("./steps/20200326A.sql").default },
+  ];
+  const steps = files.sort((a, b) => a.key.localeCompare(b.key))
   return init(db, steps);
 }

@@ -5,25 +5,25 @@ import { app, BrowserWindow } from "electron";
 const isDevelopment = process.env.NODE_ENV !== "production"
 
 const createWindow = async () => {
-  if (isDevelopment) {
-    await installExtensions();
-  }
+
+  let webp = {
+    preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    contextIsolation: true
+  };
 
   let win = new BrowserWindow({
     width: 800,
     height: 600,
-    webPreferences: isDevelopment ? {
-      nodeIntegration: true,
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    } : {
-      nodeIntegration: true,
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    }
+    webPreferences: webp
   })
 
+  win.webContents.openDevTools();
+  /*
   if (isDevelopment) {
     win.webContents.openDevTools();
   }
+  */
+
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   Promise.resolve({});

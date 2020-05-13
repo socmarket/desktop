@@ -15,54 +15,8 @@ import { ClientActions, ClientReducer } from "../serv/client"
 import { AclActions, AclReducer } from "../serv/acl"
 import migrate from "../db/migration";
 
-class DbService {
-
-  exec(sql, params) {
-    return new Promise((resolve, reject) => {
-      db.run(sql, params, function (err, res) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve("OK");
-        }
-      })
-    });
-  }
-
-  select(sql, params) {
-    return new Promise((resolve, reject) => {
-      db.all(sql, params, function (err, rows) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      })
-    });
-  }
-
-  selectOne(sql, params) {
-    return new Promise((resolve, reject) => {
-      db.get(sql, params, function (err, rows) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      })
-    });
-  }
-}
-
-
-let sqlite3 = require("sqlite3").verbose();
-let db = (process.env.NODE_ENV === "development") ?
-  new sqlite3.Database("socmag.dev.db") :
-    new sqlite3.Database("socmag.db");
-let dbService = new DbService(db);
-
 const thunkM = thunk.withExtraArgument({
-  db: dbService
+  db: window.db
 });
 
 function createRootReducer() {
@@ -117,13 +71,12 @@ function prodCreateStore() {
 
 const store = (process.env.NODE_ENV === "development") ? devCreateStore() : prodCreateStore();
 
-migrate(db)
-  .then(res => {
+migrate(window.db)
+  .then(async () => {
     store.dispatch(RegistryActions.reloadUnits());
     store.dispatch(RegistryActions.reloadCategories());
     store.dispatch(RegistryActions.reloadSuppliers());
     store.dispatch(RegistryActions.reloadClients());
-    Promise.resolve("OK");
   })
   .catch(err => console.log(err));
 
