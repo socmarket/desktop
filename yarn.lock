@@ -1154,6 +1154,13 @@
   dependencies:
     cross-spawn "^7.0.1"
 
+"@marshallofsound/webpack-asset-relocator-loader@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@marshallofsound/webpack-asset-relocator-loader/-/webpack-asset-relocator-loader-0.5.0.tgz#e764e9c1edf7dfc0db7aa5d67767f4f6f0a681c5"
+  integrity sha512-X50R97SiDNTpOckiplghBo63Vo8GxSsr98s3VTwEu3qyVr+TY4I91KRtKelEj2OAfgMnkTymw89+psFVq8aB1g==
+  dependencies:
+    sourcemap-codec "^1.4.4"
+
 "@nivo/colors@0.61.0":
   version "0.61.0"
   resolved "https://registry.yarnpkg.com/@nivo/colors/-/colors-0.61.0.tgz#5af2a6d8b1d22c786950cc9fb07c216a80a541ff"
@@ -5181,11 +5188,6 @@ node-libs-browser@^2.2.1:
     util "^0.11.0"
     vm-browserify "^1.0.1"
 
-node-loader@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/node-loader/-/node-loader-0.6.0.tgz#c797ef51095ed5859902b157f6384f6361e05ae8"
-  integrity sha1-x5fvUQle1YWZArFX9jhPY2HgWug=
-
 node-modules-regexp@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/node-modules-regexp/-/node-modules-regexp-1.0.0.tgz#8d9dbe28964a4ac5712e9131642107c71e90ec40"
@@ -6870,6 +6872,11 @@ source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.0, source-map@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
+
+sourcemap-codec@^1.4.4:
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
+  integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
 
 spawn-rx@^3.0.0:
   version "3.0.0"

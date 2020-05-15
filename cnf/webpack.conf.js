@@ -6,21 +6,7 @@ module.exports = {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },
   module: {
-   rules: [
-       {
-          test: /sqlite3\.js$/,
-          use: {
-              loader: "string-replace-loader",
-              options: {
-                  multiple: [
-                      {
-                        search  : "var sqlite3 = require('./sqlite3-binding.js');",
-                        replace : `var sqlite3 = require('./binding/electron-v8.2-${proc.platform}-${proc.arch}/node_sqlite3.node');`
-                      }
-                  ],
-              },
-          },
-      },
+    rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
@@ -84,8 +70,22 @@ module.exports = {
         }
       },
       {
-        test: /\.node$/,
-        use: 'node-loader',
+        test: /sqlite3\.js$/,
+        use: {
+          loader: "string-replace-loader",
+          options: {
+            search  : "var sqlite3 = require('./sqlite3-binding.js');",
+            replace : `var sqlite3 = require('./binding/electron-v8.2-${proc.platform}-${proc.arch}/node_sqlite3.node');`
+          },
+        },
+      },
+      {
+        test: /\.(m?js|node)$/,
+        use: {
+          loader: '@marshallofsound/webpack-asset-relocator-loader',
+          options: {
+          }
+        }
       },
     ]
   },

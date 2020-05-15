@@ -2,12 +2,6 @@ module.exports = {
   packagerConfig: {
     quiet: false
   },
-  hooks: {
-    packageAfterCopy: async () => {
-    },
-    generateAssets: async () => {
-    }
-  },
   plugins: [
     [
       "@electron-forge/plugin-webpack",
