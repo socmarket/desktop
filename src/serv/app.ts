@@ -15,6 +15,10 @@ const AppActions = {
     type: 'APP_OPEN_DASHBOARD',
   }),
 
+  openSaleJournal: () => ({
+    type: 'APP_OPEN_SALE_JOURNAL',
+  }),
+
   openProducts: () => ({
     type: 'APP_SHOW_PRODUCTS_DIALOG',
   }),
@@ -90,6 +94,7 @@ function AppReducer (state: AppState = {
   showSaleCheck: false,
   showConsignment: false,
   showDashboard: true,
+  showSaleJournal: false,
 }, action) {
   switch (action.type) {
     case 'APP_SHOW_CLIENTS_DIALOG':
@@ -119,18 +124,28 @@ function AppReducer (state: AppState = {
     case 'APP_OPEN_DASHBOARD':
       return Object.assign({}, state, {
         showDashboard: true,
+        showSaleJournal: false,
+        showSaleCheck: false,
+        showConsignment: false,
+      });
+    case 'APP_OPEN_SALE_JOURNAL':
+      return Object.assign({}, state, {
+        showDashboard: false,
+        showSaleJournal: true,
         showSaleCheck: false,
         showConsignment: false,
       });
     case 'APP_OPEN_CONSIGNMENT':
       return Object.assign({}, state, {
         showDashboard: false,
+        showSaleJournal: false,
         showSaleCheck: false,
         showConsignment: true,
       });
     case 'APP_OPEN_SALECHECK':
       return Object.assign({}, state, {
         showDashboard: false,
+        showSaleJournal: false,
         showSaleCheck: true,
         showConsignment: false,
       });

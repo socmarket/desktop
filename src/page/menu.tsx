@@ -16,6 +16,13 @@ class MainMenu extends React.Component {
         </Menu.Item>
 
         <Menu.Item
+          active={this.props.app.showSaleJournal}
+          onClick={() => this.props.openSaleJournal()}
+        >
+          Журнал продаж
+        </Menu.Item>
+
+        <Menu.Item
           active={this.props.app.showSaleCheck}
           onClick={() => this.props.openSaleCheck()}
         >

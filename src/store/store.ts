@@ -5,6 +5,7 @@ import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { PriceActions, PriceReducer } from "../serv/price"
 import { DashboardActions, DashboardReducer } from "../serv/dashboard"
+import { SaleJournalActions, SaleJournalReducer } from "../serv/salejournal"
 import { RegistryActions, RegistryReducer } from "../serv/registry"
 import { ProductActions, ProductReducer } from "../serv/product"
 import { CategoryActions, CategoryReducer } from "../serv/category"
@@ -25,6 +26,7 @@ function createRootReducer() {
     unitList: UnitReducer,
     counter: CounterReducer,
     dashboard: DashboardReducer,
+    saleJournal: SaleJournalReducer,
     priceList: PriceReducer,
     productList: ProductReducer,
     categoryList: CategoryReducer,
@@ -47,6 +49,7 @@ function devCreateStore() {
     ...PriceActions,
     ...CounterActions,
     ...DashboardActions,
+    ...SaleJournalActions,
     ...ProductActions,
     ...CategoryActions,
     ...RegistryActions,
