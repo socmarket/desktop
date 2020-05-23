@@ -14,10 +14,14 @@ import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
 import { SupplierActions, SupplierReducer } from "../serv/supplier"
 import { ClientActions, ClientReducer } from "../serv/client"
 import { AclActions, AclReducer } from "../serv/acl"
+import { PrinterActions, PrinterReducer } from "../serv/printer"
+import { SettingsActions, SettingsReducer } from "../serv/settings"
+
 import migrate from "../db/migration";
 
 const thunkM = thunk.withExtraArgument({
-  db: window.db
+  db: window.db,
+  usb: window.usb,
 });
 
 function createRootReducer() {
@@ -36,6 +40,8 @@ function createRootReducer() {
     supplier: SupplierReducer,
     client: ClientReducer,
     acl: AclReducer,
+    printer: PrinterReducer,
+    settings: SettingsReducer,
   });
 }
 
@@ -58,6 +64,8 @@ function devCreateStore() {
     ...SupplierActions,
     ...ClientActions,
     ...AclActions,
+    ...PrinterActions,
+    ...SettingsActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?

@@ -122,7 +122,7 @@ const AclActions = {
 function AclReducer (state: AclState = {
   currentUser: emptyUser,
   lastError: "",
-  authenticated: false,
+  authenticated: true,
   login: "",
   password: "",
   password2: "",

@@ -7,6 +7,7 @@ export interface AppState {
   showClientsDialog: boolean;
   showSaleCheck: boolean;
   showConsignment: boolean;
+  showSettings: boolean;
 }
 
 const AppActions = {
@@ -67,6 +68,14 @@ const AppActions = {
     type: 'APP_HIDE_UNITS_DIALOG',
   }),
 
+  openSettings: () => ({
+    type: 'APP_SHOW_SETTINGS_DIALOG',
+  }),
+
+  closeSettings: () => ({
+    type: 'APP_HIDE_SETTINGS_DIALOG',
+  }),
+
   openWarehouse: () => ({
     type: 'APP_SHOW_WAREHOUSE_DIALOG',
   }),
@@ -95,6 +104,7 @@ function AppReducer (state: AppState = {
   showConsignment: false,
   showDashboard: true,
   showSaleJournal: false,
+  showSettingsDialog: true,
 }, action) {
   switch (action.type) {
     case 'APP_SHOW_CLIENTS_DIALOG':
@@ -121,6 +131,10 @@ function AppReducer (state: AppState = {
       return Object.assign({}, state, { showUnitsDialog: true });
     case 'APP_HIDE_UNITS_DIALOG':
       return Object.assign({}, state, { showUnitsDialog: false });
+    case 'APP_SHOW_SETTINGS_DIALOG':
+      return Object.assign({}, state, { showSettingsDialog: true });
+    case 'APP_HIDE_SETTINGS_DIALOG':
+      return Object.assign({}, state, { showSettingsDialog: false });
     case 'APP_OPEN_DASHBOARD':
       return Object.assign({}, state, {
         showDashboard: true,
