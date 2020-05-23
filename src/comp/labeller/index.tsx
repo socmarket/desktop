@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { ResponsivePie } from '@nivo/pie'
 import { Modal, Grid, Form, Input, Table, Button, Segment, Image, Label } from "semantic-ui-react"
-import Printer from "./printer"
+import LabellerCard from "./card.tsx"
 import { AppActions } from "../../serv/app"
-import { SettingsActions } from "../../serv/settings"
+import { LabellerActions } from "../../serv/labeller"
 
-class SettingsDialog extends React.Component {
+class LabellerDialog extends React.Component {
 
   constructor(props) {
     super(props);
@@ -15,9 +15,9 @@ class SettingsDialog extends React.Component {
 
   render() {
     return (
-      <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closeSettings()}>
+      <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closeLabeller()}>
         <Modal.Content>
-          <Printer />
+          <LabellerCard />
         </Modal.Content>
       </Modal>
     );
@@ -27,8 +27,9 @@ class SettingsDialog extends React.Component {
 
 const stateMap = (state) => {
   return {
-    data: state.settings,
+    data: state.labeller,
   };
 }
 
-export default connect(stateMap, { ...AppActions, ...SettingsActions })(SettingsDialog);
+export default connect(stateMap, { ...AppActions, ...LabellerActions })(LabellerDialog);
+

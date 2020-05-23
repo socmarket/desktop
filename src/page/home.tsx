@@ -12,6 +12,7 @@ import CategoryDialog from "../comp/category";
 import SupplierDialog from "../comp/supplier";
 import ClientDialog from "../comp/client";
 import SettingsDialog from "../comp/settings";
+import LabellerDialog from "../comp/labeller";
 
 import Dashboard from "../comp/dashboard";
 import SaleJournal from "../comp/salejournal/salejournal.tsx";
@@ -32,6 +33,7 @@ class HomePage extends React.Component {
         { this.props.app.showSuppliersDialog && <SupplierDialog /> }
         { this.props.app.showClientsDialog && <ClientDialog /> }
         { this.props.app.showSettingsDialog && <SettingsDialog /> }
+        { this.props.app.showLabellerDialog && <LabellerDialog /> }
         { this.props.app.showSaleCheck && <SaleCheck /> }
         { this.props.app.showConsignment && <Consignment /> }
       </Fragment>

@@ -2,12 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { Grid, Form, Input, Select, TextArea, Button, Segment, Image, Label } from "semantic-ui-react"
 import { Product, ProductActions } from "../../serv/product"
+import { LabellerActions } from "../../serv/labeller"
 
 class ProductCard extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { ...(this.props.productList.currentProduct) };
+    this.state = {
+      ...(this.props.productList.currentProduct),
+      useGenBarcode: false,
+    };
     this.handleBarcodeActivate = this.handleBarcodeActivate.bind(this);
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -17,6 +21,7 @@ class ProductCard extends React.Component {
     this.handleCreateProduct = this.handleCreateProduct.bind(this);
     this.handleUpdateProduct = this.handleUpdateProduct.bind(this);
     this.handleResetProduct = this.handleResetProduct.bind(this);
+    this.genBarcode = this.genBarcode.bind(this);
   }
 
   componentDidUpdate() {
@@ -32,6 +37,19 @@ class ProductCard extends React.Component {
     this.props.changeCurrentProduct(this.state);
   }
 
+  genBarcode() {
+    this.props.genBarcode();
+    const self = this;
+    setTimeout(() => {
+      this.setState({
+        barcode: this.props.newBarcode,
+        useGenBarcode: true
+      }, () => {
+        self.updateForm()
+      });
+    }, 200);
+  }
+
   handleResetProduct() {
     this.setState({
       barcode: "",
@@ -39,6 +57,7 @@ class ProductCard extends React.Component {
       notes: "",
       unitId: 1,
       categoryId: -1,
+      useGenBarcode: false
     }, this.updateForm);
   }
 
@@ -53,7 +72,7 @@ class ProductCard extends React.Component {
   }
 
   handleBarcodeChange(event) {
-    this.setState({ barcode: event.target.value });
+    this.setState({ barcode: event.target.value, useGenBarcode: false });
   }
 
   handleTitleChange(event) {
@@ -81,6 +100,7 @@ class ProductCard extends React.Component {
       notes: "",
       unitId: 1,
       categoryId: -1,
+      useGenBarcode: false,
     });
   }
 
@@ -89,8 +109,9 @@ class ProductCard extends React.Component {
   }
 
   render() {
+    const barcode = this.state.useGenBarcode ? this.props.newBarcode : this.state.barcode;
     const isNewProduct: boolean = this.state.id <= 0;
-    const isEmpty: boolean = this.state.barcode === "" ||  this.state.title === "";
+    const isEmpty: boolean = barcode === "" ||  this.state.title === "";
     return (
       <Grid columns={2}>
         <Grid.Row>
@@ -100,14 +121,17 @@ class ProductCard extends React.Component {
           <Grid.Column width={10}>
             <Form>
               <Form.Group>
-                <Form.Input width={10}
+                <Form.Input width={9}
                   label="Штрихкод"
                   error={isNewProduct}
                   onKeyPress={this.handleBarcodeActivate}
                   onBlur={this.handleBarcodeActivate}
                   onChange={this.handleBarcodeChange}
-                  value={this.state.barcode}
+                  value={barcode}
                   autoFocus
+                  action={
+                    <Button width={1} icon="plus" onClick={this.genBarcode} />
+                  }
                 />
                 <Form.Select width={6} label="Ед. изм." fluid
                   options={this.props.unitOptions}
@@ -168,7 +192,8 @@ const stateMap = (state) => {
     unitOptions: state.registry.unitOptions,
     categoryOptions: state.registry.categoryOptions,
     productList: state.productList,
+    newBarcode: state.labeller.newBarcode,
   };
 }
 
-export default connect(stateMap, ProductActions)(ProductCard);
+export default connect(stateMap, { ...ProductActions, ...LabellerActions })(ProductCard);

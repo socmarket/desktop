@@ -87,6 +87,13 @@ class MainMenu extends React.Component {
           </Menu.Item>
 
           <Menu.Item
+            active={this.props.app.showLabellerDialog}
+            onClick={() => this.props.openLabeller()}
+          >
+            Маркировка
+          </Menu.Item>
+
+          <Menu.Item
             onClick={this.props.signOut}
           >
             Выйти
@@ -106,4 +113,3 @@ const stateMap = (state) => {
 }
 
 export default connect(stateMap, { ...AppActions, ...AclActions })(MainMenu);
-

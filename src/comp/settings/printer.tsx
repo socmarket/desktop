@@ -12,8 +12,6 @@ class Printer extends React.Component {
     super(props);
     this.state = {
       code: "BEEP\n",
-      vid: 0,
-      pid: 0,
     };
     this.print = this.print.bind(this);
     this.onCodeChanged = this.onCodeChanged.bind(this);
@@ -25,7 +23,7 @@ class Printer extends React.Component {
   }
 
   print() {
-    this.props.print(this.state.vid, this.state.pid, this.state.code);
+    this.props.print(this.state.code);
   }
 
   onCodeChanged(event) {
@@ -35,10 +33,7 @@ class Printer extends React.Component {
   }
 
   selectPrinter(vid, pid) {
-    this.setState({
-      vid: vid,
-      pid: pid,
-    });
+    this.props.selectPrinter(vid, pid);
   }
 
   table() {

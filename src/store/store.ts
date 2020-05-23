@@ -16,6 +16,7 @@ import { ClientActions, ClientReducer } from "../serv/client"
 import { AclActions, AclReducer } from "../serv/acl"
 import { PrinterActions, PrinterReducer } from "../serv/printer"
 import { SettingsActions, SettingsReducer } from "../serv/settings"
+import { LabellerActions, LabellerReducer } from "../serv/labeller"
 
 import migrate from "../db/migration";
 
@@ -42,6 +43,7 @@ function createRootReducer() {
     acl: AclReducer,
     printer: PrinterReducer,
     settings: SettingsReducer,
+    labeller: LabellerReducer,
   });
 }
 
@@ -66,6 +68,7 @@ function devCreateStore() {
     ...AclActions,
     ...PrinterActions,
     ...SettingsActions,
+    ...LabellerActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?

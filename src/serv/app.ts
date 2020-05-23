@@ -5,9 +5,10 @@ export interface AppState {
   showCategoriesDialog: boolean;
   showSuppliersDialog: boolean;
   showClientsDialog: boolean;
+  showSettingsDialog: boolean;
+  showLabellerDialog: boolean;
   showSaleCheck: boolean;
   showConsignment: boolean;
-  showSettings: boolean;
 }
 
 const AppActions = {
@@ -76,6 +77,14 @@ const AppActions = {
     type: 'APP_HIDE_SETTINGS_DIALOG',
   }),
 
+  openLabeller: () => ({
+    type: 'APP_SHOW_LABELLER_DIALOG',
+  }),
+
+  closeLabeller: () => ({
+    type: 'APP_HIDE_LABELLER_DIALOG',
+  }),
+
   openWarehouse: () => ({
     type: 'APP_SHOW_WAREHOUSE_DIALOG',
   }),
@@ -96,7 +105,7 @@ const AppActions = {
 
 function AppReducer (state: AppState = {
   showPriceDialog: false,
-  showProductsDialog: false,
+  showProductsDialog: true,
   showCategoriesDialog: false,
   showSuppliersDialog: false,
   showClientsDialog: false,
@@ -104,7 +113,8 @@ function AppReducer (state: AppState = {
   showConsignment: false,
   showDashboard: true,
   showSaleJournal: false,
-  showSettingsDialog: true,
+  showSettingsDialog: false,
+  showLabellerDialog: false,
 }, action) {
   switch (action.type) {
     case 'APP_SHOW_CLIENTS_DIALOG':
@@ -135,6 +145,10 @@ function AppReducer (state: AppState = {
       return Object.assign({}, state, { showSettingsDialog: true });
     case 'APP_HIDE_SETTINGS_DIALOG':
       return Object.assign({}, state, { showSettingsDialog: false });
+    case 'APP_SHOW_LABELLER_DIALOG':
+      return Object.assign({}, state, { showLabellerDialog: true });
+    case 'APP_HIDE_LABELLER_DIALOG':
+      return Object.assign({}, state, { showLabellerDialog: false });
     case 'APP_OPEN_DASHBOARD':
       return Object.assign({}, state, {
         showDashboard: true,

@@ -2,6 +2,8 @@ export interface PrinterState {
   items: Array,
   errorMsg: String,
   rescanInProgress: Boolean,
+  vid: int,
+  pid: int,
 }
 
 const printerRescanStarted = () => ({
@@ -18,6 +20,12 @@ const printerRescanned = (items) => ({
   items: items,
 })
 
+const printerSelected = (vid, pid) => ({
+  type: "PRINTER_SELECTED",
+  vid: vid,
+  pid: pid,
+})
+
 function rescanPrinters() {
   return function (dispatch, getState, { db, usb }) {
     dispatch(printerRescanStarted());
@@ -32,9 +40,10 @@ function rescanPrinters() {
   };
 }
 
-function exec(vid, pid, code) {
+function print(code) {
   return function (dispatch, getState, { db, usb }) {
-    usb.open(vid, pid)
+    const { printer } = getState();
+    usb.open(printer.vid, printer.pid)
       .then(_ => usb.write(code))
       .then(_ => usb.close())
       .catch(err => {
@@ -44,15 +53,24 @@ function exec(vid, pid, code) {
   };
 }
 
+function selectPrinter(vid, pid) {
+  return function (dispatch, getState, { db, usb }) {
+    dispatch(printerSelected(vid, pid));
+  };
+}
+
 const PrinterActions = {
   rescanPrinters: rescanPrinters,
-  print: exec,
+  print: print,
+  selectPrinter: selectPrinter,
 };
 
 function PrinterReducer (state: PrinterState = {
   list: [],
   errorMsg: "",
   rescanInProgress: false,
+  vid: 0,
+  pid: 0,
 }, action) {
   switch (action.type) {
     case "PRINTER_RESCAN_STARTED":
@@ -70,6 +88,11 @@ function PrinterReducer (state: PrinterState = {
         list: action.items,
         errorMsg: "",
         rescanInProgress: false,
+      });
+    case "PRINTER_SELECTED":
+      return Object.assign({}, state, {
+        vid: action.vid,
+        pid: action.pid,
       });
     default:
       return state;

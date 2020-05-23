@@ -72,6 +72,7 @@ function init() {
 
     selectOne: function (sql, params) {
       return new Promise((resolve, reject) => {
+        console.log(`exec: ${sql}`);
         _db.get(sql, params, function (err, rows) {
           if (err) {
             reject(err);
