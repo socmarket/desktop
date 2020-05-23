@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Grid, Form, Input, Select, TextArea, Button, Segment, Image, Label } from "semantic-ui-react"
+import { Grid, Form, Card, Input, Select, TextArea, Button, Segment, Image, Label } from "semantic-ui-react"
 import { Product, ProductActions } from "../../serv/product"
 import { LabellerActions } from "../../serv/labeller"
 
@@ -11,6 +11,7 @@ class ProductCard extends React.Component {
     this.state = {
       ...(this.props.productList.currentProduct),
       useGenBarcode: false,
+      labelCount: 1,
     };
     this.handleBarcodeActivate = this.handleBarcodeActivate.bind(this);
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
@@ -21,7 +22,9 @@ class ProductCard extends React.Component {
     this.handleCreateProduct = this.handleCreateProduct.bind(this);
     this.handleUpdateProduct = this.handleUpdateProduct.bind(this);
     this.handleResetProduct = this.handleResetProduct.bind(this);
+    this.handleLabelCountChange = this.handleLabelCountChange.bind(this);
     this.genBarcode = this.genBarcode.bind(this);
+    this.printLabel = this.printLabel.bind(this);
   }
 
   componentDidUpdate() {
@@ -35,6 +38,10 @@ class ProductCard extends React.Component {
 
   private updateForm() {
     this.props.changeCurrentProduct(this.state);
+  }
+
+  printLabel() {
+    this.props.printLabel(this.state.barcode, this.state.title, this.state.labelCount);
   }
 
   genBarcode() {
@@ -91,6 +98,10 @@ class ProductCard extends React.Component {
     this.setState({ categoryId: data.value });
   }
 
+  handleLabelCountChange(event, data) {
+    this.setState({ labelCount: data.value });
+  }
+
   handleCreateProduct() {
     this.props.createProduct(this.state);
     this.setState({
@@ -116,12 +127,38 @@ class ProductCard extends React.Component {
       <Grid columns={2}>
         <Grid.Row>
           <Grid.Column width={6}>
-            <Image fluid bordered rounded src="https://picsum.photos/200/250" />
+            <Card>
+              <Card.Content extra>
+                <Button fluid basic color="red" onClick={this.genBarcode}>Новый штрихкод</Button>
+              </Card.Content>
+              <Card.Content header="Печать этикеток" />
+              <Card.Content extra>
+                <Input
+                  label="#"
+                  size="mini"
+                  value={this.state.labelCount}
+                  onChange={this.handleLabelCountChange}
+                />
+              </Card.Content>
+              <Card.Content extra>
+                <Button
+                  fluid basic
+                  color="green"
+                  onClick={this.printLabel}
+                  disabled={this.state.id <= 0}
+                >Печать</Button>
+              </Card.Content>
+              {this.props.errorMsg.length > 0 &&
+                <Card.Content>
+                  {this.props.errorMsg}
+                </Card.Content>
+              }
+            </Card>
           </Grid.Column>
           <Grid.Column width={10}>
             <Form>
               <Form.Group>
-                <Form.Input width={9}
+                <Form.Input width={10}
                   label="Штрихкод"
                   error={isNewProduct}
                   onKeyPress={this.handleBarcodeActivate}
@@ -129,9 +166,6 @@ class ProductCard extends React.Component {
                   onChange={this.handleBarcodeChange}
                   value={barcode}
                   autoFocus
-                  action={
-                    <Button width={1} icon="plus" onClick={this.genBarcode} />
-                  }
                 />
                 <Form.Select width={6} label="Ед. изм." fluid
                   options={this.props.unitOptions}
@@ -193,6 +227,7 @@ const stateMap = (state) => {
     categoryOptions: state.registry.categoryOptions,
     productList: state.productList,
     newBarcode: state.labeller.newBarcode,
+    errorMsg: state.labeller.errorMsg
   };
 }
 

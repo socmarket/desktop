@@ -1,0 +1,6 @@
+CLS
+SIZE 76 mm,25 mm
+GAP 1 mm,0 mm
+BARCODE 20,30,"128",80,1,0,2,3,"__BARCODE__"
+TEXT 20,150,"2",0,1,1,"__LABEL__"
+PRINT 1,__COUNT__

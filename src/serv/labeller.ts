@@ -1,8 +1,12 @@
+import labelProg from "./tspl/label.tspl"
 import createNewBarcode from "./sql/createNewBarcode.sql"
 import selectUnusedBarcode from "./sql/selectUnusedBarcode.sql"
 
+import { transliterate as tr } from 'transliteration';
+
 export interface LabellerState {
-  newBarcode: String,
+  newBarcode: String;
+  errorMsg: String;
 }
 
 const newBarcodeCreated = (barcode) => ({
@@ -10,8 +14,9 @@ const newBarcodeCreated = (barcode) => ({
   barcode: barcode,
 });
 
-const barcodeUsed = () => ({
-  type: "LABELLER_BARCODE_USED",
+const labellerFailed = (errorMsg) => ({
+  type: "LABELLER_FAILED",
+  errorMsg: errorMsg,
 });
 
 const PREFIX = "SM";
@@ -33,28 +38,58 @@ function genBarcode() {
   };
 }
 
-function useBarcode() {
-  return function (dispatch, getState, { db }) {
-    dispatch(barcodeUsed());
+function printLabel(barcode, label, count = 1) {
+  return function (dispatch, getState, { db, usb }) {
+    const { printer } = getState();
+    const code = labelProg
+      .replace("__BARCODE__", barcode)
+      .replace("__LABEL__", tr(label))
+      .replace("__COUNT__", count)
+    ;
+    if (printer.vid > 0 && printer.pid > 0) {
+      if (barcode.length > 0 && label.length > 0) {
+        usb.open(printer.vid, printer.pid)
+          .then(_ => usb.write(code))
+          .then(_ => usb.close())
+          .then(_ => {
+            dispatch(labellerFailed(""));
+          })
+          .catch(err => {
+            dispatch(labellerFailed("Ошибка печати."));
+            console.log(err);
+          })
+        ;
+      } else {
+        dispatch(labellerFailed("Товар не выбран или не зарегистрирован."));
+      }
+    } else {
+      dispatch(labellerFailed("Принтер не выбран. Выберите принтер в настройках."));
+    }
   };
 }
 
 const LabellerActions = {
   genBarcode: genBarcode,
-  useBarcode: useBarcode,
+  printLabel: printLabel,
 };
 
 function LabellerReducer (state: LabellerState = {
   newBarcode: "",
+  errorMsg: "",
 }, action) {
   switch (action.type) {
     case "LABELLER_NEW_BARCODE_CREATED":
       return Object.assign({}, state, {
         newBarcode: action.barcode,
+        errorMsg: "",
       });
     case "LABELLER_BARCODE_USED":
       return Object.assign({}, state, {
         newBarcode: "",
+      });
+    case "LABELLER_FAILED":
+      return Object.assign({}, state, {
+        errorMsg: action.errorMsg,
       });
     default:
       return state;

@@ -70,6 +70,12 @@ module.exports = {
         }
       },
       {
+        test: /\.tspl$/,
+        use: {
+          loader: "raw-loader",
+        }
+      },
+      {
         test: /sqlite3\.js$/,
         use: {
           loader: "string-replace-loader",
