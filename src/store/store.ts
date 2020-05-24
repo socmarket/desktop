@@ -85,13 +85,20 @@ function prodCreateStore() {
 
 const store = (process.env.NODE_ENV === "development") ? devCreateStore() : prodCreateStore();
 
-migrate(window.db)
-  .then(async () => {
-    store.dispatch(RegistryActions.reloadUnits());
-    store.dispatch(RegistryActions.reloadCategories());
-    store.dispatch(RegistryActions.reloadSuppliers());
-    store.dispatch(RegistryActions.reloadClients());
-  })
-  .catch(err => console.log(err));
+function getStore() {
+  return new Promise((resolve, reject) => {
+    migrate(window.db)
+      .then(async () => {
+        store.dispatch(RegistryActions.reloadUnits());
+        store.dispatch(RegistryActions.reloadCategories());
+        store.dispatch(RegistryActions.reloadSuppliers());
+        store.dispatch(RegistryActions.reloadClients());
+        resolve(store);
+      })
+      .catch(err => {
+        reject(err);
+      })
+  });
+}
 
-export default store;
+export default getStore;

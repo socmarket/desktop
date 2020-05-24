@@ -4,12 +4,23 @@ import { Provider } from "react-redux";
 
 import "semantic-ui-css/semantic.css"
 
-import Store from "./store/store";
+import getStore from "./store/store";
 import StartPage from "./page/start";
+import ErrorPage from "./page/error";
 
-ReactDom.render(
-  <Provider store={Store}>
-    <StartPage />
-  </Provider>,
-  document.getElementById("root")
-);
+getStore()
+  .then(store => {
+    ReactDom.render(
+      <Provider store={store}>
+        <StartPage />
+      </Provider>,
+      document.getElementById("root")
+    );
+  })
+  .catch(err => {
+    ReactDom.render(
+      <ErrorPage error={err} />,
+      document.getElementById("root")
+    );
+  })
+;

@@ -16,7 +16,10 @@ function runUpdate(db, step) {
     .then(_ => db.exec("insert into migration(mkey) values(?)", [ step.key ]))
     .then(_ => db.exec("commit"))
     .catch(err => {
-      return db.exec("rollback");
+      return db.exec("rollback")
+        .then(_ => {
+          throw err
+        });
     })
   ;
 }
@@ -37,12 +40,12 @@ function runUpdates(db, lastKey, steps) {
 
 function init(db, steps): Promise<string> {
   return getLastKey(db)
-    .then(lastKey => runUpdates(db, lastKey, steps))
     .catch(err =>
       createMig(db)
         .then(res => getLastKey(db))
         .then(lastKey => runUpdates(db, lastKey, steps))
     )
+    .then(lastKey => runUpdates(db, lastKey, steps))
   ;
 }
 
