@@ -18,14 +18,20 @@ import Dashboard from "../comp/dashboard";
 import SaleJournal from "../comp/salejournal/salejournal.tsx";
 import SaleCheck from "../comp/salecheck/salecheck.tsx";
 import Consignment from "../comp/consignment/consignment.tsx";
+import ConsignmentJournal from "../comp/consignmentjournal";
 
 class HomePage extends React.Component {
   render() {
     return (
       <Fragment>
         <MainMenu />
-        { this.props.app.showDashboard && <Dashboard /> }
-        { this.props.app.showSaleJournal && <SaleJournal /> }
+
+        { (this.props.app.activePage == "dashboard"  ) && <Dashboard /> }
+        { (this.props.app.activePage == "saleJournal") && <SaleJournal /> }
+        { (this.props.app.activePage == "saleCheck"  ) && <SaleCheck /> }
+        { (this.props.app.activePage == "consignment") && <Consignment /> }
+        { (this.props.app.activePage == "consignmentJournal"  ) && <ConsignmentJournal /> }
+
         { this.props.app.showUnitsDialog && <UnitDialog /> }
         { this.props.app.showPricesDialog && <PriceDialog /> }
         { this.props.app.showProductsDialog && <ProductDialog /> }
@@ -34,8 +40,6 @@ class HomePage extends React.Component {
         { this.props.app.showClientsDialog && <ClientDialog /> }
         { this.props.app.showSettingsDialog && <SettingsDialog /> }
         { this.props.app.showLabellerDialog && <LabellerDialog /> }
-        { this.props.app.showSaleCheck && <SaleCheck /> }
-        { this.props.app.showConsignment && <Consignment /> }
       </Fragment>
     );
   }

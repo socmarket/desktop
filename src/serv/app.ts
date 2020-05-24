@@ -7,19 +7,10 @@ export interface AppState {
   showClientsDialog: boolean;
   showSettingsDialog: boolean;
   showLabellerDialog: boolean;
-  showSaleCheck: boolean;
-  showConsignment: boolean;
+  activePage: String;
 }
 
 const AppActions = {
-
-  openDashboard: () => ({
-    type: 'APP_OPEN_DASHBOARD',
-  }),
-
-  openSaleJournal: () => ({
-    type: 'APP_OPEN_SALE_JOURNAL',
-  }),
 
   openProducts: () => ({
     type: 'APP_SHOW_PRODUCTS_DIALOG',
@@ -86,11 +77,11 @@ const AppActions = {
   }),
 
   openWarehouse: () => ({
-    type: 'APP_SHOW_WAREHOUSE_DIALOG',
+    type: 'APP_SHOW_CONSIGNMENT_JOURNAL_DIALOG',
   }),
 
   closeWarehouse: () => ({
-    type: 'APP_HIDE_WAREHOUSE_DIALOG',
+    type: 'APP_HIDE_CONSIGNMENT_JOURNAL_DIALOG',
   }),
 
   openConsignment: () => ({
@@ -101,20 +92,29 @@ const AppActions = {
     type: 'APP_OPEN_SALECHECK',
   }),
 
+  openDashboard: () => ({
+    type: 'APP_OPEN_DASHBOARD',
+  }),
+
+  openSaleJournal: () => ({
+    type: 'APP_OPEN_SALE_JOURNAL',
+  }),
+
+  openConsignmentJournal: () => ({
+    type: 'APP_OPEN_CONSIGNMENT_JOURNAL',
+  }),
+
 }
 
 function AppReducer (state: AppState = {
   showPriceDialog: false,
-  showProductsDialog: true,
+  showProductsDialog: false,
   showCategoriesDialog: false,
   showSuppliersDialog: false,
   showClientsDialog: false,
-  showSaleCheck: false,
-  showConsignment: false,
-  showDashboard: true,
-  showSaleJournal: false,
   showSettingsDialog: false,
   showLabellerDialog: false,
+  activePage: "dashboard",
 }, action) {
   switch (action.type) {
     case 'APP_SHOW_CLIENTS_DIALOG':
@@ -150,33 +150,15 @@ function AppReducer (state: AppState = {
     case 'APP_HIDE_LABELLER_DIALOG':
       return Object.assign({}, state, { showLabellerDialog: false });
     case 'APP_OPEN_DASHBOARD':
-      return Object.assign({}, state, {
-        showDashboard: true,
-        showSaleJournal: false,
-        showSaleCheck: false,
-        showConsignment: false,
-      });
+      return Object.assign({}, state, { activePage: "dashboard" });
     case 'APP_OPEN_SALE_JOURNAL':
-      return Object.assign({}, state, {
-        showDashboard: false,
-        showSaleJournal: true,
-        showSaleCheck: false,
-        showConsignment: false,
-      });
+      return Object.assign({}, state, { activePage: "saleJournal" });
     case 'APP_OPEN_CONSIGNMENT':
-      return Object.assign({}, state, {
-        showDashboard: false,
-        showSaleJournal: false,
-        showSaleCheck: false,
-        showConsignment: true,
-      });
+      return Object.assign({}, state, { activePage: "consignment" });
     case 'APP_OPEN_SALECHECK':
-      return Object.assign({}, state, {
-        showDashboard: false,
-        showSaleJournal: false,
-        showSaleCheck: true,
-        showConsignment: false,
-      });
+      return Object.assign({}, state, { activePage: "saleCheck" });
+    case 'APP_OPEN_CONSIGNMENT_JOURNAL':
+      return Object.assign({}, state, { activePage: "consignmentJournal" });
     default:
       return state
   }

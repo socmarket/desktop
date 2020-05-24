@@ -9,31 +9,38 @@ class MainMenu extends React.Component {
     return (
       <Menu attached="top">
         <Menu.Item
-          active={this.props.app.showDashboard}
+          active={this.props.app.activePage === "dashboard"}
           onClick={() => this.props.openDashboard()}
         >
           Главная
         </Menu.Item>
 
         <Menu.Item
-          active={this.props.app.showSaleJournal}
-          onClick={() => this.props.openSaleJournal()}
-        >
-          Журнал продаж
-        </Menu.Item>
-
-        <Menu.Item
-          active={this.props.app.showSaleCheck}
+          active={this.props.app.activePage === "saleCheck"}
           onClick={() => this.props.openSaleCheck()}
         >
           Продажа
         </Menu.Item>
 
         <Menu.Item
-          active={this.props.app.showConsignment}
+          active={this.props.app.activePage === "consignment"}
           onClick={() => this.props.openConsignment()}
         >
           Приёмка
+        </Menu.Item>
+
+        <Menu.Item
+          active={this.props.app.activePage === "saleJournal"}
+          onClick={() => this.props.openSaleJournal()}
+        >
+          Журнал продаж
+        </Menu.Item>
+
+        <Menu.Item
+          active={this.props.app.activePage === "consignmentJournal"}
+          onClick={() => this.props.openConsignmentJournal()}
+        >
+          Журнал приёмки
         </Menu.Item>
 
         <Menu.Menu position="right">

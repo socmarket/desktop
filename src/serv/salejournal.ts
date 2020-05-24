@@ -1,4 +1,5 @@
-import selectSaleJournal from "./sql/selectSaleJournal.sql"
+import selectSaleCheckList from "./sql/selectSaleCheckList.sql"
+import selectSaleCheckItemsFor from "./sql/selectSaleCheckItemsFor.sql"
 
 export interface SaleJournalState {
   items: Array
@@ -11,10 +12,20 @@ const updateSaleJournal = (items) => ({
 
 function reloadSaleJournal() {
   return function (dispatch, getState, { db }) {
-    return db.select(selectSaleJournal)
-      .then(items => {
-        dispatch(updateSaleJournal(items));
-      })
+    return db.select(selectSaleCheckList)
+      .then(items =>
+        Promise.all(
+          items.map(saleCheck => new Promise((resolve, reject) => {
+            db.select(selectSaleCheckItemsFor, { $saleCheckId: saleCheck.id })
+              .then(items => {
+                resolve({ ...saleCheck, items: items })
+              })
+              .catch(err => reject(err))
+          }))
+        )
+      )
+      .then(items => dispatch(updateSaleJournal(items)))
+    ;
   };
 }
 

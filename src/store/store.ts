@@ -4,19 +4,21 @@ import { AppReducer } from "../serv/app"
 import { UnitActions, UnitReducer } from "../serv/unit"
 import { CounterActions, CounterReducer } from "../serv/counter"
 import { PriceActions, PriceReducer } from "../serv/price"
-import { DashboardActions, DashboardReducer } from "../serv/dashboard"
-import { SaleJournalActions, SaleJournalReducer } from "../serv/salejournal"
 import { RegistryActions, RegistryReducer } from "../serv/registry"
 import { ProductActions, ProductReducer } from "../serv/product"
 import { CategoryActions, CategoryReducer } from "../serv/category"
-import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
-import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
 import { SupplierActions, SupplierReducer } from "../serv/supplier"
 import { ClientActions, ClientReducer } from "../serv/client"
 import { AclActions, AclReducer } from "../serv/acl"
 import { PrinterActions, PrinterReducer } from "../serv/printer"
 import { SettingsActions, SettingsReducer } from "../serv/settings"
 import { LabellerActions, LabellerReducer } from "../serv/labeller"
+
+import { DashboardActions, DashboardReducer } from "../serv/dashboard"
+import { SaleJournalActions, SaleJournalReducer } from "../serv/salejournal"
+import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
+import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
+import { ConsignmentJournalActions, ConsignmentJournalReducer } from "../serv/consignmentjournal"
 
 import migrate from "../db/migration";
 
@@ -44,6 +46,7 @@ function createRootReducer() {
     printer: PrinterReducer,
     settings: SettingsReducer,
     labeller: LabellerReducer,
+    consignmentJournal: ConsignmentJournalReducer,
   });
 }
 
@@ -69,6 +72,7 @@ function devCreateStore() {
     ...PrinterActions,
     ...SettingsActions,
     ...LabellerActions,
+    ...ConsignmentJournalActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
