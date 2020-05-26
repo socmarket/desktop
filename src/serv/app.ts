@@ -76,14 +76,6 @@ const AppActions = {
     type: 'APP_HIDE_LABELLER_DIALOG',
   }),
 
-  openWarehouse: () => ({
-    type: 'APP_SHOW_CONSIGNMENT_JOURNAL_DIALOG',
-  }),
-
-  closeWarehouse: () => ({
-    type: 'APP_HIDE_CONSIGNMENT_JOURNAL_DIALOG',
-  }),
-
   openConsignment: () => ({
     type: 'APP_OPEN_CONSIGNMENT',
   }),
@@ -98,10 +90,6 @@ const AppActions = {
 
   openSaleJournal: () => ({
     type: 'APP_OPEN_SALE_JOURNAL',
-  }),
-
-  openConsignmentJournal: () => ({
-    type: 'APP_OPEN_CONSIGNMENT_JOURNAL',
   }),
 
 }
@@ -157,8 +145,6 @@ function AppReducer (state: AppState = {
       return Object.assign({}, state, { activePage: "consignment" });
     case 'APP_OPEN_SALECHECK':
       return Object.assign({}, state, { activePage: "saleCheck" });
-    case 'APP_OPEN_CONSIGNMENT_JOURNAL':
-      return Object.assign({}, state, { activePage: "consignmentJournal" });
     default:
       return state
   }

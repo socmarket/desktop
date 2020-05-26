@@ -18,7 +18,6 @@ import Dashboard from "../comp/dashboard";
 import SaleJournal from "../comp/salejournal/salejournal.tsx";
 import SaleCheck from "../comp/salecheck/salecheck.tsx";
 import Consignment from "../comp/consignment/consignment.tsx";
-import ConsignmentJournal from "../comp/consignmentjournal";
 
 class HomePage extends React.Component {
   render() {
@@ -30,7 +29,6 @@ class HomePage extends React.Component {
         { (this.props.app.activePage == "saleJournal") && <SaleJournal /> }
         { (this.props.app.activePage == "saleCheck"  ) && <SaleCheck /> }
         { (this.props.app.activePage == "consignment") && <Consignment /> }
-        { (this.props.app.activePage == "consignmentJournal"  ) && <ConsignmentJournal /> }
 
         { this.props.app.showUnitsDialog && <UnitDialog /> }
         { this.props.app.showPricesDialog && <PriceDialog /> }

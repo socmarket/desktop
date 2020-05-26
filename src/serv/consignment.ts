@@ -3,6 +3,13 @@ import selectProductWithPrice from "./sql/selectProductWithPrice.sql"
 import consignmentInsertItem from "./sql/consignmentInsertItem.sql"
 import consignmentListSimple from "./sql/consignmentListSimple.sql"
 
+import selectConsignmentList     from "./sql/consignment/journal/selectConsignmentList.sql"
+import selectConsignmentItemsFor from "./sql/consignment/journal/selectConsignmentItemsFor.sql"
+
+export interface ConsignmentJournal {
+  items: Array
+}
+
 export interface ConsignmentItem {
   productId: int;
   quantity: long;
@@ -16,11 +23,12 @@ export interface ConsignmentItem {
 }
 
 export interface ConsignmentState {
-  list: Array,
+  list: Array;
   items: Array[ConsignmentItem];
   itemsCost: number;
   currentConsignmentItem: ConsignmentItem;
   currentProduct: Product;
+  journal: ConsignmentJournal;
 }
 
 const currentConsignmentProductFound = (product) => ({
@@ -45,6 +53,30 @@ const consignmentListUpdated = (list) => ({
   type: "CONSIGNMENT_LIST_UPDATED",
   list: list,
 })
+
+const updateConsignmentJournal = (items) => ({
+  type: "CONSIGNMENT_JOURNAL_UPDATE",
+  items: items,
+})
+
+function reloadConsignmentJournal() {
+  return function (dispatch, getState, { db }) {
+    return db.select(selectConsignmentList)
+      .then(items =>
+        Promise.all(
+          items.map(consignment => new Promise((resolve, reject) => {
+            db.select(selectConsignmentItemsFor, { $consignmentId: consignment.id })
+              .then(items => {
+                resolve({ ...consignment, items: items })
+              })
+              .catch(err => reject(err))
+          }))
+        )
+      )
+      .then(items => dispatch(updateConsignmentJournal(items)))
+    ;
+  };
+}
 
 function findProduct(barcode) {
   return function (dispatch, getState, { db }) {
@@ -90,6 +122,7 @@ function closeConsignment(supplierId) {
       .then(_ => dispatch(consignmentClosed()))
       .then(_ => db.select(consignmentListSimple))
       .then(list => dispatch(consignmentListUpdated(list)))
+      .then(_ => reloadConsignmentJournal()(dispatch, getState, { db: db }))
       .catch(err => {
         console.log(err);
         return db.exec("rollback");
@@ -129,6 +162,7 @@ const ConsignmentActions = {
   closeConsignment: closeConsignment,
   findProduct: findProduct,
   updateConsignmentList: updateConsignmentList,
+  reloadConsignmentJournal: reloadConsignmentJournal,
 }
 
 const emptyConsignmentItem = {
@@ -158,6 +192,9 @@ function ConsignmentReducer (state: ConsignmentState = {
   itemsCost: 0.00,
   currentConsignmentItem: emptyConsignmentItem,
   currentProduct: emptyProduct,
+  journal: {
+    items: []
+  },
 }, action) {
   switch (action.type) {
     case 'CONSIGNMENT_PRODUCT_FOUND':
@@ -243,6 +280,13 @@ function ConsignmentReducer (state: ConsignmentState = {
         currentConsignmentItem: emptyConsignmentItem,
         items: [],
         itemsCost: 0.00,
+      });
+    }
+    case "CONSIGNMENT_JOURNAL_UPDATE": {
+      return Object.assign({}, state, {
+        journal: {
+          items: action.items
+        }
       });
     }
     default:

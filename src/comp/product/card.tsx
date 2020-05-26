@@ -84,6 +84,7 @@ class ProductCard extends React.Component {
 
   handleTitleChange(event) {
     this.setState({ title: event.target.value });
+    this.props.setProductListFilter(event.target.value);
   }
 
   handleNotesChange(event) {
@@ -188,7 +189,7 @@ class ProductCard extends React.Component {
                 />
               </Form.Group>
               <Form.Group>
-                <Form.TextArea width={16} label="Описание"
+                <Form.Input width={16} label="Описание"
                   value={this.state.notes}
                   onChange={this.handleNotesChange}
                 />
@@ -207,7 +208,7 @@ class ProductCard extends React.Component {
                 />
                 { !isNewProduct && (
                   <Button
-                    negative
+                    color="orange"
                     floated="right"
                     content="Сбросить"
                     onClick={this.handleResetProduct}

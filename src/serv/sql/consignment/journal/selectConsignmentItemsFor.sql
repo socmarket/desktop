@@ -7,6 +7,7 @@ select
   consignmentitem.unitId,
   consignmentitem.currencyId,
   product.title as productTitle,
+  product.barcode as productBarcode,
   category.title as categoryTitle,
   unit.title as unitTitle
 from

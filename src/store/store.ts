@@ -18,7 +18,6 @@ import { DashboardActions, DashboardReducer } from "../serv/dashboard"
 import { SaleJournalActions, SaleJournalReducer } from "../serv/salejournal"
 import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
-import { ConsignmentJournalActions, ConsignmentJournalReducer } from "../serv/consignmentjournal"
 
 import migrate from "../db/migration";
 
@@ -46,7 +45,6 @@ function createRootReducer() {
     printer: PrinterReducer,
     settings: SettingsReducer,
     labeller: LabellerReducer,
-    consignmentJournal: ConsignmentJournalReducer,
   });
 }
 
@@ -72,7 +70,6 @@ function devCreateStore() {
     ...PrinterActions,
     ...SettingsActions,
     ...LabellerActions,
-    ...ConsignmentJournalActions,
   };
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?

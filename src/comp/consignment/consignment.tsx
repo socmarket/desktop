@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
+import Journal from "./journal.tsx"
 import { ConsignmentActions } from "../../serv/consignment"
 import {
   Header, Grid, Table, Form, Input, Select,
@@ -163,6 +164,7 @@ class Consignment extends React.Component {
           supplierId: -1
         }, () => {
           this.inputBarcode.current.focus();
+          this.props.reloadConsignmentJournal();
         });
       }, 100);
     }
@@ -178,17 +180,19 @@ class Consignment extends React.Component {
       <Table compact celled selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Дата</Table.HeaderCell>
-            <Table.HeaderCell>Поставщик</Table.HeaderCell>
+            <Table.HeaderCell>Категория</Table.HeaderCell>
+            <Table.HeaderCell>Позиций</Table.HeaderCell>
+            <Table.HeaderCell>Товаров</Table.HeaderCell>
             <Table.HeaderCell>Сумма</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           { list.map( (item, idx) => (
             <Table.Row key={idx}>
-              <Table.Cell>{moment.utc(item.acceptedAt).local().format("DD-MM-YYYY HH:mm")}</Table.Cell>
-              <Table.Cell>{item.supplierName}</Table.Cell>
-              <Table.Cell>{item.total}</Table.Cell>
+              <Table.Cell>{item.categoryTitle}</Table.Cell>
+              <Table.Cell textAlign="right">{item.uniqueQuantity}</Table.Cell>
+              <Table.Cell textAlign="right">{item.quantity}</Table.Cell>
+              <Table.Cell textAlign="right">{item.cost}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -360,6 +364,10 @@ class Consignment extends React.Component {
             {this.editor()}
             {this.table()}
           </Container>
+          <br />
+          <br />
+          <Divider horizontal>Журнал приёмки</Divider>
+          <Journal />
         </Grid.Column>
       </Grid>
     );
