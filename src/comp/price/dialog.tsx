@@ -46,7 +46,7 @@ class PriceDialog extends React.Component {
 
   handleBarcodeActivate() {
     const currentProduct = this.props.priceList.currentProduct;
-    if (this.state.barcode > 0) {
+    if (this.state.barcode.length > 0) {
       if (currentProduct.barcode !== this.state.barcode) {
         this.props.findProduct(this.state.barcode);
       } else if (this.state.price > 0) {

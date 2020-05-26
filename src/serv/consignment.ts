@@ -10,6 +10,7 @@ export interface ConsignmentItem {
   unitId: int;
   unitTitle: string;
   unitNotation: string;
+  categoryTitle: string;
   currencyId: int;
   createdAt: datetime;
 }
@@ -148,6 +149,7 @@ const emptyProduct = {
   unitId: -1,
   unitTitle: "",
   unitNotation: "",
+  categoryTitle: "",
 };
 
 function ConsignmentReducer (state: ConsignmentState = {
@@ -167,6 +169,7 @@ function ConsignmentReducer (state: ConsignmentState = {
         unitId: product.unitId,
         unitTitle: product.unitTitle,
         unitNotation: product.unitNotation,
+        categoryTitle: product.categoryTitle,
         currencyId: 1,
       }
       return Object.assign({}, state, {
@@ -191,6 +194,7 @@ function ConsignmentReducer (state: ConsignmentState = {
         unitId: product.unitId,
         unitTitle: product.unitTitle,
         unitNotation: product.unitNotation,
+        categoryTitle: product.categoryTitle,
         currencyId: -1,
       }
       /* If product is in the check, then just increase quantity */

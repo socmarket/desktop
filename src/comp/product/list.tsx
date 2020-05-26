@@ -38,6 +38,7 @@ class ProductList extends React.Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Штрихкод</Table.HeaderCell>
+            <Table.HeaderCell>Кат</Table.HeaderCell>
             <Table.HeaderCell>Название</Table.HeaderCell>
             <Table.HeaderCell>№</Table.HeaderCell>
             <Table.HeaderCell>Описание</Table.HeaderCell>
@@ -47,6 +48,7 @@ class ProductList extends React.Component {
           { this.props.productList.items.map(product => (
             <Table.Row key={product.id}>
               <Table.Cell>{product.barcode}</Table.Cell>
+              <Table.Cell>{product.categoryTitle}</Table.Cell>
               <Table.Cell>{product.title}</Table.Cell>
               <Table.Cell>{product.code}</Table.Cell>
               <Table.Cell>{product.notes}</Table.Cell>

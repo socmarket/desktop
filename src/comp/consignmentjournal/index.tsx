@@ -26,6 +26,7 @@ class ConsignmentJournal extends React.Component {
               <Table.Row>
                 <Table.HeaderCell>Партия</Table.HeaderCell>
                 <Table.HeaderCell>Товар</Table.HeaderCell>
+                <Table.HeaderCell>Катег</Table.HeaderCell>
                 <Table.HeaderCell>Кол-во</Table.HeaderCell>
                 <Table.HeaderCell>Ед.изм.</Table.HeaderCell>
                 <Table.HeaderCell>Цена</Table.HeaderCell>
@@ -47,18 +48,20 @@ class ConsignmentJournal extends React.Component {
                     { consignment.items.slice(0, 1).map(item => (
                       <Fragment key={item.id}>
                         <Table.Cell>{item.productTitle.substring(0, 80)}</Table.Cell>
+                        <Table.Cell>{item.categoryTitle}</Table.Cell>
                         <Table.Cell textAlign="right">{item.quantity}</Table.Cell>
                         <Table.Cell>{item.unitTitle}</Table.Cell>
-                        <Table.Cell textAlign="right">{item.price}</Table.Cell>
+                        <Table.Cell textAlign="right">{item.price / 100}</Table.Cell>
                       </Fragment>
                     ))}
                   </Table.Row>
                   { consignment.items.slice(1).map(item => (
                     <Table.Row key={item.id}>
                       <Table.Cell>{item.productTitle.substring(0, 50)}</Table.Cell>
+                      <Table.Cell>{item.categoryTitle}</Table.Cell>
                       <Table.Cell textAlign="right">{item.quantity}</Table.Cell>
                       <Table.Cell>{item.unitTitle}</Table.Cell>
-                      <Table.Cell textAlign="right">{item.price}</Table.Cell>
+                      <Table.Cell textAlign="right">{item.price / 100.00}</Table.Cell>
                     </Table.Row>
                   ))}
                 </Fragment>

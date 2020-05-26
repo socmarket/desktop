@@ -99,6 +99,7 @@ function getStore() {
         store.dispatch(RegistryActions.reloadClients());
         resolve(store);
       })
+      .then(_ => window.db.exec("PRAGMA case_sensitive_like = false;"))
       .catch(err => {
         reject(err);
       })

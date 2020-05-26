@@ -8,18 +8,22 @@ import {
   Label, Container, Menu, Message, Divider
 } from "semantic-ui-react"
 
+const emptyState = {
+  barcode: "",
+  quantity: "",
+  price: "",
+  supplierId: -1,
+  searched: false,
+  currentItemIdx: -1,
+};
+
 class Consignment extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      barcode: "",
-      quantity: "",
-      price: "",
-      supplierId: -1,
-      searched: false,
-      currentItemIdx: -1,
-    }
+
+    this.state = emptyState;
+
     this.handleActivate = this.handleActivate.bind(this);
     this.handleNavigation = this.handleNavigation.bind(this);
     this.handleBarcodeFocus = this.handleBarcodeFocus.bind(this);
@@ -44,12 +48,7 @@ class Consignment extends React.Component {
   private addConsignmentItem() {
     this.props.addConsignmentItem(this.state);
     setTimeout(() => {
-      this.setState({
-        barcode: "",
-        quantity: 0,
-        price: 0,
-        supplierId: -1,
-      }, () => {
+      this.setState(emptyState, () => {
         this.inputBarcode.current.focus();
       });
     }, 100);
@@ -91,20 +90,22 @@ class Consignment extends React.Component {
   }
 
   handleActivate(event) {
+    const self = this;
     const act = () => {
-      if (this.state.barcode.length > 0) {
-        if (this.state.barcode !== this.props.consignment.currentProduct.barcode) {
-          this.props.findProduct(this.state.barcode);
+      if (self.state.barcode.length > 0) {
+        if (self.state.barcode !== self.props.consignment.currentProduct.barcode) {
+          self.props.findProduct(self.state.barcode);
         }
         setTimeout(() => {
-          if (this.validate()) {
-            this.addConsignmentItem();
+          if (self.validate()) {
+            self.addConsignmentItem();
           }
         }, 100);
       } else {
-        this.inputBarcode.current.focus();
+        self.inputBarcode.current.focus();
       }
     }
+    console.log(event);
     if (event.key) {
       if (event.key === "Enter") {
         act();
@@ -244,9 +245,9 @@ class Consignment extends React.Component {
 
   private createPriceInput(props) {
     return (
-      <div className="ui input action">
+      <div className="ui input">
         <input ref={this.inputPrice} style={{ textAlign: "right" }} {...props} style={{ textAlign: "right" }} />
-        <Button primary onClick={this.handleActivate}>Добавить</Button>
+        {/* <Button primary onClick={this.handleActivate}>Добавить</Button> */}
       </div>
     );
   }
@@ -260,7 +261,8 @@ class Consignment extends React.Component {
     const searched = this.state.searched;
     const itemsCost = this.props.consignment.itemsCost;
     const foundProductUnit = (currentProduct.unitTitle.length > 0) ? ", изм: " + currentProduct.unitTitle : ""
-    const foundProductTitle = productNotFound ? "| Товар не найден" : "| " + currentProduct.title + foundProductUnit
+    const foundProductCategory = (currentProduct.categoryTitle.length > 0) ? ": " + currentProduct.categoryTitle : ""
+    const foundProductTitle = productNotFound ? "| Товар не найден" : "| " + currentProduct.title + foundProductCategory + foundProductUnit
     return (
       <Segment onKeyPress={this.handleActivate}>
         <Form error={productNotFound} success={!productNotFound}>

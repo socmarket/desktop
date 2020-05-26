@@ -103,6 +103,7 @@ class ProductCard extends React.Component {
   }
 
   handleCreateProduct() {
+    const self = this;
     this.props.createProduct(this.state);
     this.setState({
       id: -1,
@@ -145,7 +146,7 @@ class ProductCard extends React.Component {
                   fluid basic
                   color="green"
                   onClick={this.printLabel}
-                  disabled={this.state.id <= 0}
+                  disabled={this.state.barcode.length === 0 || this.state.title.length === 0}
                 >Печать</Button>
               </Card.Content>
               {this.props.errorMsg.length > 0 &&

@@ -1,4 +1,5 @@
 import labelProg from "./tspl/label.tspl"
+import labelCompactX3 from "./tspl/labelCompactX3.tspl"
 import createNewBarcode from "./sql/createNewBarcode.sql"
 import selectUnusedBarcode from "./sql/selectUnusedBarcode.sql"
 
@@ -17,6 +18,10 @@ const newBarcodeCreated = (barcode) => ({
 const labellerFailed = (errorMsg) => ({
   type: "LABELLER_FAILED",
   errorMsg: errorMsg,
+});
+
+const barcodeUsed = () => ({
+  type: "LABELLER_BARCODE_USED",
 });
 
 const PREFIX = "SM";
@@ -41,11 +46,12 @@ function genBarcode() {
 function printLabel(barcode, label, count = 1) {
   return function (dispatch, getState, { db, usb }) {
     const { printer } = getState();
-    const code = labelProg
-      .replace("__BARCODE__", barcode)
-      .replace("__LABEL__", tr(label))
-      .replace("__COUNT__", count)
+    const code = labelCompactX3
+      .replace(/__BARCODE__/g, barcode)
+      .replace(/__LABEL__/g, tr(label.substring(0, 25)))
+      .replace(/__COUNT__/g, count)
     ;
+    console.log(code);
     if (printer.vid > 0 && printer.pid > 0) {
       if (barcode.length > 0 && label.length > 0) {
         usb.open(printer.vid, printer.pid)
@@ -68,7 +74,14 @@ function printLabel(barcode, label, count = 1) {
   };
 }
 
+function useBarcode () {
+  return function (dispatch, getState, { db }) {
+    dispatch(barcodeUsed());
+  };
+}
+
 const LabellerActions = {
+  useBarcode: useBarcode,
   genBarcode: genBarcode,
   printLabel: printLabel,
 };
@@ -90,6 +103,11 @@ function LabellerReducer (state: LabellerState = {
     case "LABELLER_FAILED":
       return Object.assign({}, state, {
         errorMsg: action.errorMsg,
+      });
+    case "LABELLER_BARCODE_USED":
+      return Object.assign({}, state, {
+        errorMsg: "",
+        newBarcode: "",
       });
     default:
       return state;

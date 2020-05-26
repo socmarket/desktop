@@ -1,3 +1,5 @@
+import selectProductList from "./sql/product/selectProductList.sql"
+
 export interface Product {
   id: int;
   barcode: string;
@@ -28,7 +30,8 @@ const currentProductUpdated = (product) => ({
 
 function setProductListFilter(pattern) {
   return (dispatch, getState, { db }) => {
-    db.select("select * from product where (title like ?) or (code like ?) or (barcode like ?)",
+    // db.select("select * from product where (title like ?) or (code like ?) or (barcode like ?)",
+    db.select(selectProductList,
       [
         "%" + pattern + "%",
         "%" + pattern + "%",

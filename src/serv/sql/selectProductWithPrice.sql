@@ -12,10 +12,13 @@ select
   ), 0)             as price,
 
   unit.id           as unitId,
-  unit.title        as unitTitle,
-  unit.notation     as unitNotation
+  unit.notation     as unitNotation,
+
+  coalesce(unit.title, '')     as unitTitle,
+  coalesce(category.title, '') as categoryTitle
 from
   product
   left join unit on (unit.id = product.unitId)
+  left join category on (category.id = product.categoryId)
 where
   product.barcode = ?
