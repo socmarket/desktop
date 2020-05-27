@@ -8,7 +8,7 @@ from
     select
       category.title as categoryTitle,
       sum(ci.price / 100.00 * ci.quantity) as cost,
-      count(*) as uniqueQuantity,
+      count(distinct ci.productId) as uniqueQuantity,
       sum(ci.quantity) as quantity
     from
       consignmentitem ci

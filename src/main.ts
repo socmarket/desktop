@@ -17,12 +17,9 @@ const createWindow = async () => {
     webPreferences: webp
   })
 
-  win.webContents.openDevTools();
-  /*
   if (isDevelopment) {
     win.webContents.openDevTools();
   }
-  */
 
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 

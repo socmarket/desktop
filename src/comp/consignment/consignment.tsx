@@ -175,7 +175,7 @@ class Consignment extends React.Component {
   }
 
   private list() {
-    const list = this.props.consignment.list;
+    const summaryByCategory = this.props.consignment.summaryByCategory;
     return (
       <Table compact celled selectable>
         <Table.Header>
@@ -186,8 +186,16 @@ class Consignment extends React.Component {
             <Table.HeaderCell>Сумма</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Всего</Table.HeaderCell>
+            <Table.HeaderCell textAlign="right">{summaryByCategory.summary.uniqueQuantity}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="right">{summaryByCategory.summary.quantity}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="right">{summaryByCategory.summary.cost}</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
         <Table.Body>
-          { list.map( (item, idx) => (
+          { summaryByCategory.items.map( (item, idx) => (
             <Table.Row key={idx}>
               <Table.Cell>{item.categoryTitle}</Table.Cell>
               <Table.Cell textAlign="right">{item.uniqueQuantity}</Table.Cell>

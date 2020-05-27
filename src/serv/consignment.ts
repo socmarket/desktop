@@ -23,7 +23,7 @@ export interface ConsignmentItem {
 }
 
 export interface ConsignmentState {
-  list: Array;
+  summaryByCategory: Array;
   items: Array[ConsignmentItem];
   itemsCost: number;
   currentConsignmentItem: ConsignmentItem;
@@ -49,9 +49,9 @@ const addConsignmentItem = (item) => ({
   item: item,
 })
 
-const consignmentListUpdated = (list) => ({
+const consignmentListUpdated = (summaryByCategory) => ({
   type: "CONSIGNMENT_LIST_UPDATED",
-  list: list,
+  summaryByCategory: summaryByCategory,
 })
 
 const updateConsignmentJournal = (items) => ({
@@ -120,8 +120,7 @@ function closeConsignment(supplierId) {
       .then(consignmentId => db.exec("update consignment set closed = true where id = ?", [ consignmentId ]))
       .then(_ => db.exec("commit"))
       .then(_ => dispatch(consignmentClosed()))
-      .then(_ => db.select(consignmentListSimple))
-      .then(list => dispatch(consignmentListUpdated(list)))
+      .then(_ => updateConsignmentList()(dispatch, getState, { db: db }))
       .then(_ => reloadConsignmentJournal()(dispatch, getState, { db: db }))
       .catch(err => {
         console.log(err);
@@ -134,7 +133,18 @@ function updateConsignmentList() {
   return function (dispatch, getState, { db }) {
     return Promise.resolve()
       .then(_ => db.select(consignmentListSimple))
-      .then(list => dispatch(consignmentListUpdated(list)))
+      .then(list => {
+        const summary = list.reduce((a, b) => ({
+          categoryTitle: "",
+          uniqueQuantity: a.uniqueQuantity + b.uniqueQuantity,
+          quantity: a.quantity + b.quantity,
+          cost: a.cost + b.cost
+        }));
+        dispatch(consignmentListUpdated({
+          items: list,
+          summary: summary,
+        }))
+      })
       .catch(err => {
         console.log(err);
       })
@@ -187,7 +197,14 @@ const emptyProduct = {
 };
 
 function ConsignmentReducer (state: ConsignmentState = {
-  list: [],
+  summaryByCategory: {
+    items: [],
+    summary: {
+      uniqueQuantity: 0,
+      quantity: 0,
+      cost: 0,
+    }
+  },
   items: [],
   itemsCost: 0.00,
   currentConsignmentItem: emptyConsignmentItem,
@@ -271,7 +288,7 @@ function ConsignmentReducer (state: ConsignmentState = {
     }
     case 'CONSIGNMENT_LIST_UPDATED': {
       return Object.assign({}, state, {
-        list: action.list,
+        summaryByCategory: action.summaryByCategory,
       });
     }
     case 'CONSIGNMENT_CLOSED': {
