@@ -1,4 +1,5 @@
 import selectProductList from "./sql/product/selectProductList.sql"
+import updateProductSql from "./sql/product/updateProduct.sql"
 
 export interface Product {
   id: int;
@@ -64,17 +65,18 @@ function changeCurrentProduct(product) {
 function createProduct(product: Product) {
   return function (dispatch, getState, { db }) {
     const { productList: { filterPattern } } = getState();
-    db.exec("insert into product(barcode, title, notes, unitId, categoryId) values(?, ?, ?, ?, ?)",
-      [
-        product.barcode,
-        product.title,
-        product.notes,
-        product.unitId,
-        product.categoryId
-      ], {
-        product: product
-      }
-    )
+    db.exec(
+        "insert into product(barcode, title, titleLower, notes, notesLower, unitId, categoryId) values(?, ?, ?, ?, ?, ?, ?)",
+        [
+          product.barcode,
+          product.title,
+          product.title.toLowerCase(),
+          product.notes,
+          product.notes.toLowerCase(),
+          product.unitId,
+          product.categoryId
+        ]
+      )
       .then(_ => setProductListFilter(filterPattern)(dispatch, getState, { db }))
       .then(_ => changeCurrentProduct({
         id: -1,
@@ -91,18 +93,16 @@ function createProduct(product: Product) {
 function updateProduct(product) {
   return function (dispatch, getState, { db }) {
     const { productList: { filterPattern } } = getState();
-    db.exec("update product set barcode = $barcode, title = $title, notes = $notes, unitId = $unitId, categoryId = $categoryId where id = $id",
-      {
-        $barcode: product.barcode,
-        $title: product.title,
-        $notes: product.notes,
-        $unitId: product.unitId,
-        $categoryId: product.categoryId,
-        $id: product.id
-      }, {
-        product: product
-      }
-    ).then(_ => setProductListFilter(filterPattern)(dispatch, getState, { db }))
+    return db.exec(updateProductSql, {
+      $barcode: product.barcode,
+      $title: product.title,
+      $title: product.title.toLowerCase(),
+      $notes: product.notes,
+      $notesLower: product.notes.toLowerCase(),
+      $unitId: product.unitId,
+      $categoryId: product.categoryId,
+      $id: product.id
+    }).then(_ => setProductListFilter(filterPattern)(dispatch, getState, { db }))
   };
 }
 

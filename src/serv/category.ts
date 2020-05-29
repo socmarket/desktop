@@ -19,9 +19,10 @@ const categoryListUpdated = (rows) => ({
 
 function updateCategory(category) {
   return function (dispatch, getState, { db }) {
-    db.select("update category set title=$title, parentId=$parentId where id=$id", {
+    db.select("update category set title=$title, titleLower=$titleLower, parentId=$parentId where id=$id", {
       $id: category.id,
       $title: category.title,
+      $titleLower: category.title.toLowerCase(),
       $parentId: category.parentId,
     })
     .then(_ => {
@@ -35,7 +36,7 @@ function updateCategory(category) {
 
 function addCategory() {
   return function (dispatch, getState, { db }) {
-    db.select("insert into category(title) values('')")
+    db.select("insert into category(title, titleLower) values('', '')")
     .then(_ => {
       return db.select(selectCategoryList)
         .then(rows => dispatch(categoryListUpdated(rows)))

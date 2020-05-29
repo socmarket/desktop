@@ -12,7 +12,7 @@ const createMig = (db): Promise => {
 function runUpdate(db, step) {
   return db.exec("begin")
     .then(async () => console.log(`migration step: ${step.key}`))
-    .then(_ => db.batch(step.content))
+    .then(_ => step.fun(db, step.key))
     .then(_ => db.exec("insert into migration(mkey) values(?)", [ step.key ]))
     .then(_ => db.exec("commit"))
     .catch(err => {
@@ -51,22 +51,8 @@ function init(db, steps): Promise<string> {
 
 export default function migrate(db): Promise<string>  {
   const files = [
-    { key: "20200317A.sql", content: require("./steps/20200317A.sql").default },
-    { key: "20200317B.sql", content: require("./steps/20200317B.sql").default },
-    { key: "20200318A.sql", content: require("./steps/20200318A.sql").default },
-    { key: "20200318B.sql", content: require("./steps/20200318B.sql").default },
-    { key: "20200318C.sql", content: require("./steps/20200318C.sql").default },
-    { key: "20200318D.sql", content: require("./steps/20200318D.sql").default },
-    { key: "20200319A.sql", content: require("./steps/20200319A.sql").default },
-    { key: "20200319B.sql", content: require("./steps/20200319B.sql").default },
-    { key: "20200320A.sql", content: require("./steps/20200320A.sql").default },
-    { key: "20200322A.sql", content: require("./steps/20200322A.sql").default },
-    { key: "20200323A.sql", content: require("./steps/20200323A.sql").default },
-    { key: "20200323B.sql", content: require("./steps/20200323B.sql").default },
-    { key: "20200323C.sql", content: require("./steps/20200323C.sql").default },
-    { key: "20200325A.sql", content: require("./steps/20200325A.sql").default },
-    { key: "20200326A.sql", content: require("./steps/20200326A.sql").default },
-    { key: "20200523A.sql", content: require("./steps/20200523A.sql").default },
+    { key: "20200529A.ts", fun: require("./steps/20200529A.ts").default },
+    { key: "20200529B.ts", fun: require("./steps/20200529B.ts").default },
   ];
   const steps = files.sort((a, b) => a.key.localeCompare(b.key))
   return init(db, steps);

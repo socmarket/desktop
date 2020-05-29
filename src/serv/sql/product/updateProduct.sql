@@ -1,0 +1,12 @@
+update
+  product
+set
+  barcode=$barcode,
+  title=$title,
+  titleLower=$titleLower,
+  notes=$notes,
+  notes=$notesLower,
+  unitId=$unitId,
+  categoryId=$categoryId
+where
+  id=$id
