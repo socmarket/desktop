@@ -4,5 +4,9 @@ select
 from
   product
   left join category on category.id = product.categoryId
-where (product.titleLower like ?) or (product.code like ?) or (product.barcode like ?)
-limit 20
+where
+  (product.barcode = $pattern)
+  or (product.titleLower like '%' || $pattern || '%')
+  or (category.titleLower like '%' || $pattern || '%')
+  or (category.titleLower like $key0 and product.titleLower like $key1)
+limit 30

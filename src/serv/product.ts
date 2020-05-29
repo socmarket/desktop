@@ -31,16 +31,26 @@ const currentProductUpdated = (product) => ({
 
 function setProductListFilter(pattern) {
   return (dispatch, getState, { db }) => {
-    // db.select("select * from product where (title like ?) or (code like ?) or (barcode like ?)",
-    db.select(selectProductList,
-      [
-        "%" + pattern + "%",
-        "%" + pattern + "%",
-        "%" + pattern + "%",
-      ], {
-        pattern: pattern
-      }
-    ).then(rows => dispatch(productListUpdated(pattern, rows)))
+    const key = pattern.toLowerCase().split(" ")
+      .concat([ "", "", "" ])
+      .map(k => {
+        if (k.length > 0) {
+          return "%" + k + "%";
+        } else {
+          return k;
+        }
+      })
+    ;
+    console.log(key);
+    return db.select(
+        selectProductList,
+        {
+          $pattern: pattern.toLowerCase(),
+          $key0: key[0],
+          $key1: key[1],
+        }
+      )
+      .then(rows => dispatch(productListUpdated(pattern, rows)))
   };
 }
 
