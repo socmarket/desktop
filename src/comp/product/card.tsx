@@ -12,6 +12,7 @@ class ProductCard extends React.Component {
       ...(this.props.productList.currentProduct),
       useGenBarcode: false,
       labelCount: 1,
+      categoryTitle: "",
     };
     this.handleBarcodeActivate = this.handleBarcodeActivate.bind(this);
     this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
@@ -25,6 +26,7 @@ class ProductCard extends React.Component {
     this.handleLabelCountChange = this.handleLabelCountChange.bind(this);
     this.genBarcode = this.genBarcode.bind(this);
     this.printLabel = this.printLabel.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
 
   componentDidUpdate() {
@@ -38,6 +40,10 @@ class ProductCard extends React.Component {
 
   private updateForm() {
     this.props.changeCurrentProduct(this.state);
+  }
+
+  private setFilter() {
+    this.props.setFilter([ this.state.categoryTitle, this.state.title ].join(" ").trim());
   }
 
   printLabel() {
@@ -83,8 +89,7 @@ class ProductCard extends React.Component {
   }
 
   handleTitleChange(event) {
-    this.setState({ title: event.target.value });
-    this.props.setProductListFilter(event.target.value);
+    this.setState({ title: event.target.value }, this.setFilter);
   }
 
   handleNotesChange(event) {
@@ -96,7 +101,10 @@ class ProductCard extends React.Component {
   }
 
   handleCategoryChange(event, data) {
-    this.setState({ categoryId: data.value });
+    this.setState({
+      categoryId: data.value,
+      categoryTitle: data.options[data.value - 1].text,
+    }, this.setFilter);
   }
 
   handleLabelCountChange(event, data) {
@@ -140,6 +148,7 @@ class ProductCard extends React.Component {
                   size="mini"
                   value={this.state.labelCount}
                   onChange={this.handleLabelCountChange}
+                  style={{ width: "100px" }}
                 />
               </Card.Content>
               <Card.Content extra>
@@ -200,7 +209,7 @@ class ProductCard extends React.Component {
         <Grid.Row>
           <Grid.Column width={16}>
             { !isEmpty && (
-              <Button.Group fluid>
+              <Button.Group fluid disabled={isEmpty} >
                 <Button
                   floated="right"
                   {...(isNewProduct && {content: "Создать", onClick: this.handleCreateProduct})}

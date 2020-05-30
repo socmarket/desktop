@@ -45,7 +45,8 @@ function setProductListFilter(pattern) {
     return db.select(
         selectProductList,
         {
-          $pattern: pattern.toLowerCase(),
+          $pattern: pattern,
+          $patternLower: pattern.toLowerCase(),
           $key0: key[0],
           $key1: key[1],
         }
