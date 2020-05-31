@@ -115,7 +115,7 @@ function updateProduct(product) {
     return db.exec(updateProductSql, {
       $barcode: product.barcode,
       $title: product.title,
-      $title: product.title.toLowerCase(),
+      $titleLower: product.title.toLowerCase(),
       $notes: product.notes,
       $notesLower: product.notes.toLowerCase(),
       $unitId: product.unitId,
