@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import Journal from "./journal.tsx"
+import ProductSelector from "../productselector"
 import { ConsignmentActions } from "../../serv/consignment"
 import {
   Header, Grid, Table, Form, Input, Select,
@@ -32,32 +33,35 @@ class Consignment extends React.Component {
     this.handleDecQuantity = this.handleDecQuantity.bind(this);
     this.handleConsignmentClose = this.handleConsignmentClose.bind(this);
 
-    this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
+    this.onProductSelected = this.onProductSelected.bind(this);
     this.handleQuantityChange = this.handleQuantityChange.bind(this);
     this.handlePriceChange = this.handlePriceChange.bind(this);
     this.handleSupplierChange = this.handleSupplierChange.bind(this);
 
-    this.createBarcodeInput = this.createBarcodeInput.bind(this);
     this.createQuantityInput = this.createQuantityInput.bind(this);
     this.createPriceInput = this.createPriceInput.bind(this);
 
-    this.inputBarcode = React.createRef();
+    this.inputSelector = React.createRef();
     this.inputQuantity = React.createRef();
     this.inputPrice = React.createRef();
   }
 
+  private focusSelector() {
+    this.inputSelector.current.focus();
+  }
+
   private addConsignmentItem() {
-    this.props.addConsignmentItem(this.state);
-    setTimeout(() => {
-      this.setState(emptyState, () => {
-        this.inputBarcode.current.focus();
-      });
-    }, 100);
+    const self = this;
+    self.props.addConsignmentItem(self.state);
+    setTimeout(() => self.setState(emptyState, () => {
+      self.focusSelector();
+      console.log(self.inputSelector.current);
+    }), 100);
   }
 
   private validate() {
     if (this.state.barcode.length === 0 || this.props.consignment.currentProduct.id <= 0) {
-      this.inputBarcode.current.focus();
+      this.focusSelector();
       return false;
     }
     if (this.state.quantity <= 0) {
@@ -103,10 +107,9 @@ class Consignment extends React.Component {
           }
         }, 100);
       } else {
-        self.inputBarcode.current.focus();
+        self.focusSelector();
       }
     }
-    console.log(event);
     if (event.key) {
       if (event.key === "Enter") {
         act();
@@ -114,10 +117,6 @@ class Consignment extends React.Component {
     } else {
       act();
     }
-  }
-
-  handleBarcodeChange(event) {
-    this.setState({ barcode: event.target.value, searched: false });
   }
 
   handleQuantityChange(event) {
@@ -157,14 +156,15 @@ class Consignment extends React.Component {
   }
 
   handleConsignmentClose() {
-    if (this.props.consignment.itemsCost > 0) {
-      this.props.closeConsignment(this.state.supplierId);
+    const self = this;
+    if (self.props.consignment.itemsCost > 0) {
+      self.props.closeConsignment(self.state.supplierId);
       setTimeout(() => {
-        this.setState({
+        self.setState({
           supplierId: -1
         }, () => {
-          this.inputBarcode.current.focus();
-          this.props.reloadConsignmentJournal();
+          self.props.reloadConsignmentJournal();
+          self.focusSelector();
         });
       }, 100);
     }
@@ -239,14 +239,6 @@ class Consignment extends React.Component {
     );
   }
 
-  private createBarcodeInput(props) {
-    return (
-      <div className="ui input">
-        <input ref={this.inputBarcode} {...props} />
-      </div>
-    );
-  }
-
   private createQuantityInput(props) {
     return (
       <div className="ui input">
@@ -264,11 +256,20 @@ class Consignment extends React.Component {
     );
   }
 
+  onProductSelected (product) {
+    this.setState({
+      barcode: product.barcode,
+      searched: false
+    }, () => {
+      this.handleActivate({});
+    });
+  }
+
   private form() {
     const currentProduct = this.props.consignment.currentProduct;
     const productNotFound: boolean = !this.searched && this.state.barcode.length > 0 && currentProduct.id < 0;
     const currentItem = this.props.consignment.currentConsignmentItem;
-    const productId = currentItem.productId
+    const productId = currentItem.productId;
     const barcode = this.state.barcode;
     const searched = this.state.searched;
     const itemsCost = this.props.consignment.itemsCost;
@@ -278,22 +279,12 @@ class Consignment extends React.Component {
     return (
       <Segment onKeyPress={this.handleActivate}>
         <Form error={productNotFound} success={!productNotFound}>
-          <Form.Group>
-            <Form.Input width={16}
-              autoFocus
-              label="Штрихкод"
-              error={productNotFound}
-              value={this.state.barcode}
-              onFocus={this.handleBarcodeFocus}
-              onChange={this.handleBarcodeChange}
-              control={this.createBarcodeInput}
-            />
-          </Form.Group>
-          <Message
-            error={productNotFound}
-            success={!productNotFound}
-            content={foundProductTitle}
+          <ProductSelector
+            autoFocus
+            forwardRef={this.inputSelector}
+            onProductSelected={this.onProductSelected}
           />
+          <Divider />
           <Form.Group>
             <Form.Input
               width={6}

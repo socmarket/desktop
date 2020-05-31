@@ -29,29 +29,37 @@ const currentProductUpdated = (product) => ({
   product: product
 });
 
-function setProductListFilter(pattern) {
+function getFilteredProductList(patternRaw) { 
+  const pattern = patternRaw.trim();
+  const key = pattern.toLowerCase().split(" ")
+    .concat([ "", "", "" ])
+    .map(k => {
+      if (k.length > 0) {
+        return "%" + k + "%";
+      } else {
+        return k;
+      }
+    })
+  ;
+  return db.select(
+      selectProductList,
+      {
+        $pattern: pattern,
+        $patternLower: pattern.toLowerCase(),
+        $key0: key[0],
+        $key1: key[1],
+      }
+    );
+}
+
+function setProductListFilter(pattern, cb) {
   return (dispatch, getState, { db }) => {
-    const key = pattern.toLowerCase().split(" ")
-      .concat([ "", "", "" ])
-      .map(k => {
-        if (k.length > 0) {
-          return "%" + k + "%";
-        } else {
-          return k;
-        }
+    getFilteredProductList(pattern)
+      .then(rows => {
+        dispatch(productListUpdated(pattern, rows))
+        if (cb) cb(rows);
       })
     ;
-    console.log(key);
-    return db.select(
-        selectProductList,
-        {
-          $pattern: pattern,
-          $patternLower: pattern.toLowerCase(),
-          $key0: key[0],
-          $key1: key[1],
-        }
-      )
-      .then(rows => dispatch(productListUpdated(pattern, rows)))
   };
 }
 
