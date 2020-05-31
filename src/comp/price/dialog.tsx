@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
-import { Modal, Grid, Form, Input, Table, Button, Segment, Image, Label } from "semantic-ui-react"
+import { Modal, Grid, Form, Input, Table, Button, Segment, Image, Label, Divider } from "semantic-ui-react"
 import { AppActions } from "../../serv/app"
 import { PriceActions } from "../../serv/price"
+import ProductSelector from "../productselector"
 
 class PriceDialog extends React.Component {
 
@@ -14,19 +15,20 @@ class PriceDialog extends React.Component {
       price: "",
     };
     this.handleBarcodeActivate = this.handleBarcodeActivate.bind(this);
-    this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
     this.handlePriceChange = this.handlePriceChange.bind(this);
     this.handleBarcodeKey = this.handleBarcodeKey.bind(this);
 
     this.createBarcodeInput = this.createBarcodeInput.bind(this);
     this.createPriceInput = this.createPriceInput.bind(this);
 
-    this.inputBarcode = React.createRef();
+    this.inputSelector = React.createRef();
     this.inputPrice = React.createRef();
+
+    this.onProductSelected = this.onProductSelected.bind(this);
   }
 
   private createBarcodeInput(props) {
-    return (<Input ref={this.inputBarcode} style={{ textAlign: "right" }} {...props} />);
+    return (<Input ref={this.inputSelector} style={{ textAlign: "right" }} {...props} />);
   }
 
   private createPriceInput(props) {
@@ -56,7 +58,7 @@ class PriceDialog extends React.Component {
             barcode: "",
             price: 0,
           }, () => {
-            this.inputBarcode.current.focus();
+            this.inputSelector.current.focus();
           });
         }, 100);
       }
@@ -69,13 +71,6 @@ class PriceDialog extends React.Component {
     }
   }
 
-  handleBarcodeBlur() {
-  }
-
-  handleBarcodeChange(event) {
-    this.setState({ barcode: event.target.value });
-  }
-
   handlePriceChange(event) {
     if (!isNaN(Number(event.target.value))) {
       this.setState({
@@ -84,15 +79,22 @@ class PriceDialog extends React.Component {
     }
   }
 
+  onProductSelected (product) {
+    this.setState({
+      barcode: product.barcode,
+    }, () => {
+      this.handleBarcodeActivate({});
+    });
+  }
+
   table() {
     const currentProduct = this.props.priceList.currentProduct;
     return (
       <Table compact celled selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell colSpan={2}>
-              {currentProduct.title}
-            </Table.HeaderCell>
+            <Table.HeaderCell>Дата</Table.HeaderCell>
+            <Table.HeaderCell>Цена продажи</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -111,30 +113,26 @@ class PriceDialog extends React.Component {
     return (
       <Grid columns={2}>
         <Grid.Row>
-          <Grid.Column width={6}>
-            <Image fluid bordered rounded src="https://picsum.photos/200/250" />
+          <Grid.Column width={16}>
+            <ProductSelector
+              autoFocus
+              forwardRef={this.inputSelector}
+              onProductSelected={this.onProductSelected}
+            />
           </Grid.Column>
-          <Grid.Column width={10}>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={16}>
             <Form>
               <Form.Group>
-                <Form.Input width={10}
-                  autoFocus
-                  label="Штрихкод"
-                  onKeyPress={this.handleBarcodeKey}
-                  onBlur={this.handleBarcodeActivate}
-                  onChange={this.handleBarcodeChange}
-                  control={this.createBarcodeInput}
-                  value={this.state.barcode}
-                />
-                <Form.Input width={6}
-                  label="Цена"
+                <Form.Input
                   onKeyPress={this.handleBarcodeKey}
                   onChange={this.handlePriceChange}
                   control={this.createPriceInput}
                   value={this.state.price}
                 />
+                <Button primary fluid>Установить цену</Button>
               </Form.Group>
-              <Button primary fluid>Установить цену</Button>
               {this.table()}
             </Form>
           </Grid.Column>

@@ -48,6 +48,7 @@ function getFilteredProductList(patternRaw) {
         $patternLower: pattern.toLowerCase(),
         $key0: key[0],
         $key1: key[1],
+        $key2: "%" + key[2] + "%",
       }
     );
 }

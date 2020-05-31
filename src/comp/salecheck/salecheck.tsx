@@ -6,6 +6,7 @@ import {
   TextArea, Button, Segment, Image,
   Label, Container, Menu, Message, Divider
 } from "semantic-ui-react"
+import ProductSelector from "../productselector"
 import { SaleCheckActions } from "../../serv/salecheck"
 
 class SaleCheck extends React.Component {
@@ -30,10 +31,10 @@ class SaleCheck extends React.Component {
     this.handleDecQuantity = this.handleDecQuantity.bind(this);
     this.handleSaleCheckClose = this.handleSaleCheckClose.bind(this);
     this.createCashInput = this.createCashInput.bind(this);
-    this.createBarcodeInput = this.createBarcodeInput.bind(this);
+    this.onProductSelected = this.onProductSelected.bind(this);
 
     this.inputCash = React.createRef();
-    this.inputBarcode = React.createRef();
+    this.inputSelector = React.createRef();
   }
 
   private addSaleCheckItem() {
@@ -108,13 +109,13 @@ class SaleCheck extends React.Component {
         cashAmount: 0.00,
         clientId: -1,
       }, () => {
-        setTimeout(() => this.inputBarcode.current.focus(), 100);
+        setTimeout(() => this.inputSelector.current.focus(), 100);
       });
     } else if (this.props.saleCheck.items.length > 0) {
       this.inputCash.current.focus();
       this.inputCash.current.select();
     } else {
-      this.inputBarcode.current.focus();
+      this.inputSelector.current.focus();
     }
   }
 
@@ -134,6 +135,16 @@ class SaleCheck extends React.Component {
         currentItemIdx: -1
       });
     }
+  }
+
+  onProductSelected (product) {
+    const self = this;
+    this.setState({
+      barcode: product.barcode,
+      searched: false
+    }, () => {
+      self.handleBarcodeActivate({ key: "Enter" });
+    });
   }
 
   private list() {
@@ -204,15 +215,6 @@ class SaleCheck extends React.Component {
     );
   }
 
-  private createBarcodeInput(props) {
-    return (
-      <div className="ui input action">
-        <input autoFocus ref={this.inputBarcode} {...props} />
-        <Button primary onClick={this.handleBarcodeActivate}>Добавить</Button>
-      </div>
-    );
-  }
-
   private form() {
     const productId = this.props.saleCheck.currentSaleCheckItem.productId
     const barcode = this.state.barcode;
@@ -223,16 +225,12 @@ class SaleCheck extends React.Component {
     return (
       <Segment onKeyPress={this.handleBarcodeActivate}>
         <Form error={productNotFound}>
-          <Form.Group>
-            <Form.Input width={16}
-              autoFocus
-              label="Штрихкод"
-              value={this.state.barcode}
-              onFocus={this.handleBarcodeFocus}
-              onChange={this.handleBarcodeChange}
-              control={this.createBarcodeInput}
-            />
-          </Form.Group>
+          <ProductSelector
+            autoFocus
+            forwardRef={this.inputSelector}
+            onProductSelected={this.onProductSelected}
+          />
+          <Divider />
           <Message error header='Товар не найден' content="Проверьте штрихкод или вбейте его вручную." />
         </Form>
         <br />
