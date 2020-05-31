@@ -1,9 +1,11 @@
 import { Product } from "./product"
-import selectPriceForProduct from "./sql/selectPriceForProduct.sql"
+import selectPriceForProduct        from "./sql/selectPriceForProduct.sql"
+import selectConsignmentByProductId from "./sql/price/selectConsignmentByProductId.sql"
 
 export interface PriceState {
-  currentProduct: Price,
-  currentProductPriceList: Array
+  currentProduct: Price;
+  currentProductPriceList: Array;
+  consignmentSummary: object;
 }
 
 const priceListProductFound = (product, prices) => ({
@@ -16,17 +18,35 @@ const priceListProductNotFound = () => ({
   type: "PRICELIST_PRODUCT_NOT_FOUND",
 });
 
+const consignmentSummaryUpdated = (consignmentSummary) => ({
+  type: "PRICELIST_CONSIGNMENT_SUMMARY_UPDATED",
+  consignmentSummary: consignmentSummary,
+})
+
 function findProduct(barcode) {
   return function (dispatch, getState, { db }) {
     if (barcode.length > 0) {
       db.selectOne("select * from product where barcode = ?", [ barcode ])
         .then(foundProduct => {
           if (foundProduct) {
-            return db.select(selectPriceForProduct, [ foundProduct.id ])
+            db.select(selectPriceForProduct, [ foundProduct.id ])
               .then(prices => {
                 const foundPrices = prices ? prices : [];
                 dispatch(priceListProductFound(foundProduct, foundPrices));
               })
+            ;
+            db.select(selectConsignmentByProductId, { $productId: foundProduct.id })
+              .then(rows => {
+                const totalCost = rows.map(i => i.price * i.quantity).reduce((a, b) => a + b);
+                const totalQuantity = rows.map(i => i.quantity).reduce((a, b) => a + b);
+                dispatch(consignmentSummaryUpdated({
+                  averagePrice: Math.round(totalCost / totalQuantity * 100) / 100.00,
+                  totalCost: totalCost,
+                  totalQuantity: totalQuantity,
+                  items: rows,
+                }));
+              })
+            ;
           } else {
             dispatch(priceListProductNotFound());
           }
@@ -68,6 +88,12 @@ function PriceReducer (state: PriceState = {
     barcode: "",
     title: "",
     notes: "",
+  },
+  consignmentSummary: {
+    totalCost: 0.00,
+    totalQuantity: 0.00,
+    averagePrice: 0.00,
+    items: [],
   }
 }, action) {
   switch (action.type) {
@@ -86,6 +112,10 @@ function PriceReducer (state: PriceState = {
           notes: "",
         },
         currentProductPriceList: []
+      });
+    case 'PRICELIST_CONSIGNMENT_SUMMARY_UPDATED':
+      return Object.assign({}, state, {
+        consignmentSummary: action.consignmentSummary
       });
     default:
       return state

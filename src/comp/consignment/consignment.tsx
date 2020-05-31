@@ -1,7 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import Journal from "./journal.tsx"
+import SummaryByProduct from "./summaryByProduct.tsx"
+import SummaryByCategory from "./summaryByCategory.tsx"
 import ProductSelector from "../productselector"
 import { ConsignmentActions } from "../../serv/consignment"
 import {
@@ -163,49 +165,18 @@ class Consignment extends React.Component {
         self.setState({
           supplierId: -1
         }, () => {
-          self.props.reloadConsignmentJournal();
+          switch (this.props.consignment.currentReport) {
+            case "journal": 
+              self.props.reloadConsignmentJournal();
+              break;
+            case "summaryByCategory":
+              self.props.reloadConsignmentJournal();
+              break;
+          }
           self.focusSelector();
         });
       }, 100);
     }
-  }
-
-  componentDidMount() {
-    this.props.updateConsignmentList();
-  }
-
-  private list() {
-    const summaryByCategory = this.props.consignment.summaryByCategory;
-    return (
-      <Table compact celled selectable>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Категория</Table.HeaderCell>
-            <Table.HeaderCell>Позиций</Table.HeaderCell>
-            <Table.HeaderCell>Товаров</Table.HeaderCell>
-            <Table.HeaderCell>Сумма</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Всего</Table.HeaderCell>
-            <Table.HeaderCell textAlign="right">{summaryByCategory.summary.uniqueQuantity}</Table.HeaderCell>
-            <Table.HeaderCell textAlign="right">{summaryByCategory.summary.quantity}</Table.HeaderCell>
-            <Table.HeaderCell textAlign="right">{summaryByCategory.summary.cost}</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          { summaryByCategory.items.map( (item, idx) => (
-            <Table.Row key={idx}>
-              <Table.Cell>{item.categoryTitle}</Table.Cell>
-              <Table.Cell textAlign="right">{item.uniqueQuantity}</Table.Cell>
-              <Table.Cell textAlign="right">{item.quantity}</Table.Cell>
-              <Table.Cell textAlign="right">{item.cost}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
-    );
   }
 
   private table() {
@@ -326,27 +297,22 @@ class Consignment extends React.Component {
     );
   }
 
-  editor() {
+  menu() {
     const idx = this.state.currentItemIdx
     const items = this.props.consignment.items;
     const item = (idx >= 0 && idx < items.length) ? items[idx] : {
       title: "",
       quantity: 0,
     };
+    const current = this.props.consignment.currentReport;
     return (
       <Menu>
-        <Menu.Item>
-          <div className="ui input">
-            <input value={item.quantity} style={{ textAlign: "right" }} readOnly />
-          </div>
+        <Menu.Item active={current==="journal"} onClick={() => this.props.openReport("journal")}>
+          Журнал
         </Menu.Item>
-        <Menu.Item>
-          <Button icon="minus" onClick={this.handleDecQuantity} />
+        <Menu.Item active={current==="summaryByCategory"} onClick={() => this.props.openReport("summaryByCategory")}>
+          Сводка по категориям
         </Menu.Item>
-        <Menu.Item>
-          <Button icon="plus" onClick={this.handleIncQuantity} />
-        </Menu.Item>
-        <Menu.Item><Header>{item.title}</Header></Menu.Item>
       </Menu>
     );
   }
@@ -356,17 +322,25 @@ class Consignment extends React.Component {
       <Grid columns={2} padded onKeyDown={this.handleNavigation}>
         <Grid.Column width={5}>
           {this.form()}
-          {this.list()}
+          { (this.props.consignment.currentProduct.id > 0) && <SummaryByProduct /> }
         </Grid.Column>
         <Grid.Column width={11}>
           <Container>
-            {this.editor()}
             {this.table()}
+            {this.menu()}
           </Container>
-          <br />
-          <br />
-          <Divider horizontal>Журнал приёмки</Divider>
-          <Journal />
+          { (this.props.consignment.currentReport === "journal") &&
+            <Fragment>
+              <Divider horizontal>Журнал приёмки</Divider>
+              <Journal />
+            </Fragment>
+          }
+          { (this.props.consignment.currentReport === "summaryByCategory") &&
+            <Fragment>
+              <Divider horizontal>Сводка по категориям</Divider>
+              <SummaryByCategory />
+            </Fragment>
+          }
         </Grid.Column>
       </Grid>
     );

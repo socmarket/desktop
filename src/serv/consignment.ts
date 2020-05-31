@@ -5,6 +5,7 @@ import consignmentListSimple from "./sql/consignmentListSimple.sql"
 
 import selectConsignmentList     from "./sql/consignment/journal/selectConsignmentList.sql"
 import selectConsignmentItemsFor from "./sql/consignment/journal/selectConsignmentItemsFor.sql"
+import selectByProductId         from "./sql/consignment/selectByProductId.sql"
 
 export interface ConsignmentJournal {
   items: Array
@@ -29,6 +30,8 @@ export interface ConsignmentState {
   currentConsignmentItem: ConsignmentItem;
   currentProduct: Product;
   journal: ConsignmentJournal;
+  currentReport: string;
+  summaryByProduct: object;
 }
 
 const currentConsignmentProductFound = (product) => ({
@@ -57,6 +60,11 @@ const consignmentListUpdated = (summaryByCategory) => ({
 const updateConsignmentJournal = (items) => ({
   type: "CONSIGNMENT_JOURNAL_UPDATE",
   items: items,
+})
+
+const summaryByProductUpdated = (summaryByProduct) => ({
+  type: "CONSIGNMENT_SUMMARY_BY_PRODUCT_UPDATED",
+  summaryByProduct: summaryByProduct,
 })
 
 function reloadConsignmentJournal() {
@@ -88,6 +96,13 @@ function findProduct(barcode) {
           } else {
             dispatch(currentConsignmentProductNotFound());
           }
+          return db.select(selectByProductId, { $productId: foundProduct.id })
+            .then(rows => {
+              dispatch(summaryByProductUpdated({
+                product: foundProduct,
+                items: rows,
+              }));
+            });
         })
     } else {
       dispatch(currentConsignmentProductNotFound());
@@ -120,7 +135,7 @@ function closeConsignment(supplierId) {
       .then(consignmentId => db.exec("update consignment set closed = true where id = ?", [ consignmentId ]))
       .then(_ => db.exec("commit"))
       .then(_ => dispatch(consignmentClosed()))
-      .then(_ => updateConsignmentList()(dispatch, getState, { db: db }))
+      .then(_ => reloadSummaryByCategory()(dispatch, getState, { db: db }))
       .then(_ => reloadConsignmentJournal()(dispatch, getState, { db: db }))
       .catch(err => {
         console.log(err);
@@ -129,7 +144,7 @@ function closeConsignment(supplierId) {
   };
 }
 
-function updateConsignmentList() {
+function reloadSummaryByCategory() {
   return function (dispatch, getState, { db }) {
     return Promise.resolve()
       .then(_ => db.select(consignmentListSimple))
@@ -165,14 +180,22 @@ function incConsignmentItemQuantity(barcode) {
   };
 }
 
+function openReport(name) {
+  return {
+    type: "CONSIGNMENT_OPEN_REPORT",
+    name: name,
+  };
+}
+
 const ConsignmentActions = {
   addConsignmentItem: addConsignmentItem,
   incConsignmentItemQuantity: incConsignmentItemQuantity,
   decConsignmentItemQuantity: decConsignmentItemQuantity,
   closeConsignment: closeConsignment,
   findProduct: findProduct,
-  updateConsignmentList: updateConsignmentList,
+  reloadSummaryByCategory: reloadSummaryByCategory,
   reloadConsignmentJournal: reloadConsignmentJournal,
+  openReport: openReport,
 }
 
 const emptyConsignmentItem = {
@@ -210,6 +233,15 @@ function ConsignmentReducer (state: ConsignmentState = {
   currentConsignmentItem: emptyConsignmentItem,
   currentProduct: emptyProduct,
   journal: {
+    items: []
+  },
+  currentReport: "journal",
+  summaryByProduct: {
+    product: {
+      title: "",
+      categoryTitle: "",
+      barcode: "",
+    },
     items: []
   },
 }, action) {
@@ -304,6 +336,16 @@ function ConsignmentReducer (state: ConsignmentState = {
         journal: {
           items: action.items
         }
+      });
+    }
+    case "CONSIGNMENT_OPEN_REPORT": {
+      return Object.assign({}, state, {
+        currentReport: action.name
+      });
+    }
+    case "CONSIGNMENT_SUMMARY_BY_PRODUCT_UPDATED": {
+      return Object.assign({}, state, {
+        summaryByProduct: action.summaryByProduct
       });
     }
     default:

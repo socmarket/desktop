@@ -87,7 +87,7 @@ class PriceDialog extends React.Component {
     });
   }
 
-  table() {
+  prices() {
     const currentProduct = this.props.priceList.currentProduct;
     return (
       <Table compact celled selectable>
@@ -109,7 +109,56 @@ class PriceDialog extends React.Component {
     );
   }
 
+  consignmentSummary() {
+    const summ = this.props.consignmentSummary;
+    return (
+      <Table compact celled selectable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell colSpan={3}>
+              Общее кол-во: {summ.totalQuantity}<br />
+              Общая стоимость: {summ.totalCost}<br />
+              Средняя цена: {summ.averagePrice}<br />
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Дата</Table.HeaderCell>
+            <Table.HeaderCell>Закупка по</Table.HeaderCell>
+            <Table.HeaderCell>Кол-во</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          { summ.items.map((item, idx) => (
+            <Table.Row key={idx}>
+              <Table.Cell>{moment.utc(item.acceptedAt).local().format("DD-MM-YYYY HH:mm")}</Table.Cell>
+              <Table.Cell>{item.price}</Table.Cell>
+              <Table.Cell>{item.quantity}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    );
+  }
+
   form() {
+    return (
+      <Form>
+        <Form.Group>
+          <Form.Input
+            onKeyPress={this.handleBarcodeKey}
+            onChange={this.handlePriceChange}
+            control={this.createPriceInput}
+            value={this.state.price}
+          />
+          <Button primary fluid>Установить цену</Button>
+        </Form.Group>
+      </Form>
+    );
+  }
+
+  content() {
     return (
       <Grid columns={2}>
         <Grid.Row>
@@ -123,18 +172,15 @@ class PriceDialog extends React.Component {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={16}>
-            <Form>
-              <Form.Group>
-                <Form.Input
-                  onKeyPress={this.handleBarcodeKey}
-                  onChange={this.handlePriceChange}
-                  control={this.createPriceInput}
-                  value={this.state.price}
-                />
-                <Button primary fluid>Установить цену</Button>
-              </Form.Group>
-              {this.table()}
-            </Form>
+            {this.form()}
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={8}>
+            {this.prices()}
+          </Grid.Column>
+          <Grid.Column width={8}>
+            {this.consignmentSummary()}
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -143,9 +189,9 @@ class PriceDialog extends React.Component {
 
   render() {
     return (
-      <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closePrices()}>
+      <Modal open size="large" centered={false} closeIcon onClose={() => this.props.closePrices()}>
         <Modal.Content>
-          {this.form()}
+          {this.content()}
         </Modal.Content>
       </Modal>
     );
@@ -156,6 +202,7 @@ const stateMap = (state) => {
   return {
     app: state.app,
     priceList: state.priceList,
+    consignmentSummary: state.priceList.consignmentSummary
   };
 }
 
