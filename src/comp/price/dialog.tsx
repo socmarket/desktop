@@ -25,6 +25,9 @@ class PriceDialog extends React.Component {
     this.inputPrice = React.createRef();
 
     this.onProductSelected = this.onProductSelected.bind(this);
+
+    this.findNextProductWithoutPrice = this.findNextProductWithoutPrice.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   private createBarcodeInput(props) {
@@ -39,16 +42,18 @@ class PriceDialog extends React.Component {
     );
   }
 
-  componentDidUpdate() {
-    const currentProduct = this.props.priceList.currentProduct;
-    if (currentProduct.barcode === this.state.barcode && this.state.barcode.length > 0) {
-      this.inputPrice.current.focus();
+  handleKeyDown(event) {
+    if (event.key && event.ctrlKey && (event.key === "l" || event.key === "L")) {
+      this.inputSelector.current.focus();
     }
   }
 
   handleBarcodeActivate() {
+    const self = this;
     const currentProduct = this.props.priceList.currentProduct;
     if (this.state.barcode.length > 0) {
+      this.inputPrice.current.focus();
+      this.inputPrice.current.select();
       if (currentProduct.barcode !== this.state.barcode) {
         this.props.findProduct(this.state.barcode);
       } else if (this.state.price > 0) {
@@ -63,6 +68,19 @@ class PriceDialog extends React.Component {
         }, 100);
       }
     }
+  }
+
+  findNextProductWithoutPrice() {
+    const self = this;
+    const currentProduct = this.props.priceList.currentProduct;
+    this.props.findNextProductWithoutPrice(currentProduct.id);
+    setTimeout(() => {
+      self.setState({
+        barcode: self.props.priceList.currentProduct.barcode,
+      }, () => {
+        self.handleBarcodeActivate({});
+      });
+    }, 100);
   }
 
   handleBarcodeKey(event) {
@@ -152,19 +170,24 @@ class PriceDialog extends React.Component {
             control={this.createPriceInput}
             value={this.state.price}
           />
-          <Button primary fluid>Установить цену</Button>
+          <Button primary fluid onClick={this.handleBarcodeKey}>Установить цену</Button>
+          <Button fluid onClick={this.findNextProductWithoutPrice} icon="angle double right">Следующий товар без цены</Button>
         </Form.Group>
       </Form>
     );
   }
 
   content() {
+    const product = this.props.priceList.currentProduct;
+    const label = product.categoryTitle + " : " + product.title + " : " + product.barcode;
+    const selectAttrs = product.id > 0 ? { value: { value: product.id, label: label } } : {};
     return (
       <Grid columns={2}>
         <Grid.Row>
           <Grid.Column width={16}>
             <ProductSelector
               autoFocus
+              {...selectAttrs}
               forwardRef={this.inputSelector}
               onProductSelected={this.onProductSelected}
             />
@@ -190,7 +213,7 @@ class PriceDialog extends React.Component {
   render() {
     return (
       <Modal open size="large" centered={false} closeIcon onClose={() => this.props.closePrices()}>
-        <Modal.Content>
+        <Modal.Content onKeyDown={this.handleKeyDown}>
           {this.content()}
         </Modal.Content>
       </Modal>

@@ -52,10 +52,10 @@ class ProductSelector extends React.Component {
       <AsyncSelect
         { ...this.props }
         closeMenuOnSelect={true}
-        isClearable={true}
         loadOptions={this.loadOptions}
         onChange={this.onChange}
         ref={this.props.forwardRef}
+        components={{ DropdownIndicator:() => null }}
       />
     );
   }

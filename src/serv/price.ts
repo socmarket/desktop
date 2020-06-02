@@ -1,6 +1,8 @@
 import { Product } from "./product"
-import selectPriceForProduct        from "./sql/selectPriceForProduct.sql"
-import selectConsignmentByProductId from "./sql/price/selectConsignmentByProductId.sql"
+import selectPriceForProduct         from "./sql/selectPriceForProduct.sql"
+import selectConsignmentByProductId  from "./sql/price/selectConsignmentByProductId.sql"
+import selectNextProductWithoutPrice from "./sql/price/selectNextProductWithoutPrice.sql"
+import selectProductByBarcode        from "./sql/price/selectProductByBarcode.sql"
 
 export interface PriceState {
   currentProduct: Price;
@@ -26,7 +28,7 @@ const consignmentSummaryUpdated = (consignmentSummary) => ({
 function findProduct(barcode) {
   return function (dispatch, getState, { db }) {
     if (barcode.length > 0) {
-      db.selectOne("select * from product where barcode = ?", [ barcode ])
+      db.selectOne(selectProductByBarcode, [ barcode ])
         .then(foundProduct => {
           if (foundProduct) {
             db.select(selectPriceForProduct, [ foundProduct.id ])
@@ -57,6 +59,37 @@ function findProduct(barcode) {
   };
 }
 
+function findNextProductWithoutPrice(id) {
+  return function (dispatch, getState, { db }) {
+    const productId = (typeof id === "undefined") ? -1 : id;
+    db.selectOne(selectNextProductWithoutPrice, { $productId: productId })
+      .then(foundProduct => {
+        if (foundProduct) {
+          db.select(selectPriceForProduct, [ foundProduct.id ])
+            .then(prices => {
+              const foundPrices = prices ? prices : [];
+              dispatch(priceListProductFound(foundProduct, foundPrices));
+            })
+          ;
+          db.select(selectConsignmentByProductId, { $productId: foundProduct.id })
+            .then(rows => {
+              const totalCost = rows.map(i => i.price * i.quantity).reduce((a, b) => a + b);
+              const totalQuantity = rows.map(i => i.quantity).reduce((a, b) => a + b);
+              dispatch(consignmentSummaryUpdated({
+                averagePrice: Math.round(totalCost / totalQuantity * 100) / 100.00,
+                totalCost: totalCost,
+                totalQuantity: totalQuantity,
+                items: rows,
+              }));
+            })
+          ;
+        } else {
+          dispatch(priceListProductNotFound());
+        }
+      })
+  };
+}
+
 function setPrice(price, currencyId) {
   return function (dispatch, getState, { db }) {
     const { priceList: { currentProduct } } = getState();
@@ -77,6 +110,7 @@ function setPrice(price, currencyId) {
 
 const PriceActions = {
   findProduct: findProduct,
+  findNextProductWithoutPrice: findNextProductWithoutPrice,
   setPrice: setPrice,
 }
 
