@@ -171,7 +171,7 @@ class PriceDialog extends React.Component {
             value={this.state.price}
           />
           <Button primary fluid onClick={this.handleBarcodeKey}>Установить цену</Button>
-          <Button fluid onClick={this.findNextProductWithoutPrice} icon="angle double right">Следующий товар без цены</Button>
+          <Button fluid onClick={this.findNextProductWithoutPrice}>Следующий товар без цены</Button>
         </Form.Group>
       </Form>
     );

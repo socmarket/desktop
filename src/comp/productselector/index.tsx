@@ -39,7 +39,7 @@ class ProductSelector extends React.Component {
   loadOptions(pattern, cb) {
     this.props.setProductListFilter(pattern, function (rows) {
       const options = rows.map(product => ({
-        label: product.categoryTitle + " : " + product.title + " : " + product.barcode,
+        label: product.categoryTitle + " : " + product.title + " : " + product.quantity + " |" + product.barcode,
         value: product.id,
         product: product,
       }));
