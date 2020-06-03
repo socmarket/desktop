@@ -10,7 +10,8 @@ module.exports = api => {
       require("@babel/preset-typescript"),
     ],
     plugins: [
-      [ "@babel/plugin-transform-runtime", { "regenerator": true } ]
+      [ "@babel/plugin-transform-runtime", { "regenerator": true } ],
+      [ "@babel/plugin-proposal-class-properties" ],
     ],
   };
 };

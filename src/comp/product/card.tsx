@@ -4,6 +4,8 @@ import { Grid, Form, Card, Input, Select, TextArea, Button, Segment, Image, Labe
 import { Product, ProductActions } from "../../serv/product"
 import { LabellerActions } from "../../serv/labeller"
 
+import { CategoryPicker } from "../../aui/comp/category";
+
 class ProductCard extends React.Component {
 
   constructor(props) {
@@ -100,10 +102,10 @@ class ProductCard extends React.Component {
     this.setState({ unitId: data.value });
   }
 
-  handleCategoryChange(event, data) {
+  handleCategoryChange(category) {
     this.setState({
-      categoryId: data.value,
-      categoryTitle: data.options[data.value - 1].text,
+      categoryId: category.id,
+      categoryTitle: category.title,
     }, this.setFilter);
   }
 
@@ -184,13 +186,13 @@ class ProductCard extends React.Component {
                   onChange={this.handleUnitChange}
                 />
               </Form.Group>
-              <Form.Group>
-                <Form.Select width={16} label="Категория товара" fluid
-                  options={this.props.categoryOptions}
+              <Form.Field>
+                <label>Категория товара</label>
+                <CategoryPicker
                   value={this.state.categoryId}
-                  onChange={this.handleCategoryChange}
+                  onPick={this.handleCategoryChange}
                 />
-              </Form.Group>
+              </Form.Field>
               <Form.Group>
                 <Form.Input width={16} label="Наименование"
                   value={this.state.title}

@@ -4,6 +4,8 @@
 const os                = require('os');
 const { contextBridge } = require('electron');
 
+import initApi from "./api";
+
 const printer = {
   dev: null,
   vid: 0,
@@ -17,8 +19,10 @@ function init() {
   let db = new sqlite3.Database("socmag.db");
   let _db = db;
   let _usb = initUsb();
+  const api = initApi("socmag.db");
 
   contextBridge.exposeInMainWorld("usb", _usb);
+  contextBridge.exposeInMainWorld("api", api);
   contextBridge.exposeInMainWorld("db", {
 
     batch: function (sql, params) {

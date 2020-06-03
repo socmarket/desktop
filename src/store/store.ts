@@ -24,6 +24,7 @@ import migrate from "../db/migration";
 const thunkM = thunk.withExtraArgument({
   db: window.db,
   usb: window.usb,
+  api: window.api,
 });
 
 function createRootReducer() {

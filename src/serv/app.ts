@@ -96,7 +96,7 @@ const AppActions = {
 
 function AppReducer (state: AppState = {
   showPriceDialog: false,
-  showProductsDialog: false,
+  showProductsDialog: true,
   showCategoriesDialog: false,
   showSuppliersDialog: false,
   showClientsDialog: false,
