@@ -8,3 +8,5 @@ from
   left join category parent on parent.id == category.parentId
 where
   category.titleLower like '%' || $pattern || '%'
+order by
+  category.titleLower asc

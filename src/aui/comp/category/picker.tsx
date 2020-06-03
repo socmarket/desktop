@@ -10,12 +10,13 @@ export default class CategoryPicker extends React.Component {
     super(props);
     this.onPick = this.onPick.bind(this);
     this.loadOptions = this.loadOptions.bind(this);
-    this.state = {};
+    this.state = {
+    };
   }
 
   updateText(value) {
     const self = this;
-    api.category.pick(value)
+    return api.category.pick(value)
       .then(category => {
         if (category) {
           self.setState({
@@ -34,6 +35,10 @@ export default class CategoryPicker extends React.Component {
 
   componentDidMount() {
     this.updateText(this.props.value);
+    this.loadOptions("", (cats) => {
+      this.setState({
+      })
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -73,6 +78,7 @@ export default class CategoryPicker extends React.Component {
         ref={this.props.forwardRef}
         onChange={this.onPick}
         components={{ DropdownIndicator:() => null }}
+        defaultOptions
         value={{
           value: this.state.value,
           label: this.state.label
