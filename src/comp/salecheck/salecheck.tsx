@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
 import {
@@ -6,8 +6,12 @@ import {
   TextArea, Button, Segment, Image,
   Label, Container, Menu, Message, Divider
 } from "semantic-ui-react"
+
 import ProductSelector from "../productselector"
+import { ClientPicker } from "../../aui/comp/client";
 import { SaleCheckActions } from "../../serv/salecheck"
+
+import Journal from "./journal.tsx";
 
 class SaleCheck extends React.Component {
 
@@ -35,6 +39,7 @@ class SaleCheck extends React.Component {
 
     this.inputCash = React.createRef();
     this.inputSelector = React.createRef();
+    this.clientPickerRef = React.createRef();
   }
 
   private addSaleCheckItem() {
@@ -82,8 +87,9 @@ class SaleCheck extends React.Component {
     this.setState({ cashAmount: event.target.value });
   }
 
-  handleClientChange(event, data) {
-    this.setState({ clientId: data.value });
+  handleClientChange(client) {
+    console.log(client)
+    this.setState({ clientId: client.id });
   }
 
   handleDecQuantity() {
@@ -103,17 +109,26 @@ class SaleCheck extends React.Component {
   }
 
   handleSaleCheckClose() {
-    if (this.props.saleCheck.items.length > 0 && this.state.cashAmount >= this.props.saleCheck.itemsCost) {
-      this.props.closeSaleCheck(this.state.cashAmount, this.state.cashAmount - this.props.itemsCost, this.state.clientId);
-      this.setState({
-        cashAmount: 0.00,
-        clientId: -1,
-      }, () => {
-        setTimeout(() => this.inputSelector.current.focus(), 100);
-      });
-    } else if (this.props.saleCheck.items.length > 0) {
-      this.inputCash.current.focus();
-      this.inputCash.current.select();
+    const self = this;
+    if (this.props.saleCheck.items.length > 0) {
+      if (this.state.cashAmount >= this.props.saleCheck.itemsCost || this.state.clientId > 0) {
+        this.props.closeSaleCheck(this.state.cashAmount, this.state.cashAmount - this.props.itemsCost, this.state.clientId);
+        this.setState({
+          cashAmount: 0.00,
+          clientId: -1,
+        }, () => {
+          setTimeout(() => {
+            switch (this.props.saleCheck.currentReport) {
+              case "journal": 
+                self.props.reloadSaleJournal();
+                self.inputSelector.current.focus();
+                break;
+            }
+          }, 100);
+        });
+      } else {
+        this.clientPickerRef.current.focus();
+      }
     } else {
       this.inputSelector.current.focus();
     }
@@ -224,7 +239,7 @@ class SaleCheck extends React.Component {
     const itemsCost = this.props.saleCheck.itemsCost;
     return (
       <Segment onKeyPress={this.handleBarcodeActivate}>
-        <Form error={productNotFound}>
+        <Form error={productNotFound} onKeyDown={this.handleNavigation}>
           <ProductSelector
             autoFocus
             forwardRef={this.inputSelector}
@@ -260,16 +275,16 @@ class SaleCheck extends React.Component {
         </Grid>
         <br />
         <Form error={productNotFound}>
-          <Form.Group>
-            <Form.Select
-              width={16}
+          <Form.Field>
+            <label>Клиент</label>
+            <ClientPicker
               label="Клиент"
               value={this.state.clientId}
-              options={this.props.clientOptions}
-              onChange={this.handleClientChange}
+              onPick={this.handleClientChange}
+              forwardRef={this.clientPickerRef}
             />
-          </Form.Group>
-          <Form.Group>
+          </Form.Field>
+          <Form.Group onKeyDown={this.handleNavigation}>
             <Form.Input width={16}
               label="Наличными"
               value={cashAmount}
@@ -290,6 +305,7 @@ class SaleCheck extends React.Component {
       title: "",
       quantity: 0,
     };
+    const current = this.props.saleCheck.currentReport;
     return (
       <Menu>
         <Menu.Item>
@@ -304,6 +320,12 @@ class SaleCheck extends React.Component {
           <Button icon="plus" onClick={this.handleIncQuantity} />
         </Menu.Item>
         <Menu.Item><Header>{item.title}</Header></Menu.Item>
+        <Menu.Item active={current==="journal"} onClick={() => this.props.openReport("journal")}>
+          Журнал
+        </Menu.Item>
+        <Menu.Item active={current==="summaryByCategory"} onClick={() => this.props.openReport("summaryByCategory")}>
+          Сводка по категориям
+        </Menu.Item>
       </Menu>
     );
   }
@@ -315,7 +337,7 @@ class SaleCheck extends React.Component {
     const priceNotSet = this.props.saleCheck.priceNotSet;
     const priceNotSetMsg = "Цена на товар " + lastProduct + " не установлена. Товар не добавлен. Установите цену."
     return (
-      <Grid columns={2} padded onKeyDown={this.handleNavigation}>
+      <Grid columns={2} padded>
         <Grid.Column width={5}>
           {this.form()}
           {this.list()}
@@ -326,6 +348,13 @@ class SaleCheck extends React.Component {
             { priceNotSet && (<Message error header="Ошибка" content={priceNotSetMsg} />) }
             {this.table()}
           </Container>
+
+          { (this.props.saleCheck.currentReport === "journal") &&
+            <Fragment>
+              <Divider horizontal>Журнал продаж</Divider>
+              <Journal />
+            </Fragment>
+          }
         </Grid.Column>
       </Grid>
     );

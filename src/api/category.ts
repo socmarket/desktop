@@ -2,6 +2,7 @@ import { Database } from "./db"
 
 // @ts-ignore
 import selectCategoryById from "./sql/category/selectCategoryById.sql"
+// @ts-ignore
 import selectCategoryByTitle from "./sql/category/selectCategoryByTitle.sql"
 
 export interface Category {
@@ -12,6 +13,7 @@ export interface Category {
 };
 
 export interface CategoryApi {
+  pick(id: number): Promise<Category>;
   find(pattern: string): Promise<Category[]>;
 };
 

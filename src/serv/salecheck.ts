@@ -4,6 +4,13 @@ import saleCheckInsertItem from "./sql/salecheckInsertItem.sql"
 import saleCheckListSimple from "./sql/saleCheckListSimple.sql"
 import selectProductWithPrice from "./sql/selectProductWithPrice.sql"
 
+import selectSaleCheckList from "./sql/selectSaleCheckList.sql"
+import selectSaleCheckItemsFor from "./sql/selectSaleCheckItemsFor.sql"
+
+export interface SaleJournal {
+  items: Array
+}
+
 export interface ProductWithPrice {
   productId: int;
   barcode: string;
@@ -28,6 +35,8 @@ export interface SaleCheckState {
   priceNotSet: boolean;
   lastItemTitle: string;
   lastItemBarcode: string;
+  currentReport: string;
+  journal: SaleJournal;
 }
 
 const currentSaleCheckProductFound = (product) => ({
@@ -47,6 +56,18 @@ const saleCheckListUpdated = (list) => ({
   type: "SALECHECK_LIST_UPDATED",
   list: list,
 })
+
+const updateSaleJournal = (items) => ({
+  type: "SALECHECK_JOURNAL_UPDATE",
+  items: items,
+})
+
+function openReport(name) {
+  return {
+    type: "SALECHECK_OPEN_REPORT",
+    name: name,
+  };
+}
 
 function addSaleCheckItem(barcode) {
   return function (dispatch, getState, { db }) {
@@ -125,12 +146,33 @@ function incSaleCheckItemQuantity(barcode) {
   };
 }
 
+function reloadSaleJournal() {
+  return function (dispatch, getState, { db }) {
+    return db.select(selectSaleCheckList)
+      .then(items =>
+        Promise.all(
+          items.map(saleCheck => new Promise((resolve, reject) => {
+            db.select(selectSaleCheckItemsFor, { $saleCheckId: saleCheck.id })
+              .then(items => {
+                resolve({ ...saleCheck, items: items })
+              })
+              .catch(err => reject(err))
+          }))
+        )
+      )
+      .then(items => dispatch(updateSaleJournal(items)))
+    ;
+  };
+}
+
 const SaleCheckActions = {
   addSaleCheckItem: addSaleCheckItem,
   incSaleCheckItemQuantity: incSaleCheckItemQuantity,
   decSaleCheckItemQuantity: decSaleCheckItemQuantity,
   closeSaleCheck: closeSaleCheck,
   updateSaleCheckList: updateSaleCheckList,
+  reloadSaleJournal: reloadSaleJournal,
+  openReport: openReport,
 }
 
 const emptySaleCheckItem = {
@@ -160,6 +202,10 @@ function SaleCheckReducer (state: SaleCheckState = {
   priceNotSet: false,
   lastItemTitle: "",
   lastItemBarcode: "",
+  currentReport: "journal",
+  journal: {
+    items: [],
+  }
 }, action) {
   switch (action.type) {
     case 'SALECHECK_PRODUCT_FOUND':
@@ -226,6 +272,18 @@ function SaleCheckReducer (state: SaleCheckState = {
         currentSaleCheckItem: emptySaleCheckItem,
         items: [],
         itemsCost: 0.00,
+      });
+    }
+    case "SALECHECK_JOURNAL_UPDATE": {
+      return Object.assign({}, state, {
+        journal: {
+          items: action.items
+        }
+      });
+    }
+    case "SALECHECK_OPEN_REPORT": {
+      return Object.assign({}, state, {
+        currentReport: action.name
       });
     }
     default:

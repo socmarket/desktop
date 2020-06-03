@@ -96,13 +96,13 @@ const AppActions = {
 
 function AppReducer (state: AppState = {
   showPriceDialog: false,
-  showProductsDialog: true,
+  showProductsDialog: false,
   showCategoriesDialog: false,
   showSuppliersDialog: false,
   showClientsDialog: false,
   showSettingsDialog: false,
   showLabellerDialog: false,
-  activePage: "dashboard",
+  activePage: "saleCheck",
 }, action) {
   switch (action.type) {
     case 'APP_SHOW_CLIENTS_DIALOG':

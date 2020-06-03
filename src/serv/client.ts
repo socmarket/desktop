@@ -34,9 +34,10 @@ function setClientListFilter(pattern) {
 function createClient(client: Client) {
   return function (dispatch, getState, { db }) {
     const { client: { filterPattern } } = getState();
-    db.exec("insert into client(name, contacts, notes) values(?, ?, ?)",
+    db.exec("insert into client(name, nameLower, contacts, notes) values(?, ?, ?, ?)",
       [
         client.name,
+        client.name.toLowerCase(),
         client.contacts,
         client.notes,
       ], {
@@ -51,9 +52,10 @@ function createClient(client: Client) {
 function updateClient(client) {
   return function (dispatch, getState, { db }) {
     const { client: { filterPattern } } = getState();
-    db.exec("update client set name = $name, contacts = $contacts, notes = $notes where id = $id",
+    db.exec("update client set name = $name, nameLower = $nameLower, contacts = $contacts, notes = $notes where id = $id",
       {
         $name: client.name,
+        $nameLower: client.name.toLowerCase(),
         $contacts: client.contacts,
         $notes: client.notes,
         $id: client.id

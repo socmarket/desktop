@@ -15,7 +15,6 @@ import SettingsDialog from "../comp/settings";
 import LabellerDialog from "../comp/labeller";
 
 import Dashboard from "../comp/dashboard";
-import SaleJournal from "../comp/salejournal/salejournal.tsx";
 import SaleCheck from "../comp/salecheck/salecheck.tsx";
 import Consignment from "../comp/consignment/consignment.tsx";
 
@@ -26,7 +25,6 @@ class HomePage extends React.Component {
         <MainMenu />
 
         { (this.props.app.activePage == "dashboard"  ) && <Dashboard /> }
-        { (this.props.app.activePage == "saleJournal") && <SaleJournal /> }
         { (this.props.app.activePage == "saleCheck"  ) && <SaleCheck /> }
         { (this.props.app.activePage == "consignment") && <Consignment /> }
 

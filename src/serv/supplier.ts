@@ -34,9 +34,10 @@ function setSupplierListFilter(pattern) {
 function createSupplier(supplier: Supplier) {
   return function (dispatch, getState, { db }) {
     const { supplier: { filterPattern } } = getState();
-    db.exec("insert into supplier(name, contacts, notes) values(?, ?, ?)",
+    db.exec("insert into supplier(name, nameLower, contacts, notes) values(?, ?, ?, ?)",
       [
         supplier.name,
+        supplier.name.toLowerCase(),
         supplier.contacts,
         supplier.notes,
       ], {
@@ -51,9 +52,10 @@ function createSupplier(supplier: Supplier) {
 function updateSupplier(supplier) {
   return function (dispatch, getState, { db }) {
     const { supplier: { filterPattern } } = getState();
-    db.exec("update supplier set name = $name, contacts = $contacts, notes = $notes where id = $id",
+    db.exec("update supplier set name = $name, nameLower = $nameLower, contacts = $contacts, notes = $notes where id = $id",
       {
         $name: supplier.name,
+        $nameLower: supplier.name.toLowerCase(),
         $contacts: supplier.contacts,
         $notes: supplier.notes,
         $id: supplier.id

@@ -15,7 +15,6 @@ import { SettingsActions, SettingsReducer } from "../serv/settings"
 import { LabellerActions, LabellerReducer } from "../serv/labeller"
 
 import { DashboardActions, DashboardReducer } from "../serv/dashboard"
-import { SaleJournalActions, SaleJournalReducer } from "../serv/salejournal"
 import { SaleCheckActions, SaleCheckReducer } from "../serv/salecheck"
 import { ConsignmentActions, ConsignmentReducer } from "../serv/consignment"
 
@@ -33,7 +32,6 @@ function createRootReducer() {
     unitList: UnitReducer,
     counter: CounterReducer,
     dashboard: DashboardReducer,
-    saleJournal: SaleJournalReducer,
     priceList: PriceReducer,
     productList: ProductReducer,
     categoryList: CategoryReducer,
@@ -59,7 +57,6 @@ function devCreateStore() {
     ...PriceActions,
     ...CounterActions,
     ...DashboardActions,
-    ...SaleJournalActions,
     ...ProductActions,
     ...CategoryActions,
     ...RegistryActions,
