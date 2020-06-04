@@ -8,6 +8,7 @@ import selectClientByTitle from "./sql/client/selectClientByTitle.sql"
 export interface Client {
   id: number;
   title: string;
+  balance: number;
 };
 
 export interface ClientApi {

@@ -29,13 +29,6 @@ class MainMenu extends React.Component {
           Приёмка
         </Menu.Item>
 
-        <Menu.Item
-          active={this.props.app.activePage === "saleJournal"}
-          onClick={() => this.props.openSaleJournal()}
-        >
-          Журнал продаж
-        </Menu.Item>
-
         <Menu.Menu position="right">
           <Menu.Item
             active={this.props.app.showPricesDialog}

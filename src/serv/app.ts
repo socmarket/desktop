@@ -88,10 +88,6 @@ const AppActions = {
     type: 'APP_OPEN_DASHBOARD',
   }),
 
-  openSaleJournal: () => ({
-    type: 'APP_OPEN_SALE_JOURNAL',
-  }),
-
 }
 
 function AppReducer (state: AppState = {
@@ -139,8 +135,6 @@ function AppReducer (state: AppState = {
       return Object.assign({}, state, { showLabellerDialog: false });
     case 'APP_OPEN_DASHBOARD':
       return Object.assign({}, state, { activePage: "dashboard" });
-    case 'APP_OPEN_SALE_JOURNAL':
-      return Object.assign({}, state, { activePage: "saleJournal" });
     case 'APP_OPEN_CONSIGNMENT':
       return Object.assign({}, state, { activePage: "consignment" });
     case 'APP_OPEN_SALECHECK':

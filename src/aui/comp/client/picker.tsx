@@ -21,7 +21,7 @@ export default class ClientPicker extends React.Component {
         if (client) {
           self.setState({
             value: client.id,
-            label: client.name,
+            label: client.name + ": " + client.balance,
           });
         } else {
           self.setState({
@@ -46,11 +46,11 @@ export default class ClientPicker extends React.Component {
   loadOptions(pattern, cb) {
     const self = this;
     api.client.find(pattern)
-      .then(cats => {
-        const opts = cats.map(cat => ({
-          label: cat.name,
-          value: cat.id,
-          client: cat,
+      .then(clients => {
+        const opts = clients.map(client => ({
+          label: client.name + ": " + client.balance,
+          value: client.id,
+          client: client,
         }));
         cb(opts);
       })

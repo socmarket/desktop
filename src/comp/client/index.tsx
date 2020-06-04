@@ -14,6 +14,7 @@ class ClientDialog extends React.Component {
       name: "",
       contacts: "",
       notes: "",
+      balanceItemAmount: 0,
     };
     this.activate = this.activate.bind(this);
     this.resetForm = this.resetForm.bind(this);
@@ -22,6 +23,11 @@ class ClientDialog extends React.Component {
     this.handleContactsChange = this.handleContactsChange.bind(this);
     this.handleNotesChange = this.handleNotesChange.bind(this);
     this.selectClient = this.selectClient.bind(this);
+
+    this.onBalanceItemAmountChange = this.onBalanceItemAmountChange.bind(this);
+
+    this.addDebit = this.addDebit.bind(this);
+    this.addCredit = this.addCredit.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +36,18 @@ class ClientDialog extends React.Component {
 
   handleFilterChange(event) {
     this.props.setClientListFilter(event.target.value);
+  }
+
+  onBalanceItemAmountChange(event) {
+    try {
+      const value = +event.target.value;
+      if (!isNaN(value) && isFinite(value)) {
+        this.setState({
+          balanceItemAmount: value,
+        });
+      }
+    } catch (e) {
+    }
   }
 
   handleNameChange(event) {
@@ -56,10 +74,11 @@ class ClientDialog extends React.Component {
       name: "",
       contacts: "",
       notes: "",
+      balanceItemAmount: 0,
     });
   }
 
-  activate(event) {
+  activate() {
     const act = () => {
       if (this.state.id < 0) {
         this.createClient();
@@ -67,13 +86,7 @@ class ClientDialog extends React.Component {
         this.updateClient();
       }
     }
-    if (event.key) {
-      if (event.key === "Enter" && event.shiftKey) {
-        act();
-      }
-    } else {
-      act();
-    }
+    act();
   }
 
   createClient() {
@@ -107,34 +120,76 @@ class ClientDialog extends React.Component {
   selectClient(idx) {
     const items = this.props.client.items;
     if (idx >= 0 && idx < items.length) {
-      const sup = items[idx];
+      const client = items[idx];
       this.setState({
-        id: sup.id,
-        name: sup.name,
-        contacts: sup.contacts,
-        notes: sup.notes,
+        id: client.id,
+        name: client.name,
+        contacts: client.contacts,
+        notes: client.notes,
+        balanceItemAmount: 0,
+      }, () => {
+        this.props.reloadBalance(client.id);
       });
     }
   }
 
-  private table() {
+  addDebit() {
+    if (this.state.id > 0 && this.state.balanceItemAmount > 0) {
+      this.props.addBalanceItem(this.state.id, this.state.balanceItemAmount)
+        .then(_ => {
+          this.setState({
+            balanceItemAmount: 0
+          });
+        })
+      ;
+    }
+  }
+
+  addCredit() {
+    if (this.state.id > 0 && this.state.balanceItemAmount > 0) {
+      this.props.addBalanceItem(this.state.id, -this.state.balanceItemAmount)
+        .then(_ => {
+          this.setState({
+            balanceItemAmount: 0
+          });
+        })
+      ;
+    }
+  }
+
+  balance() {
     return (
       <Table compact celled selectable>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>№</Table.HeaderCell>
-            <Table.HeaderCell>ФИО</Table.HeaderCell>
-            <Table.HeaderCell>Контакты</Table.HeaderCell>
-            <Table.HeaderCell>Заметки</Table.HeaderCell>
+            <Table.HeaderCell colSpan={2}>
+              {this.state.name}
+            </Table.HeaderCell>
+            <Table.HeaderCell textAlign="right">
+              {this.props.client.balance.total}
+            </Table.HeaderCell>
+          </Table.Row>
+          <Table.Row>
+            <Table.HeaderCell colSpan={3}>
+              <Input width={5} value={this.state.balanceItemAmount} onChange={this.onBalanceItemAmountChange} />
+              <Button color="green" icon="plus" floated="right" onClick={this.addDebit} />
+              <Button color="red" icon="minus" floated="right" onClick={this.addCredit} />
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Дата</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">+</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">-</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          { this.props.client.items.map( (sup, idx) => (
-            <Table.Row key={sup.id} onClick={() => this.selectClient(idx)}>
-              <Table.Cell>{sup.id}</Table.Cell>
-              <Table.Cell>{sup.name}</Table.Cell>
-              <Table.Cell>{sup.contacts}</Table.Cell>
-              <Table.Cell>{sup.notes}</Table.Cell>
+          { this.props.client.balance.items.map( (item, idx) => (
+            <Table.Row key={idx}>
+              <Table.Cell>{item.day}</Table.Cell>
+              <Table.Cell textAlign="right">{item.debit}</Table.Cell>
+              <Table.Cell textAlign="right">{item.credit}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -142,11 +197,32 @@ class ClientDialog extends React.Component {
     );
   }
 
-  private menu() {
+  table() {
+    return (
+      <Table compact celled selectable>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>ФИО</Table.HeaderCell>
+            <Table.HeaderCell>Контакты</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          { this.props.client.items.map( (client, idx) => (
+            <Table.Row key={client.id} onClick={() => this.selectClient(idx)}>
+              <Table.Cell>{client.name}</Table.Cell>
+              <Table.Cell>{client.contacts}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    );
+  }
+
+  menu() {
     return (
       <Menu borderless>
         <Menu.Item>
-          <h4>Поставщики</h4>
+          <h4>Клиенты</h4>
         </Menu.Item>
         <Menu.Item style={{ flexGrow: 1 }}>
           <Input
@@ -156,10 +232,6 @@ class ClientDialog extends React.Component {
             onChange={this.handleFilterChange}
           />
         </Menu.Item>
-        <Menu.Item position="right">
-          { !this.props.client.showForm && <Button icon="angle down" onClick={() => this.props.showClientForm()} /> }
-          { this.props.client.showForm && <Button icon="angle up" onClick={() => this.props.hideClientForm()} /> }
-        </Menu.Item>
       </Menu>
     );
   }
@@ -168,69 +240,56 @@ class ClientDialog extends React.Component {
     const isCreate = this.state.id < 0 && this.state.name.length > 0;
     const isUpdate = this.state.id > 0 && this.state.name.length > 0;
     return (
-      <Grid columns={2} onKeyPress={this.activate}>
-        <Grid.Row>
-          <Grid.Column width={6}>
-            <Image fluid bordered rounded src="https://picsum.photos/200/250" />
-          </Grid.Column>
-          <Grid.Column width={10}>
-            <Form>
-              <Form.Group>
-                <Form.Input
-                  width={16}
-                  label="Наименование\ФИО"
-                  autoFocus
-                  value={this.state.name}
-                  onChange={this.handleNameChange}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.TextArea
-                  width={16}
-                  label="Контакты"
-                  value={this.state.contacts}
-                  onChange={this.handleContactsChange}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.TextArea
-                  width={16}
-                  label="Заметки"
-                  value={this.state.notes}
-                  onChange={this.handleNotesChange}
-                />
-              </Form.Group>
-              { !isUpdate && <Button primary fluid disabled={!isCreate} >Добавить</Button> }
-              { isUpdate && <Button primary fluid>Изменить</Button> }
-            </Form>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <Segment>
+        <Form>
+          <Form.Group>
+            <Form.Input
+              width={16}
+              label="Наименование\ФИО"
+              autoFocus
+              value={this.state.name}
+              onChange={this.handleNameChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.TextArea
+              width={16}
+              label="Контакты"
+              value={this.state.contacts}
+              onChange={this.handleContactsChange}
+            />
+          </Form.Group>
+          { !isUpdate && <Button primary fluid disabled={!isCreate} onClick={this.activate}>Добавить</Button> }
+          { isUpdate && <Button primary fluid onClick={this.activate}>Изменить</Button> }
+        </Form>
+      </Segment>
     );
   }
 
-  private content() {
-    const formVisible = this.props.client.showForm;
-    const minHeight = 200;
-    const maxHeight = formVisible ? 200 : 200 + this.state.formHeight;
+  content() {
     return (
       <Container>
         {this.menu()}
-        { this.props.client.showForm &&
-          <div className="ui segment">
-            {this.card()}
-          </div>
-        }
-        <Container style={{ minHeight: minHeight, maxHeight: maxHeight, overflowY: "scroll"}}>
-          {this.table()}
-        </Container>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={6}>
+              {this.card()}
+            </Grid.Column>
+            <Grid.Column width={5}>
+              {this.table()}
+            </Grid.Column>
+            <Grid.Column width={5}>
+              {this.state.id > 0 && this.balance()}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </Container>
     );
   }
 
   render() {
     return (
-      <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closeClients()}>
+      <Modal open size="large" centered={false} closeIcon onClose={() => this.props.closeClients()}>
         <Modal.Content>
           {this.content()}
         </Modal.Content>
@@ -247,4 +306,3 @@ const stateMap = (state) => {
 }
 
 export default connect(stateMap, { ...AppActions, ...ClientActions })(ClientDialog);
-

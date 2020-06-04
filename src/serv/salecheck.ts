@@ -228,7 +228,7 @@ function SaleCheckReducer (state: SaleCheckState = {
         items.map(i => (i.productId === product.id) ? Object.assign({}, i, { quantity: i.quantity + 1 }) : i) :
         [ ... items, saleCheckItem ]
       ;
-      const sum = newItems.map(i => i.price * i.quantity).reduce((a, b) => a + b);
+      const sum = newItems.map(i => i.price * i.quantity).reduce((a, b) => (a + b), 0);
       const priceNotSet = product.price <= 0;
       return Object.assign({}, state, {
         currentSaleCheckItem: saleCheckItem,

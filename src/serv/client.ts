@@ -1,5 +1,7 @@
 import { RegistryActions } from "./registry"
 
+import selectBalanceByIdSql from "./sql/client/selectBalanceById.sql"
+
 export interface Client {
   id: int;
   name: string;
@@ -8,9 +10,10 @@ export interface Client {
 }
 
 export interface ClientState {
-  items: Array,
-  filterPattern: string,
-  showForm: boolean,
+  items: Array;
+  filterPattern: string;
+  showForm: boolean;
+  balance: object;
 }
 
 const clientListUpdated = (pattern, rows) => ({
@@ -24,9 +27,15 @@ const currentClientUpdated = (client) => ({
   client: client
 });
 
+const balanceUpdated = (items) => ({
+  type: "CLIENT_BALANCE_UPDATED",
+  items: items
+});
+
+
 function setClientListFilter(pattern) {
   return (dispatch, getState, { db }) => {
-    db.select("select * from client where (name like ?)", [ "%" + pattern + "%" ], { pattern: pattern })
+    db.select("select * from client where (nameLower like ?)", [ "%" + pattern.toLowerCase() + "%" ])
       .then(rows => dispatch(clientListUpdated(pattern, rows)))
   };
 }
@@ -68,6 +77,25 @@ function updateClient(client) {
   };
 }
 
+function reloadBalance(clientId) {
+  return function (dispatch, getState, { db }) {
+    return db.select(selectBalanceByIdSql, { $clientId: clientId })
+      .then(rows => dispatch(balanceUpdated(rows)))
+    ;
+  };
+}
+
+function addBalanceItem(clientId, amount) {
+  return function (dispatch, getState, { db }) {
+    return db.exec("insert into clientbalance(clientId, amount) values(?, ?)", [
+      clientId,
+      Math.round(amount * 100),
+    ])
+      .then(_ => reloadBalance(clientId)(dispatch, getState, { db: db }))
+    ;
+  };
+}
+
 const ClientActions = {
   showClientForm: () => ({
     type: 'CLIENT_SHOW_FORM'
@@ -78,12 +106,18 @@ const ClientActions = {
   createClient: createClient,
   updateClient: updateClient,
   setClientListFilter: setClientListFilter,
+  reloadBalance: reloadBalance,
+  addBalanceItem: addBalanceItem,
 }
 
 function ClientReducer (state: ClientState = {
   items: [],
   filterPattern: "",
   showForm: true,
+  balance: {
+    items: [],
+    total: 0,
+  }
 }, action) {
   switch (action.type) {
     case 'CLIENT_LIST_UPDATED':
@@ -92,10 +126,20 @@ function ClientReducer (state: ClientState = {
       return Object.assign({}, state, { showForm: true });
     case 'CLIENT_HIDE_FORM':
       return Object.assign({}, state, { showForm: false });
+    case 'CLIENT_BALANCE_UPDATED': {
+      const items = action.items;
+      const debit  = items.length > 0 ? items.map(a => a.debit ).reduce((a, b) => (a + b), 0) : 0;
+      const credit = items.length > 0 ? items.map(a => a.credit).reduce((a, b) => (a + b), 0) : 0;
+      return Object.assign({}, state, {
+        balance: {
+          items: action.items,
+          total: debit - credit,
+        }
+      });
+    }
     default:
       return state
   }
 }
 
 export { ClientActions, ClientReducer };
-
