@@ -17,6 +17,7 @@ import LabellerDialog from "../comp/labeller";
 import Dashboard from "../comp/dashboard";
 import SaleCheck from "../comp/salecheck/salecheck.tsx";
 import Consignment from "../comp/consignment/consignment.tsx";
+import Test from "../comp/test";
 
 class HomePage extends React.Component {
   render() {
@@ -27,6 +28,7 @@ class HomePage extends React.Component {
         { (this.props.app.activePage == "dashboard"  ) && <Dashboard /> }
         { (this.props.app.activePage == "saleCheck"  ) && <SaleCheck /> }
         { (this.props.app.activePage == "consignment") && <Consignment /> }
+        { (this.props.app.activePage == "test") && <Test /> }
 
         { this.props.app.showUnitsDialog && <UnitDialog /> }
         { this.props.app.showPricesDialog && <PriceDialog /> }

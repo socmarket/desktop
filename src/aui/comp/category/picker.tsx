@@ -14,7 +14,7 @@ export default class CategoryPicker extends React.Component {
     };
   }
 
-  updateText(value) {
+  updateLabel(value) {
     const self = this;
     return api.category.pick(value)
       .then(category => {
@@ -34,16 +34,12 @@ export default class CategoryPicker extends React.Component {
   }
 
   componentDidMount() {
-    this.updateText(this.props.value);
-    this.loadOptions("", (cats) => {
-      this.setState({
-      })
-    });
+    this.updateLabel(this.props.value);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.value !== this.props.value) {
-      this.updateText(this.props.value);
+      this.updateLabel(this.props.value);
     }
   }
 

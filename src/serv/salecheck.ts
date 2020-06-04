@@ -272,6 +272,7 @@ function SaleCheckReducer (state: SaleCheckState = {
         currentSaleCheckItem: emptySaleCheckItem,
         items: [],
         itemsCost: 0.00,
+        priceNotSet: false,
       });
     }
     case "SALECHECK_JOURNAL_UPDATE": {

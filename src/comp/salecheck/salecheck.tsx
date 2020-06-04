@@ -9,6 +9,7 @@ import {
 
 import ProductSelector from "../productselector"
 import { ClientPicker } from "../../aui/comp/client";
+import { SaleCheckForm } from "../../aui/comp/salecheck";
 import { SaleCheckActions } from "../../serv/salecheck"
 
 import Journal from "./journal.tsx";
@@ -18,38 +19,13 @@ class SaleCheck extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      barcode: "",
-      cashAmount: 0.00,
-      clientId: -1,
-      searched: false,
       currentItemIdx: -1,
-      lastTitle: "",
-      lastBarcode: "",
     }
-    this.handleBarcodeActivate = this.handleBarcodeActivate.bind(this);
-    this.handleBarcodeChange = this.handleBarcodeChange.bind(this);
-    this.handleCashAmountChange = this.handleCashAmountChange.bind(this);
-    this.handleClientChange = this.handleClientChange.bind(this);
     this.handleNavigation = this.handleNavigation.bind(this);
     this.handleIncQuantity = this.handleIncQuantity.bind(this);
     this.handleDecQuantity = this.handleDecQuantity.bind(this);
     this.handleSaleCheckClose = this.handleSaleCheckClose.bind(this);
-    this.createCashInput = this.createCashInput.bind(this);
     this.onProductSelected = this.onProductSelected.bind(this);
-
-    this.inputCash = React.createRef();
-    this.inputSelector = React.createRef();
-    this.clientPickerRef = React.createRef();
-  }
-
-  private addSaleCheckItem() {
-    this.props.addSaleCheckItem(this.state.barcode);
-    setTimeout(() => {
-      const id = this.props.saleCheck.currentSaleCheckItem.productId;
-      if (id < 0) {
-        this.setState({ searched: true });
-      }
-    }, 100);
   }
 
   handleNavigation(event) {
@@ -69,29 +45,6 @@ class SaleCheck extends React.Component {
     }
   }
 
-  handleBarcodeActivate(event) {
-    if (event.key && event.key === "Enter") {
-      if (this.state.barcode.length > 0) {
-        this.addSaleCheckItem();
-      } else {
-        this.handleSaleCheckClose();
-      }
-    }
-  }
-
-  handleBarcodeChange(event) {
-    this.setState({ barcode: event.target.value, searched: false });
-  }
-
-  handleCashAmountChange(event) {
-    this.setState({ cashAmount: event.target.value });
-  }
-
-  handleClientChange(client) {
-    console.log(client)
-    this.setState({ clientId: client.id });
-  }
-
   handleDecQuantity() {
     const idx = this.state.currentItemIdx;
     const items = this.props.saleCheck.items;
@@ -108,30 +61,15 @@ class SaleCheck extends React.Component {
     }
   }
 
-  handleSaleCheckClose() {
-    const self = this;
-    if (this.props.saleCheck.items.length > 0) {
-      if (this.state.cashAmount >= this.props.saleCheck.itemsCost || this.state.clientId > 0) {
-        this.props.closeSaleCheck(this.state.cashAmount, this.state.cashAmount - this.props.itemsCost, this.state.clientId);
-        this.setState({
-          cashAmount: 0.00,
-          clientId: -1,
-        }, () => {
-          setTimeout(() => {
-            switch (this.props.saleCheck.currentReport) {
-              case "journal": 
-                self.props.reloadSaleJournal();
-                self.inputSelector.current.focus();
-                break;
-            }
-          }, 100);
-        });
-      } else {
-        this.clientPickerRef.current.focus();
+  handleSaleCheckClose(client, cash, change) {
+    this.props.closeSaleCheck(cash, change, client.id);
+    setTimeout(() => {
+      switch (this.props.saleCheck.currentReport) {
+        case "journal": 
+          this.props.reloadSaleJournal();
+          break;
       }
-    } else {
-      this.inputSelector.current.focus();
-    }
+    }, 100);
   }
 
   componentDidMount() {
@@ -139,12 +77,6 @@ class SaleCheck extends React.Component {
   }
 
   componentDidUpdate() {
-    const id = this.props.saleCheck.currentSaleCheckItem.productId;
-    if (id > 0 && this.state.barcode.length > 0) {
-      this.setState({ barcode: "" }, () => {
-        this.addSaleCheckItem();
-      });
-    }
     if (this.state.currentItemIdx >= this.props.saleCheck.items.length) {
       this.setState({
         currentItemIdx: -1
@@ -153,13 +85,7 @@ class SaleCheck extends React.Component {
   }
 
   onProductSelected (product) {
-    const self = this;
-    this.setState({
-      barcode: product.barcode,
-      searched: false
-    }, () => {
-      self.handleBarcodeActivate({ key: "Enter" });
-    });
+    this.props.addSaleCheckItem(product.barcode);
   }
 
   private list() {
@@ -221,83 +147,6 @@ class SaleCheck extends React.Component {
     );
   }
 
-  private createCashInput(props) {
-    return (
-      <div className="ui input action">
-        <input ref={this.inputCash} style={{ textAlign: "right" }} {...props} />
-        <Button positive onClick={this.handleSaleCheckClose}>Оплатить</Button>
-      </div>
-    );
-  }
-
-  private form() {
-    const productId = this.props.saleCheck.currentSaleCheckItem.productId
-    const barcode = this.state.barcode;
-    const searched = this.state.searched;
-    const productNotFound: boolean = productId < 0 && barcode.length > 0 && searched;
-    const cashAmount = this.state.cashAmount;
-    const itemsCost = this.props.saleCheck.itemsCost;
-    return (
-      <Segment onKeyPress={this.handleBarcodeActivate}>
-        <Form error={productNotFound} onKeyDown={this.handleNavigation}>
-          <ProductSelector
-            autoFocus
-            forwardRef={this.inputSelector}
-            onProductSelected={this.onProductSelected}
-          />
-          <Divider />
-          <Message error header='Товар не найден' content="Проверьте штрихкод или вбейте его вручную." />
-        </Form>
-        <br />
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={6}><Header as="h2" >Сумма: </Header></Grid.Column>
-            <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{itemsCost}</Header></Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width={6}><Header as="h2" >Скидка: </Header></Grid.Column>
-            <Grid.Column width={10}><Header as="h2" dividing textAlign="right">0.00</Header></Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width={6}><Header as="h1">Итог: </Header></Grid.Column>
-            <Grid.Column width={10}>
-              <Header dividing as="h1" textAlign="right">{this.props.saleCheck.itemsCost}</Header>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width={6}><Header as="h2">Сдача: </Header></Grid.Column>
-            <Grid.Column width={10}>
-              <Header dividing as="h2" textAlign="right">
-                {cashAmount > itemsCost ? Math.round((cashAmount - itemsCost + Number.EPSILON) * 100) / 100 : "0.00" }
-              </Header>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-        <br />
-        <Form error={productNotFound}>
-          <Form.Field>
-            <label>Клиент</label>
-            <ClientPicker
-              label="Клиент"
-              value={this.state.clientId}
-              onPick={this.handleClientChange}
-              forwardRef={this.clientPickerRef}
-            />
-          </Form.Field>
-          <Form.Group onKeyDown={this.handleNavigation}>
-            <Form.Input width={16}
-              label="Наличными"
-              value={cashAmount}
-              onFocus={this.handleBarcodeFocus}
-              onChange={this.handleCashAmountChange}
-              control={this.createCashInput}
-            />
-          </Form.Group>
-        </Form>
-      </Segment>
-    );
-  }
-
   editor() {
     const idx = this.state.currentItemIdx
     const items = this.props.saleCheck.items;
@@ -310,15 +159,15 @@ class SaleCheck extends React.Component {
       <Menu>
         <Menu.Item>
           <div className="ui input">
-            <input value={item.quantity} style={{ textAlign: "right" }} readOnly />
+            <input value={item.quantity} style={{ textAlign: "right" }} onKeyDown={this.handleNavigation} readOnly />
           </div>
         </Menu.Item>
-        <Menu.Item>
-          <Button icon="minus" onClick={this.handleDecQuantity} />
-        </Menu.Item>
-        <Menu.Item>
-          <Button icon="plus" onClick={this.handleIncQuantity} />
-        </Menu.Item>
+        <Menu.Item><Button icon="minus" onClick={this.handleDecQuantity} /></Menu.Item>
+        <Menu.Item><Button icon="plus" onClick={this.handleIncQuantity} /></Menu.Item>
+
+        <Menu.Item><Button icon="arrow left" onClick={() => this.handleNavigation({ key: "ArrowUp" })} /></Menu.Item>
+        <Menu.Item><Button icon="arrow right" onClick={() => this.handleNavigation({ key: "ArrowDown" })} /></Menu.Item>
+
         <Menu.Item><Header>{item.title}</Header></Menu.Item>
         <Menu.Item active={current==="journal"} onClick={() => this.props.openReport("journal")}>
           Журнал
@@ -339,7 +188,13 @@ class SaleCheck extends React.Component {
     return (
       <Grid columns={2} padded>
         <Grid.Column width={5}>
-          {this.form()}
+          <SaleCheckForm
+            api={window.api}
+            cost={this.props.saleCheck.itemsCost}
+            items={this.props.saleCheck.items}
+            onProductPick={this.onProductSelected}
+            onActivate={this.handleSaleCheckClose}
+          />
           {this.list()}
         </Grid.Column>
         <Grid.Column width={11}>

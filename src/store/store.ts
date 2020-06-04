@@ -51,7 +51,7 @@ function devCreateStore() {
   const { logger } = require("redux-logger");
   const middleware = [thunkM];
   const enhancers = [];
-  middleware.push(logger);
+  // middleware.push(logger);
   const actionCreators = {
     ...UnitActions,
     ...PriceActions,

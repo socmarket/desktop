@@ -14,7 +14,7 @@ export default class ClientPicker extends React.Component {
     };
   }
 
-  updateText(value) {
+  updateLabel(value) {
     const self = this;
     return api.client.pick(value)
       .then(client => {
@@ -34,16 +34,12 @@ export default class ClientPicker extends React.Component {
   }
 
   componentDidMount() {
-    this.updateText(this.props.value);
-    this.loadOptions("", (cats) => {
-      this.setState({
-      })
-    });
+    this.updateLabel(this.props.value);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.value !== this.props.value) {
-      this.updateText(this.props.value);
+      this.updateLabel(this.props.value);
     }
   }
 

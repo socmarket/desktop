@@ -4,19 +4,29 @@ import initClientApi, {
 } from "./client"
 
 import initCategoryApi, {
-  Category,
   CategoryApi,
 } from "./category"
 
+import initProductApi, {
+  ProductApi,
+} from "./product"
+
+import initSaleCheckApi, {
+  SaleCheckApi,
+} from "./product"
+
 import Database from "./db"
 
-
-export { Client, ClientApi };
-export { Category, CategoryApi };
+export * from "./client";
+export * from "./category";
+export * from "./product";
+export * from "./salecheck";
 
 export interface Api {
   client: ClientApi;
+  product: ProductApi;
   category: CategoryApi;
+  saleCheck: SaleCheckApi;
 }
 
 export default function initApi(
@@ -25,6 +35,8 @@ export default function initApi(
   const db = Database(dbFilePath);
   return {
     client: initClientApi(db),
+    product: initProductApi(db),
     category: initCategoryApi(db),
+    saleCheck: initSaleCheckApi(db),
   };
 }
