@@ -76,7 +76,8 @@ export default class ClientPicker extends React.Component {
         ref={this.props.forwardRef}
         onChange={this.onPick}
         components={{ DropdownIndicator:() => null }}
-        defaultOptions
+        cache={null}
+        cacheOptions={false}
         value={{
           value: this.state.value,
           label: this.state.label
