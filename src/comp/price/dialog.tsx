@@ -4,7 +4,7 @@ import moment from "moment";
 import { Modal, Grid, Form, Input, Table, Button, Segment, Image, Label, Divider } from "semantic-ui-react"
 import { AppActions } from "../../serv/app"
 import { PriceActions } from "../../serv/price"
-import ProductSelector from "../productselector"
+import { ProductPicker } from "../../aui/comp/product"
 
 class PriceDialog extends React.Component {
 
@@ -21,7 +21,7 @@ class PriceDialog extends React.Component {
     this.createBarcodeInput = this.createBarcodeInput.bind(this);
     this.createPriceInput = this.createPriceInput.bind(this);
 
-    this.inputSelector = React.createRef();
+    this.productPickerRef = React.createRef();
     this.inputPrice = React.createRef();
 
     this.onProductSelected = this.onProductSelected.bind(this);
@@ -31,7 +31,7 @@ class PriceDialog extends React.Component {
   }
 
   private createBarcodeInput(props) {
-    return (<Input ref={this.inputSelector} style={{ textAlign: "right" }} {...props} />);
+    return (<Input ref={this.productPickerRef} style={{ textAlign: "right" }} {...props} />);
   }
 
   private createPriceInput(props) {
@@ -44,7 +44,7 @@ class PriceDialog extends React.Component {
 
   handleKeyDown(event) {
     if (event.key && event.ctrlKey && (event.key === "l" || event.key === "L")) {
-      this.inputSelector.current.focus();
+      this.productPickerRef.current.focus();
     }
   }
 
@@ -63,7 +63,7 @@ class PriceDialog extends React.Component {
             barcode: "",
             price: 0,
           }, () => {
-            this.inputSelector.current.focus();
+            this.productPickerRef.current.focus();
           });
         }, 100);
       }
@@ -185,11 +185,12 @@ class PriceDialog extends React.Component {
       <Grid columns={2}>
         <Grid.Row>
           <Grid.Column width={16}>
-            <ProductSelector
+            <ProductPicker
               autoFocus
-              {...selectAttrs}
-              forwardRef={this.inputSelector}
-              onProductSelected={this.onProductSelected}
+              api={window.api}
+              value={product.id}
+              forwardRef={this.productPickerRef}
+              onPick={this.onProductSelected}
             />
           </Grid.Column>
         </Grid.Row>

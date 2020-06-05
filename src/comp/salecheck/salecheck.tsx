@@ -7,7 +7,6 @@ import {
   Label, Container, Menu, Message, Divider
 } from "semantic-ui-react"
 
-import ProductSelector from "../productselector"
 import { ClientPicker } from "../../aui/comp/client";
 import { SaleCheckForm } from "../../aui/comp/salecheck";
 import { SaleCheckActions } from "../../serv/salecheck"

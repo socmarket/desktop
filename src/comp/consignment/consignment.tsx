@@ -4,7 +4,7 @@ import moment from "moment";
 import Journal from "./journal.tsx"
 import SummaryByProduct from "./summaryByProduct.tsx"
 import SummaryByCategory from "./summaryByCategory.tsx"
-import ProductSelector from "../productselector"
+import { ProductPicker } from "../../aui/comp/product"
 import { ConsignmentActions } from "../../serv/consignment"
 import {
   Header, Grid, Table, Form, Input, Select,
@@ -43,13 +43,13 @@ class Consignment extends React.Component {
     this.createQuantityInput = this.createQuantityInput.bind(this);
     this.createPriceInput = this.createPriceInput.bind(this);
 
-    this.inputSelector = React.createRef();
+    this.productPickerRef = React.createRef();
     this.inputQuantity = React.createRef();
     this.inputPrice = React.createRef();
   }
 
   private focusSelector() {
-    this.inputSelector.current.focus();
+    this.productPickerRef.current.focus();
   }
 
   private addConsignmentItem() {
@@ -57,7 +57,7 @@ class Consignment extends React.Component {
     self.props.addConsignmentItem(self.state);
     setTimeout(() => self.setState(emptyState, () => {
       self.focusSelector();
-      console.log(self.inputSelector.current);
+      console.log(self.productPickerRef.current);
     }), 100);
   }
 
@@ -250,10 +250,12 @@ class Consignment extends React.Component {
     return (
       <Segment onKeyPress={this.handleActivate}>
         <Form error={productNotFound} success={!productNotFound}>
-          <ProductSelector
+          <ProductPicker
             autoFocus
-            forwardRef={this.inputSelector}
-            onProductSelected={this.onProductSelected}
+            api={window.api}
+            forwardRef={this.productPickerRef}
+            onPick={this.onProductSelected}
+            value={productId}
           />
           <Divider />
           <Form.Group>
