@@ -14,6 +14,7 @@ const createWindow = async () => {
   let win = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
     webPreferences: webp
   })
 
@@ -21,7 +22,9 @@ const createWindow = async () => {
     win.webContents.openDevTools();
   }
 
+  win.maximize();
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  win.show();
 
   Promise.resolve({});
 }
