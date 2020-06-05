@@ -14,7 +14,16 @@ from
       unit.title as unitTitle,
       category.title as categoryTitle,
       (select coalesce(sum(quantity), 0) from consignmentitem where productId = product.id) as inQuantity,
-      (select coalesce(sum(quantity), 0) from salecheckitem where productId = product.id) as outQuantity
+      (select
+        coalesce(sum(salecheckitem.quantity - ret.quantity), 0)
+        from salecheckitem
+        left join (
+          select saleCheckItemId, sum(quantity) as quantity
+          from salecheckreturn
+          group by saleCheckItemId
+        ) as ret on ret.saleCheckItemId = salecheckitem.id
+        where productId = product.id
+      ) as outQuantity
     from
       product
       left join unit     on unit.id     = product.unitId

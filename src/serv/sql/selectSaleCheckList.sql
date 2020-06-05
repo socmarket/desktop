@@ -5,10 +5,13 @@ select
   salecheck.change as change,
   salecheck.soldAt as soldAt,
   (
-    select
-      sum (quantity * price) / 100.0 as cost
-    from
-      salecheckitem
+    select sum ((salecheckitem.quantity - ret.quantity) * price) / 100.0 as cost
+    from salecheckitem
+    left join (
+      select saleCheckItemId, sum(quantity) as quantity
+      from salecheckreturn
+      group by saleCheckItemId
+    ) as ret on ret.saleCheckItemId = salecheckitem.id
     where salecheckitem.saleCheckId = salecheck.id
   )                as cost
 from

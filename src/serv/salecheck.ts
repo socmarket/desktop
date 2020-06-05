@@ -146,6 +146,24 @@ function incSaleCheckItemQuantity(barcode) {
   };
 }
 
+function returnPurchase(saleCheckItemId, quantity) {
+  return function (dispatch, getState, { db }) {
+    return db.selectOne("select id, quantity from salecheckreturn where saleCheckItemId = ?", [ saleCheckItemId ])
+      .then(item => {
+        if (item) {
+          return db.exec("update salecheckreturn set quantity = quantity + ?, returnedAt = current_timestamp where saleCheckItemId = ?",  [ quantity, saleCheckItemId ])
+            .then(_ => reloadSaleJournal()(dispatch, getState, { db: db }))
+          ;
+        } else {
+          return db.exec("insert into salecheckreturn(saleCheckItemId, quantity) values(?, ?)",  [ saleCheckItemId, quantity ])
+            .then(_ => reloadSaleJournal()(dispatch, getState, { db: db }))
+          ;
+        }
+      })
+    ;
+  };
+}
+
 function reloadSaleJournal() {
   return function (dispatch, getState, { db }) {
     return db.select(selectSaleCheckList)
@@ -172,6 +190,7 @@ const SaleCheckActions = {
   closeSaleCheck: closeSaleCheck,
   updateSaleCheckList: updateSaleCheckList,
   reloadSaleJournal: reloadSaleJournal,
+  returnPurchase: returnPurchase,
   openReport: openReport,
 }
 
