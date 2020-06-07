@@ -1,4 +1,4 @@
-import { Database } from "./db"
+import { Database } from "./internal/db"
 
 // @ts-ignore
 import selectClientById from "./sql/client/selectClientById.sql"

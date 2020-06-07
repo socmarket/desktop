@@ -15,7 +15,8 @@ import initSaleCheckApi, {
   SaleCheckApi,
 } from "./product"
 
-import Database from "./db"
+import Database from "./internal/db"
+import { initUsb } from "./internal/usb"
 
 export * from "./client";
 export * from "./category";
@@ -23,6 +24,8 @@ export * from "./product";
 export * from "./salecheck";
 
 export interface Api {
+  _db: Database;
+  _usb: object;
   client: ClientApi;
   product: ProductApi;
   category: CategoryApi;
@@ -33,7 +36,10 @@ export default function initApi(
   dbFilePath: string
 ): Api {
   const db = Database(dbFilePath);
+  const usb = initUsb();
   return {
+    _db: db,
+    _usb: usb,
     client: initClientApi(db),
     product: initProductApi(db),
     category: initCategoryApi(db),

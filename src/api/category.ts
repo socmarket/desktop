@@ -1,4 +1,4 @@
-import { Database } from "./db"
+import { Database } from "./internal/db"
 
 // @ts-ignore
 import selectCategoryById from "./sql/category/selectCategoryById.sql"
