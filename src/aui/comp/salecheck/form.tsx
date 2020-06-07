@@ -2,6 +2,7 @@ import { ClientPicker } from "../client";
 import { ProductPicker } from "../product";
 
 import React from "react";
+import { Translation } from 'react-i18next';
 import {
   Segment, Grid, Form, Button, Divider,
   Message, Header, Container
@@ -150,6 +151,8 @@ export class SaleCheckForm extends React.Component {
   render() {
     const me = this;
     return (
+      <Translation ns={"salecheck.form"}>
+      { (t, { i18n }) =>
       <Segment textAlign="left" onKeyDown={this.onActivate}>
         <Form error={me.state.isError}>
           <ProductPicker
@@ -165,21 +168,21 @@ export class SaleCheckForm extends React.Component {
         <br />
         <Grid>
           <Grid.Row>
-            <Grid.Column width={6}><Header as="h2" >Сумма: </Header></Grid.Column>
+            <Grid.Column width={6}><Header as="h2">{t("cost")}</Header></Grid.Column>
             <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{me.props.cost}</Header></Grid.Column>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width={6}><Header as="h2" >Скидка: </Header></Grid.Column>
+            <Grid.Column width={6}><Header as="h2" >{t("discount")}</Header></Grid.Column>
             <Grid.Column width={10}><Header as="h2" dividing textAlign="right">0</Header></Grid.Column>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width={6}><Header as="h1">Итог: </Header></Grid.Column>
+            <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
             <Grid.Column width={10}>
               <Header dividing as="h1" textAlign="right">{me.props.cost}</Header>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column width={6}><Header as="h2">Сдача: </Header></Grid.Column>
+            <Grid.Column width={6}><Header as="h2">{t("change")}</Header></Grid.Column>
             <Grid.Column width={10}>
               <Header dividing as="h2" textAlign="right">{me.state.change}</Header>
             </Grid.Column>
@@ -198,7 +201,7 @@ export class SaleCheckForm extends React.Component {
           <Form.Group>
             <Form.Input
               width={16}
-              label="Наличными"
+              label={t("cash")}
               value={this.state.cash}
               onChange={this.onCashChange}
               control={this.createCashInput}
@@ -209,10 +212,12 @@ export class SaleCheckForm extends React.Component {
           <Button
             onClick={() => this.onActivate({ key: "Enter", shiftKey: true })}
           >
-            Закрыть чек (Shift + Enter)
+            {t("closeReceipt")} (Shift + Enter)
           </Button>
         </Container>
       </Segment>
+      }
+      </Translation>
     );
   }
 }

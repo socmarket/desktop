@@ -1,0 +1,10 @@
+{
+  "salecheck.form": {
+    cost: "Cost: ",
+    discount: "Discount: ",
+    total: "Total: ",
+    change: "Change: ",
+    cash: "With cash: ",
+    closeReceipt: "Close receipt",
+  },
+}

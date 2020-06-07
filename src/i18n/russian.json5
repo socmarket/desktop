@@ -1,0 +1,10 @@
+{
+  "salecheck.form": {
+    cost: "Сумма: ",
+    discount: "Скидка: ",
+    total: "Итог: ",
+    change: "Сдача: ",
+    cash: "Наличными: ",
+    closeReceipt: "Закрыть чек",
+  },
+}

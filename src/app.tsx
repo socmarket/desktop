@@ -8,6 +8,8 @@ import getStore from "./store/store";
 import StartPage from "./page/start";
 import ErrorPage from "./page/error";
 
+import "./i18n";
+
 getStore()
   .then(store => {
     ReactDom.render(
