@@ -115,9 +115,20 @@ class SaleCheck extends React.Component {
     );
   }
 
+  private tool() {
+    const lastTitle = this.props.saleCheck.lastItemTitle;
+    const lastBarcode = this.props.saleCheck.lastItemBarcode;
+    const lastProduct = "[ " + lastBarcode + " ] : " + lastTitle;
+    const priceNotSetMsg = "Цена на товар " + lastProduct + " не установлена. Товар не добавлен. Установите цену."
+    return (
+      <Message error header="Ошибка" content={priceNotSetMsg} />
+    );
+  }
+
   private table() {
     const items = this.props.saleCheck.items;
     const currentIdx = this.state.currentItemIdx;
+    const priceNotSet = this.props.saleCheck.priceNotSet;
     return (
       <Table compact celled selectable>
         <Table.Header>
@@ -129,6 +140,13 @@ class SaleCheck extends React.Component {
             <Table.HeaderCell>Сумма</Table.HeaderCell>
             <Table.HeaderCell>Штрихкод</Table.HeaderCell>
           </Table.Row>
+          { priceNotSet &&
+          <Table.Row>
+            <Table.HeaderCell colSpan={6}>
+              {this.tool()}
+            </Table.HeaderCell>
+          </Table.Row>
+          }
         </Table.Header>
         <Table.Body>
           { items.map( (item, idx) => (
@@ -142,11 +160,18 @@ class SaleCheck extends React.Component {
             </Table.Row>
           ))}
         </Table.Body>
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell colSpan={6}>
+              {this.menu()}
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
       </Table>
     );
   }
 
-  editor() {
+  menu() {
     const idx = this.state.currentItemIdx
     const items = this.props.saleCheck.items;
     const item = (idx >= 0 && idx < items.length) ? items[idx] : {
@@ -179,15 +204,11 @@ class SaleCheck extends React.Component {
   }
 
   render() {
-    const lastTitle = this.props.saleCheck.lastItemTitle;
-    const lastBarcode = this.props.saleCheck.lastItemBarcode;
-    const lastProduct = "[ " + lastBarcode + " ] : " + lastTitle;
-    const priceNotSet = this.props.saleCheck.priceNotSet;
-    const priceNotSetMsg = "Цена на товар " + lastProduct + " не установлена. Товар не добавлен. Установите цену."
     return (
       <Grid columns={2} padded>
         <Grid.Column width={5}>
           <SaleCheckForm
+            autoFocus
             api={window.api}
             cost={this.props.saleCheck.itemsCost}
             items={this.props.saleCheck.items}
@@ -197,12 +218,7 @@ class SaleCheck extends React.Component {
           {this.list()}
         </Grid.Column>
         <Grid.Column width={11}>
-          <Container>
-            {this.editor()}
-            { priceNotSet && (<Message error header="Ошибка" content={priceNotSetMsg} />) }
-            {this.table()}
-          </Container>
-
+          {this.table()}
           { (this.props.saleCheck.currentReport === "journal") &&
             <Fragment>
               <Divider horizontal>Журнал продаж</Divider>
