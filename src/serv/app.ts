@@ -98,7 +98,7 @@ function AppReducer (state: AppState = {
   showClientsDialog: false,
   showSettingsDialog: false,
   showLabellerDialog: false,
-  activePage: "saleCheck",
+  activePage: "dashboard",
 }, action) {
   switch (action.type) {
     case 'APP_SHOW_CLIENTS_DIALOG':

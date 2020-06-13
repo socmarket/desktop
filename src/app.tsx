@@ -2,7 +2,9 @@ import React, { Fragment } from "react";
 import ReactDom from "react-dom";
 import { Provider } from "react-redux";
 
-import "semantic-ui-css/semantic.css"
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
+import "semantic-ui-css/semantic.css";
 
 import getStore from "./store/store";
 import StartPage from "./page/start";

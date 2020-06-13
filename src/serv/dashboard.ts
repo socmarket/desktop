@@ -1,39 +1,37 @@
-import totalSaleQuantityByProduct from "./sql/dashboardTotalSaleQuantityByProduct.sql"
-
-export interface DashboardState {
-  totalSaleQuantityByProduct: Array
-}
-
-const updateTotalSaleQuantityByProduct = (items) => ({
-  type: "DASHBOARD_TOTAL_SALE_QUANTITY",
+const updateProfitByDay = (items) => ({
+  type: "DASHBOARD_PROFIT_BY_DAY_UPDATED",
   items: items,
-})
+});
 
-function reloadTotalSaleQuantityByProduct(barcode) {
-  return function (dispatch, getState, { db }) {
-    return db.select(totalSaleQuantityByProduct)
+function reloadProfitByDay(start, end) {
+  return function (dispatch, getState, { api }) {
+    return api.dashboard.selectProfitByDay(start, end)
       .then(items => {
         if (items) {
-          dispatch(updateTotalSaleQuantityByProduct(items));
+          return dispatch(updateProfitByDay(items));
         } else {
-          dispatch(updateTotalSaleQuantityByProduct([]));
+          return dispatch(updateProfitByDay([]));
         }
       })
+    ;
   };
 }
 
-
 const DashboardActions = {
-  reloadTotalSaleQuantityByProduct: reloadTotalSaleQuantityByProduct,
+  reloadProfitByDay: reloadProfitByDay,
 };
 
 function DashboardReducer (state = {
-  totalSaleQuantityByProduct: []
+  profitByDay: {
+    items: []
+  }
 }, action) {
   switch (action.type) {
-    case "DASHBOARD_TOTAL_SALE_QUANTITY": {
+    case "DASHBOARD_PROFIT_BY_DAY_UPDATED": {
       return Object.assign({}, state, {
-        totalSaleQuantityByProduct: action.items
+        profitByDay: {
+          items: action.items
+        }
       });
     }
     default:
