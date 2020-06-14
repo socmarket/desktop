@@ -8,6 +8,7 @@ export default class ProductPicker extends React.Component {
     super(props);
     this.api = props.api;
     this.onPick = this.onPick.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
     this.loadOptions = this.loadOptions.bind(this);
     this.state = {
       value: -1,
@@ -79,6 +80,18 @@ export default class ProductPicker extends React.Component {
     });
   }
 
+  onKeyDown(ev) {
+    const ref = this.props.forwardRef.current;
+    const target = ev.target;
+    if (ev.key === "Enter") {
+      if (ref.state.isLoading) {
+        setTimeout(() => {
+          target.dispatchEvent(new KeyboardEvent("keydown", { type: "keydown", key: 'Enter', bubbles: true }));
+        }, 100);
+      }
+    }
+  }
+
   render() {
     return (
       <AsyncSelect
@@ -87,6 +100,7 @@ export default class ProductPicker extends React.Component {
         loadOptions={this.loadOptions}
         ref={this.props.forwardRef}
         onChange={this.onPick}
+        onKeyDown={this.onKeyDown}
         components={{ DropdownIndicator:() => null }}
         defaultOptions
         value={{
