@@ -73,17 +73,10 @@ class MainMenu extends React.Component {
           </Menu.Item>
 
           <Menu.Item
-            active={this.props.app.showSettingsDialog}
-            onClick={() => this.props.openSettings()}
+            active={this.props.app.showAboutDialog}
+            onClick={() => this.props.openAbout()}
           >
-            Настройки
-          </Menu.Item>
-
-          <Menu.Item
-            active={this.props.app.showLabellerDialog}
-            onClick={() => this.props.openLabeller()}
-          >
-            Маркировка
+            О программе
           </Menu.Item>
 
           <Menu.Item

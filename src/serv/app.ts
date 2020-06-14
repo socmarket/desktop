@@ -7,6 +7,7 @@ export interface AppState {
   showClientsDialog: boolean;
   showSettingsDialog: boolean;
   showLabellerDialog: boolean;
+  showAboutDialog: boolean;
   activePage: String;
 }
 
@@ -76,6 +77,14 @@ const AppActions = {
     type: 'APP_HIDE_LABELLER_DIALOG',
   }),
 
+  openAbout: () => ({
+    type: 'APP_SHOW_ABOUT_DIALOG',
+  }),
+
+  closeAbout: () => ({
+    type: 'APP_HIDE_ABOUT_DIALOG',
+  }),
+
   openConsignment: () => ({
     type: 'APP_OPEN_CONSIGNMENT',
   }),
@@ -98,6 +107,7 @@ function AppReducer (state: AppState = {
   showClientsDialog: false,
   showSettingsDialog: false,
   showLabellerDialog: false,
+  showAboutDialog: false,
   activePage: "dashboard",
 }, action) {
   switch (action.type) {
@@ -133,6 +143,10 @@ function AppReducer (state: AppState = {
       return Object.assign({}, state, { showLabellerDialog: true });
     case 'APP_HIDE_LABELLER_DIALOG':
       return Object.assign({}, state, { showLabellerDialog: false });
+    case 'APP_SHOW_ABOUT_DIALOG':
+      return Object.assign({}, state, { showAboutDialog: true });
+    case 'APP_HIDE_ABOUT_DIALOG':
+      return Object.assign({}, state, { showAboutDialog: false });
     case 'APP_OPEN_DASHBOARD':
       return Object.assign({}, state, { activePage: "dashboard" });
     case 'APP_OPEN_CONSIGNMENT':

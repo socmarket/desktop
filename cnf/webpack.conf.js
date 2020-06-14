@@ -1,7 +1,22 @@
-const path = require("path");
-const proc = require("process");
+const webpack = require("webpack")
+const proc = require("process")
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
+const pckg = require("../package.json")
+
+const git = new GitRevisionPlugin()
 
 module.exports = {
+  plugins: [
+    git,
+    new webpack.DefinePlugin({
+      "VERSION": JSON.stringify({
+        hash: git.commithash(),
+        date: (new Date()).toIsoString(),
+        branch: git.branch(),
+        value: pckg.version,
+      }),
+    })
+  ],
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
   },

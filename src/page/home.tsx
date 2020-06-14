@@ -14,6 +14,8 @@ import ClientDialog from "../comp/client";
 import SettingsDialog from "../comp/settings";
 import LabellerDialog from "../comp/labeller";
 
+import AboutDialog from "./about";
+
 import Dashboard from "../comp/dashboard";
 import SaleCheck from "../comp/salecheck/salecheck.tsx";
 import Consignment from "../comp/consignment/consignment.tsx";
@@ -38,6 +40,7 @@ class HomePage extends React.Component {
         { this.props.app.showClientsDialog && <ClientDialog /> }
         { this.props.app.showSettingsDialog && <SettingsDialog /> }
         { this.props.app.showLabellerDialog && <LabellerDialog /> }
+        { this.props.app.showAboutDialog && <AboutDialog /> }
       </Fragment>
     );
   }
