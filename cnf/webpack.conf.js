@@ -11,7 +11,7 @@ module.exports = {
     new webpack.DefinePlugin({
       "VERSION": JSON.stringify({
         hash: git.commithash(),
-        date: (new Date()).toIsoString(),
+        date: (new Date()).toISOString(),
         branch: git.branch(),
         value: pckg.version,
       }),

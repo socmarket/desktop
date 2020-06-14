@@ -14,7 +14,7 @@ class AboutDialog extends React.Component {
               <Grid.Column textAlign="right">
                 <p>Версия</p>
                 <p>Сборка</p>
-                <p>Выпуск</p>
+                <p>Дата сборки</p>
               </Grid.Column>
               <Grid.Column>
                 <p>{VERSION.value}</p>
@@ -22,7 +22,7 @@ class AboutDialog extends React.Component {
                 <p>{VERSION.date.substring(0, 10)}</p>
               </Grid.Column>
             </Grid>
-            <Divider vertical />
+            <Divider vertical>|</Divider>
           </Segment>
         </Modal.Content>
       </Modal>
