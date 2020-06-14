@@ -15,9 +15,9 @@ import initSaleCheckApi, {
   SaleCheckApi,
 } from "./product"
 
-import initDashboardApi, {
-  DashboardApi,
-} from "./dashboard"
+import initReportApi, {
+  ReportApi,
+} from "./report"
 
 import Database from "./internal/db"
 import { initUsb } from "./internal/usb"
@@ -34,7 +34,7 @@ export interface Api {
   product: ProductApi;
   category: CategoryApi;
   saleCheck: SaleCheckApi;
-  dashboard: DashboardApi;
+  report: ReportApi;
 }
 
 export default function initApi(
@@ -49,6 +49,6 @@ export default function initApi(
     product: initProductApi(db),
     category: initCategoryApi(db),
     saleCheck: initSaleCheckApi(db),
-    dashboard: initDashboardApi(db),
+    report: initReportApi(db),
   };
 }

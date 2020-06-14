@@ -1,18 +1,15 @@
-const updateProfitByDay = (items) => ({
+const updateProfitByDay = (res) => ({
   type: "DASHBOARD_PROFIT_BY_DAY_UPDATED",
-  items: items,
+  res: res,
 });
 
 function reloadProfitByDay(start, end) {
   return function (dispatch, getState, { api }) {
-    return api.dashboard.selectProfitByDay(start, end)
-      .then(items => {
-        if (items) {
-          return dispatch(updateProfitByDay(items));
-        } else {
-          return dispatch(updateProfitByDay([]));
-        }
-      })
+    const startS = start.utc().format("YYYY-MM-DD");
+    const endS = end.utc().format("YYYY-MM-DD");
+    console.log(startS, endS);
+    return api.report.selectProfitByDay(startS, endS)
+      .then(res => dispatch(updateProfitByDay(res)))
     ;
   };
 }
@@ -23,15 +20,19 @@ const DashboardActions = {
 
 function DashboardReducer (state = {
   profitByDay: {
-    items: []
+    items: [],
+    summary: {
+      revenue: 0,
+      cost: 0,
+      credit: 0,
+      profit: 0,
+    }
   }
 }, action) {
   switch (action.type) {
     case "DASHBOARD_PROFIT_BY_DAY_UPDATED": {
       return Object.assign({}, state, {
-        profitByDay: {
-          items: action.items
-        }
+        profitByDay: action.res,
       });
     }
     default:
