@@ -7,7 +7,6 @@ function reloadProfitByDay(start, end) {
   return function (dispatch, getState, { api }) {
     const startS = start.utc().format("YYYY-MM-DD");
     const endS = end.utc().format("YYYY-MM-DD");
-    console.log(startS, endS);
     return api.report.selectProfitByDay(startS, endS)
       .then(res => dispatch(updateProfitByDay(res)))
     ;

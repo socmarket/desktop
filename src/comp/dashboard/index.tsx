@@ -11,6 +11,8 @@ import { DashboardActions } from "../../serv/dashboard"
 
 import "moment/locale/ru";
 
+const spaced = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
 class Dashboard extends React.Component {
 
   constructor(props) {
@@ -75,25 +77,25 @@ class Dashboard extends React.Component {
         <Menu.Item fitted="vertically">
           <Statistic size="tiny">
             <Statistic.Label>Выручка</Statistic.Label>
-            <Statistic.Value>{summary.revenue}</Statistic.Value>
+            <Statistic.Value>{spaced(summary.revenue)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny">
             <Statistic.Label>Себестоимость</Statistic.Label>
-            <Statistic.Value>{summary.cost}</Statistic.Value>
+            <Statistic.Value>{spaced(summary.cost)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny" color="red">
             <Statistic.Label>В долг</Statistic.Label>
-            <Statistic.Value>{summary.credit}</Statistic.Value>
+            <Statistic.Value>{spaced(summary.credit)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny" color="green">
             <Statistic.Label>Прибыль</Statistic.Label>
-            <Statistic.Value>{summary.profit}</Statistic.Value>
+            <Statistic.Value>{spaced(summary.profit)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
       </Menu>

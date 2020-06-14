@@ -43,7 +43,6 @@ function init(db, steps): Promise<string> {
     .catch(err =>
       createMig(db)
         .then(res => getLastKey(db))
-        .then(lastKey => runUpdates(db, lastKey, steps))
     )
     .then(lastKey => runUpdates(db, lastKey, steps))
   ;
