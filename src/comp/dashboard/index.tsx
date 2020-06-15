@@ -26,11 +26,15 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    this.props.reloadProductPie();
     this.props.reloadProfitByDay(
       this.state.start,
       this.state.end,
     );
-    this.props.reloadProductPie();
+    this.props.reloadLowCountProducts(
+      this.state.start,
+      this.state.end,
+    );
   }
 
   reloadProfitByDay(start, end) {
@@ -217,6 +221,37 @@ class Dashboard extends React.Component {
     );
   }
 
+  lowCountProducts() {
+    const data = this.props.dashboard.lowCountProducts.items;
+    return (
+      <Segment raised style={{ height: 300, overflowY: "auto" }}>
+        <Label color="blue" floating style={{ top: "5%", left: "5%", right: "unset" }}>Мало осталось</Label>
+        <Table compact celled>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Кат</Table.HeaderCell>
+              <Table.HeaderCell>Товар</Table.HeaderCell>
+              <Table.HeaderCell>Продано</Table.HeaderCell>
+              <Table.HeaderCell>Клиентов</Table.HeaderCell>
+              <Table.HeaderCell>Осталось</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            { data.map(item => (
+              <Table.Row key={item.productId}>
+                <Table.Cell>{item.categoryTitle}</Table.Cell>
+                <Table.Cell>{item.title}</Table.Cell>
+                <Table.Cell textAlign="right">{item.outQuantity}</Table.Cell>
+                <Table.Cell textAlign="right">{item.clientQuantity}</Table.Cell>
+                <Table.Cell textAlign="right">{item.remainingQuantity}</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </Segment>
+    );
+  }
+
   render() {
     return (
       <Grid padded>
@@ -226,8 +261,11 @@ class Dashboard extends React.Component {
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Column width={6}>
+          <Grid.Column width={4}>
             {this.productPie()}
+          </Grid.Column>
+          <Grid.Column width={7}>
+            {this.lowCountProducts()}
           </Grid.Column>
         </Grid.Row>
       </Grid>
