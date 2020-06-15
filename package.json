@@ -71,10 +71,10 @@
   },
   "scripts": {
     "rebuild": "yarn electron-rebuild",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "start": "yarn electron-forge start",
+    "package": "yarn electron-forge package",
+    "make": "yarn electron-forge make",
+    "publish": "yarn electron-forge publish"
   },
   "config": {
     "forge": "forge.js"
