@@ -275,7 +275,7 @@ class ClientDialog extends React.Component {
             <Grid.Column width={6}>
               {this.card()}
             </Grid.Column>
-            <Grid.Column width={5}>
+            <Grid.Column width={5} style={{ maxHeight: 400, overflowY: "auto" }}>
               {this.table()}
             </Grid.Column>
             <Grid.Column width={5}>

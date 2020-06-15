@@ -21,8 +21,8 @@ class SaleJournal extends React.Component {
   render() {
     const data = this.props.journal.items.filter(saleCheck => saleCheck.items.length > 0);
     return (
-      <Grid padded>
-        <Grid.Column width={16}>
+      <Grid>
+        <Grid.Column width={16} style={{ maxHeight: 500, overflowY: "auto" }}>
           <Table basic compact structured>
             <Table.Header>
               <Table.Row>

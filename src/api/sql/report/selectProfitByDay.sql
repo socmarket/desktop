@@ -27,7 +27,7 @@ from
               sum(consignmentitem.price / 100.00) / count(consignmentitem.id)
             from
               consignmentitem
-              left join consignment on consignment.id = consignmentitem.id
+              left join consignment on consignment.id = consignmentitem.consignmentId
             where
               consignment.acceptedAt <= salecheck.soldAt and
               consignmentitem.productId == salecheckitem.productId

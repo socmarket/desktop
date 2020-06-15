@@ -1,10 +1,12 @@
 import { Database } from "./internal/db"
 
 // @ts-ignore
+import selectProductPie from "./sql/report/selectProductPie.sql"
+// @ts-ignore
 import selectProfitByDaySql from "./sql/report/selectProfitByDay.sql"
-import selectSaleCountByProductSql from "./sql/report/selectSaleCountByProduct.sql"
 
 export interface ReportApi {
+  selectProductPie(): Object[];
   selectProfitByDay(start, end): Object[];
 };
 
@@ -40,8 +42,16 @@ export default function initReportApi(db: Database): ReportApi {
         })
       ;
     },
-    selectSaleCountByProduct: () => {
-      return db.select(selectSaleCountByProductSql);
+    selectProductPie: () => {
+      return db.select(selectProductPie)
+        .then(items => {
+          if (items) {
+            return { items: items };
+          } else {
+            return { items: [] };
+          }
+        })
+      ;
     },
   };
 };

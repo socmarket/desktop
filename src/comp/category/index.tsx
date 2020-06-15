@@ -144,7 +144,9 @@ class CategoryDialog extends React.Component {
     return (
       <Container onKeyDown={this.handleNavigation}>
         {this.menu()}
+        <Container style={{ maxHeight: 400, overflowY: "auto" }}>
         {this.table()}
+        </Container>
       </Container>
     );
   }

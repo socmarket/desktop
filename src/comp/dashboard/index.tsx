@@ -30,6 +30,7 @@ class Dashboard extends React.Component {
       this.state.start,
       this.state.end,
     );
+    this.props.reloadProductPie();
   }
 
   reloadProfitByDay(start, end) {
@@ -180,12 +181,53 @@ class Dashboard extends React.Component {
     );
   }
 
+  productPie() {
+    const data = this.props.dashboard.productPie.items.map(item => ({
+      id: item.title,
+      label: item.title,
+      value: item.quantity,
+    }));
+    return (
+      <Segment raised style={{ height: 300 }}>
+        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>Товарный пирог</Label>
+        <ResponsivePie
+            data={data}
+            margin={{ top: 20, right: 50, bottom: 20, left: 20 }}
+            innerRadius={0.5}
+            padAngle={0.7}
+            cornerRadius={3}
+            colors={{ scheme: 'nivo' }}
+            borderWidth={1}
+            borderColor={{ from: 'color', modifiers: [ [ 'darker', 0.2 ] ] }}
+            radialLabelsSkipAngle={10}
+            radialLabelsTextXOffset={6}
+            radialLabelsTextColor="#333333"
+            radialLabelsLinkOffset={0}
+            radialLabelsLinkDiagonalLength={16}
+            radialLabelsLinkHorizontalLength={24}
+            radialLabelsLinkStrokeWidth={1}
+            radialLabelsLinkColor={{ from: 'color' }}
+            slicesLabelsSkipAngle={10}
+            slicesLabelsTextColor="#333333"
+            animate={true}
+            motionStiffness={90}
+            motionDamping={15}
+        />
+      </Segment>
+    );
+  }
+
   render() {
     return (
       <Grid padded>
         <Grid.Row>
           <Grid.Column width={16}>
             {this.profitByDay()}
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={6}>
+            {this.productPie()}
           </Grid.Column>
         </Grid.Row>
       </Grid>

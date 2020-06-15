@@ -13,3 +13,5 @@ from
       productId
   ) item
   left join product on product.id = item.productId
+order by
+  item.quantity desc
