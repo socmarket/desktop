@@ -27,6 +27,7 @@ class Dashboard extends React.Component {
 
   componentDidMount() {
     this.props.reloadProductPie();
+    this.props.reloadCategoryPie();
     this.props.reloadProfitByDay(
       this.state.start,
       this.state.end,
@@ -221,6 +222,42 @@ class Dashboard extends React.Component {
     );
   }
 
+  categoryPie() {
+    const data = this.props.dashboard.categoryPie.items.map(item => ({
+      id: item.title,
+      label: item.title,
+      value: item.productCount,
+    }));
+    return (
+      <Segment raised style={{ height: 300 }}>
+        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>Ассортимент</Label>
+        <ResponsivePie
+            data={data}
+            margin={{ top: 20, right: 50, bottom: 20, left: 20 }}
+            innerRadius={0.5}
+            padAngle={0.7}
+            cornerRadius={3}
+            colors={{ scheme: 'nivo' }}
+            borderWidth={1}
+            borderColor={{ from: 'color', modifiers: [ [ 'darker', 0.2 ] ] }}
+            radialLabelsSkipAngle={10}
+            radialLabelsTextXOffset={6}
+            radialLabelsTextColor="#333333"
+            radialLabelsLinkOffset={0}
+            radialLabelsLinkDiagonalLength={16}
+            radialLabelsLinkHorizontalLength={24}
+            radialLabelsLinkStrokeWidth={1}
+            radialLabelsLinkColor={{ from: 'color' }}
+            slicesLabelsSkipAngle={10}
+            slicesLabelsTextColor="#333333"
+            animate={true}
+            motionStiffness={90}
+            motionDamping={15}
+        />
+      </Segment>
+    );
+  }
+
   lowCountProducts() {
     const data = this.props.dashboard.lowCountProducts.items;
     return (
@@ -264,7 +301,10 @@ class Dashboard extends React.Component {
           <Grid.Column width={4}>
             {this.productPie()}
           </Grid.Column>
-          <Grid.Column width={7}>
+          <Grid.Column width={4}>
+            {this.categoryPie()}
+          </Grid.Column>
+          <Grid.Column width={8}>
             {this.lowCountProducts()}
           </Grid.Column>
         </Grid.Row>

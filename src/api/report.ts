@@ -1,7 +1,9 @@
 import { Database } from "./internal/db"
 
 // @ts-ignore
-import selectProductPie from "./sql/report/selectProductPie.sql"
+import selectProductPieSql from "./sql/report/selectProductPie.sql"
+// @ts-ignore
+import selectCategoryPieSql from "./sql/report/selectCategoryPie.sql"
 // @ts-ignore
 import selectProfitByDaySql from "./sql/report/selectProfitByDay.sql"
 // @ts-ignore
@@ -9,6 +11,7 @@ import selectLowCountProductsSql from "./sql/report/selectLowCountProducts.sql"
 
 export interface ReportApi {
   selectProductPie(): Object[];
+  selectCategoryPie(): Object[];
   selectProfitByDay(start, end): Object[];
   selectLowCountProducts(start, end): Object[];
 };
@@ -46,7 +49,18 @@ export default function initReportApi(db: Database): ReportApi {
       ;
     },
     selectProductPie: () => {
-      return db.select(selectProductPie)
+      return db.select(selectProductPieSql)
+        .then(items => {
+          if (items) {
+            return { items: items };
+          } else {
+            return { items: [] };
+          }
+        })
+      ;
+    },
+    selectCategoryPie: () => {
+      return db.select(selectCategoryPieSql)
         .then(items => {
           if (items) {
             return { items: items };

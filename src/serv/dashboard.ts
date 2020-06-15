@@ -8,6 +8,11 @@ const updateProductPie = (res) => ({
   res: res,
 });
 
+const updateCategoryPie = (res) => ({
+  type: "DASHBOARD_CATEGORY_PIE_UPDATED",
+  res: res,
+});
+
 const updateLowCountProducts = (res) => ({
   type: "DASHBOARD_LOW_COUNT_PRODUCTS_UPDATED",
   res: res,
@@ -31,6 +36,14 @@ function reloadProductPie() {
   };
 }
 
+function reloadCategoryPie() {
+  return function (dispatch, getState, { api }) {
+    return api.report.selectCategoryPie()
+      .then(res => dispatch(updateCategoryPie(res)))
+    ;
+  };
+}
+
 function reloadLowCountProducts(start, end) {
   return function (dispatch, getState, { api }) {
     const startS = start.utc().format("YYYY-MM-DD");
@@ -43,12 +56,16 @@ function reloadLowCountProducts(start, end) {
 
 const DashboardActions = {
   reloadProductPie: reloadProductPie,
+  reloadCategoryPie: reloadCategoryPie,
   reloadProfitByDay: reloadProfitByDay,
   reloadLowCountProducts: reloadLowCountProducts,
 };
 
 function DashboardReducer (state = {
   productPie: {
+    items: []
+  },
+  categoryPie: {
     items: []
   },
   profitByDay: {
@@ -68,6 +85,11 @@ function DashboardReducer (state = {
     case "DASHBOARD_PRODUCT_PIE_UPDATED": {
       return Object.assign({}, state, {
         productPie: action.res,
+      });
+    }
+    case "DASHBOARD_CATEGORY_PIE_UPDATED": {
+      return Object.assign({}, state, {
+        categoryPie: action.res,
       });
     }
     case "DASHBOARD_PROFIT_BY_DAY_UPDATED": {
