@@ -15,7 +15,7 @@ from
       category.title as categoryTitle,
       (select coalesce(sum(quantity), 0) from consignmentitem where productId = product.id) as inQuantity,
       (select
-        coalesce(sum(salecheckitem.quantity - ret.quantity), 0)
+        coalesce(sum(salecheckitem.quantity - coalesce(ret.quantity, 0)), 0)
         from salecheckitem
         left join (
           select saleCheckItemId, sum(quantity) as quantity

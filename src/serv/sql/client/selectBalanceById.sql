@@ -12,7 +12,7 @@ from
     select
       date(salecheck.soldAt) as day,
       0.00 as debit,
-      sum(quantity * price) / 100 as credit
+      sum(quantity * price) / 100.0 as credit
     from
       salecheckitem
       left join salecheck on salecheck.id = salecheckitem.saleCheckId
@@ -23,21 +23,32 @@ from
   ) sc on sc.day = days.day
   left join (
     select
-      date(salecheck.soldAt) as day,
-      sum(cash) as debit,
-      0.00 as credit
-    from
-      salecheck
-    where
-      salecheck.clientId = $clientId
-    group by
-      date(salecheck.soldAt)
+      day,
+      sum(debit) as debit,
+      sum(credit) as credit
+    from (
+      select
+        date(salecheck.soldAt) as day,
+        case
+          when sum(quantity * (price / 100.0)) > cash then cash
+          else sum(quantity * (price / 100.0))
+        end as debit,
+        0.00 as credit
+      from
+        salecheck
+        left join salecheckitem on salecheckitem.saleCheckId = salecheck.id
+      where
+        salecheck.clientId = $clientId
+      group by
+        salecheck.id
+    ) t
+    group by t.day
   ) sd on sd.day = days.day
   left join (
     select
       date(clientbalance.registeredAt) as day,
       0.00 as debit,
-      sum(amount) / 100 as credit
+      sum(amount) / 100.0 as credit
     from
       clientbalance
     where
@@ -48,7 +59,7 @@ from
   left join (
     select
       date(clientbalance.registeredAt) as day,
-      sum(amount) / 100 as debit,
+      sum(amount) / 100.0 as debit,
       0.00 as credit
     from
       clientbalance

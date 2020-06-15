@@ -5,7 +5,7 @@ select
   salecheck.change as change,
   salecheck.soldAt as soldAt,
   (
-    select sum ((salecheckitem.quantity - ret.quantity) * price) / 100.0 as cost
+    select sum ((salecheckitem.quantity - coalesce(ret.quantity, 0)) * price) / 100.0 as cost
     from salecheckitem
     left join (
       select saleCheckItemId, sum(quantity) as quantity

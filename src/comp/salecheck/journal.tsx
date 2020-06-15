@@ -55,6 +55,12 @@ class SaleJournal extends React.Component {
                           <br />Долг: {saleCheck.cost - saleCheck.cash}
                         </Fragment>
                       }
+                      { (saleCheck.cash >= saleCheck.cost) &&
+                        <Fragment>
+                          <br />Наличными: {saleCheck.cash}
+                          <br />Сдача: {saleCheck.cash - saleCheck.cost}
+                        </Fragment>
+                      }
                     </Table.Cell>
                     { saleCheck.items.slice(0, 1).map(item => (
                       <Fragment key={item.id}>
