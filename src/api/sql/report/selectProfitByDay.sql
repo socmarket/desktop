@@ -24,7 +24,7 @@ from
           salecheckitem.price / 100.00 as price,
           (
             select
-              sum(consignmentitem.price) / count(consignmentitem.id) / 100.00
+              sum(consignmentitem.price / 100.00) / count(consignmentitem.id)
             from
               consignmentitem
               left join consignment on consignment.id = consignmentitem.id
