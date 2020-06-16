@@ -1,6 +1,48 @@
 import React          from "react";
 import { components } from "react-select";
 import AsyncSelect    from "react-select/async";
+import {
+  Header, Grid, Table, Form, Input, Select,
+  TextArea, Button, Segment, Image,
+  Label, Container, Menu, Message, Divider, List
+} from "semantic-ui-react"
+
+const Option = (props) => {
+  const p = props.data.product;
+  const {
+    children,
+    className,
+    cx,
+    getStyles,
+    isDisabled,
+    isFocused,
+    isSelected,
+    innerRef,
+    innerProps,
+  } = props;
+  const cname = className + " ui compact " + 
+    (isFocused ?
+      (isSelected ? "blue" : "info") :
+      (isSelected ? "blue" : "")
+    ) + " message"
+  ;
+  return (
+    <div
+      className={cname}
+      ref={innerRef}
+      style={{ margin: 0 }}
+      {...innerProps}
+    >
+      {
+        p.categoryTitle
+        + " : " + p.title
+        + " : " + p.quantity
+        + " : " + p.price
+        + " | " + p.barcode
+      }
+    </div>
+  );
+};
 
 export default class ProductPicker extends React.Component {
 
@@ -38,6 +80,7 @@ export default class ProductPicker extends React.Component {
     return product.categoryTitle
       + " : " + product.title
       + " : " + product.quantity
+      + " : " + product.price
       + " | " + product.barcode
     ;
   }

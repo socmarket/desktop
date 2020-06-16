@@ -6,7 +6,8 @@ select
   unitTitle,
   unitId,
   categoryId,
-  inQuantity - outQuantity as quantity
+  inQuantity - outQuantity as quantity,
+  price
 from
   (
     select
@@ -23,7 +24,17 @@ from
           group by saleCheckItemId
         ) as ret on ret.saleCheckItemId = salecheckitem.id
         where productId = product.id
-      ) as outQuantity
+      ) as outQuantity,
+      (select
+        coalesce(price.price / 100.00, 0) as price
+        from
+          price
+        where
+          productId = product.id
+        order by
+          setAt desc
+        limit 1
+      ) as price
     from
       product
       left join unit     on unit.id     = product.unitId
