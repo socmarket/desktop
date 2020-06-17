@@ -2,6 +2,7 @@ import path from "path";
 import { format as formatUrl } from "url";
 import { app, BrowserWindow } from "electron";
 
+let mainWindow = null
 const isDevelopment = process.env.NODE_ENV !== "production"
 
 const createWindow = async () => {
@@ -27,6 +28,8 @@ const createWindow = async () => {
   win.show();
 
   Promise.resolve({});
+
+  return win;
 }
 
 app.on('window-all-closed', () => {
@@ -37,10 +40,13 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  mainWindow = createWindow();
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) createWindow();
+  if (mainWindow === null)
+    mainWindow = createWindow();
 });
