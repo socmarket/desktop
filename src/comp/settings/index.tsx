@@ -11,18 +11,6 @@ class SettingsDialog extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.inputRef = React.createRef();
-  }
-
-  handleClick() {
-    const self = this;
-    this.props.tryPromise()
-      .then(data => {
-        self.inputRef.current.focus();
-        self.inputRef.current.select();
-      })
-    ;
   }
 
   render() {
@@ -30,10 +18,6 @@ class SettingsDialog extends React.Component {
       <Modal open size="small" centered={false} closeIcon onClose={() => this.props.closeSettings()}>
         <Modal.Content>
           <Printer />
-          <Container>
-            <Button onClick={this.handleClick}>Try Promise</Button>
-            <input ref={this.inputRef} />
-          </Container>
         </Modal.Content>
       </Modal>
     );

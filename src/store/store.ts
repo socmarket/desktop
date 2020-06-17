@@ -92,6 +92,7 @@ function getStore() {
         store.dispatch(RegistryActions.reloadCategories());
         store.dispatch(RegistryActions.reloadSuppliers());
         store.dispatch(RegistryActions.reloadClients());
+        store.dispatch(LabellerActions.reloadSettings());
         resolve(store);
       })
       .catch(err => {
