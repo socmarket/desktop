@@ -19,3 +19,5 @@ from
       or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
     limit 30
   )
+order by
+  id desc

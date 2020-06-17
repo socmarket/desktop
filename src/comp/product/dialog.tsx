@@ -6,6 +6,10 @@ import ProductCard from "./card"
 import ProductList from "./list"
 
 class ProductDialog extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <Modal open size="large" centered={false} closeIcon onClose={() => this.props.closeProducts()}>

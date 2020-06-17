@@ -29,6 +29,10 @@ class ProductCard extends React.Component {
     this.genBarcode = this.genBarcode.bind(this);
     this.printLabel = this.printLabel.bind(this);
     this.setFilter = this.setFilter.bind(this);
+    this.createBarcodeInput = this.createBarcodeInput.bind(this);
+
+    this.barcodeInputRef = React.createRef();
+    this.categorySelectRef = React.createRef();
   }
 
   componentDidUpdate() {
@@ -73,7 +77,10 @@ class ProductCard extends React.Component {
       unitId: 1,
       categoryId: -1,
       useGenBarcode: false
-    }, this.updateForm);
+    }, () => {
+      this.updateForm();
+      this.barcodeInputRef.current.focus();
+    });
   }
 
   handleBarcodeActivate(event) {
@@ -124,11 +131,21 @@ class ProductCard extends React.Component {
       unitId: 1,
       categoryId: -1,
       useGenBarcode: false,
+    }, () => {
+      this.barcodeInputRef.current.focus();
     });
   }
 
   handleUpdateProduct() {
     this.props.updateProduct(this.state);
+  }
+
+  private createBarcodeInput(props) {
+    return (
+      <div className="ui input">
+        <input ref={this.barcodeInputRef} {...props} />
+      </div>
+    );
   }
 
   render() {
@@ -177,6 +194,7 @@ class ProductCard extends React.Component {
                   onKeyPress={this.handleBarcodeActivate}
                   onBlur={this.handleBarcodeActivate}
                   onChange={this.handleBarcodeChange}
+                  control={this.createBarcodeInput}
                   value={barcode}
                   autoFocus
                 />

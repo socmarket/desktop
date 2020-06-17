@@ -80,6 +80,13 @@ class MainMenu extends React.Component {
           </Menu.Item>
 
           <Menu.Item
+            active={this.props.app.showSettingsDialog}
+            onClick={() => this.props.openSettings()}
+          >
+            Н
+          </Menu.Item>
+
+          <Menu.Item
             onClick={this.props.signOut}
           >
             Выйти
