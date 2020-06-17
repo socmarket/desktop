@@ -1,6 +1,6 @@
 import labelProg from "./tspl/label.tspl"
-import labelCompactX3 from "./tspl/labelCompactX3.tspl"
-import labelCompactX2Multiline from "./tspl/labelCompactX2Multiline.tspl"
+import labelCompactX3S60x40 from "./tspl/labelCompactX3S60x40.tspl"
+import labelCompactX2MultilineS60x40 from "./tspl/labelCompactX2MultilineS60x40.tspl"
 import createNewBarcode from "./sql/createNewBarcode.sql"
 import selectUnusedBarcode from "./sql/selectUnusedBarcode.sql"
 
@@ -51,7 +51,7 @@ function printLabel(barcode, label, count = 1) {
     if (label.length > 18) {
       const lbl = label.match(/.{1,18}/g)
       while (lbl.length < 3) lbl.push("");
-      code = labelCompactX2Multiline
+      code = labelCompactX2MultilineS60x40
         .replace(/__BARCODE__/g, barcode)
         .replace(/__LINE1__/g, tr(lbl[0]))
         .replace(/__LINE2__/g, tr(lbl[1]))
@@ -59,7 +59,7 @@ function printLabel(barcode, label, count = 1) {
         .replace(/__COUNT__/g, count)
       ;
     } else {
-      code = labelCompactX3
+      code = labelCompactX3S60x40
         .replace(/__BARCODE__/g, barcode)
         .replace(/__LABEL__/g, tr(label.substring(0, 25)))
         .replace(/__COUNT__/g, count)
