@@ -32,23 +32,17 @@ const currentProductUpdated = (product) => ({
 function getFilteredProductList(patternRaw) { 
   const pattern = patternRaw.trim();
   const key = pattern.toLowerCase().split(" ")
-    .concat([ "", "", "" ])
-    .map(k => {
-      if (k.length > 0) {
-        return "%" + k + "%";
-      } else {
-        return k;
-      }
-    })
+    .concat([ "", "", "", "", "" ])
   ;
   return db.select(
       selectProductList,
       {
         $pattern: pattern,
-        $patternLower: pattern.toLowerCase(),
         $key0: key[0],
         $key1: key[1],
-        $key2: "%" + key[2] + "%",
+        $key2: key[2],
+        $key3: key[3],
+        $key4: key[4],
       }
     );
 }

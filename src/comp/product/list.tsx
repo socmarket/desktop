@@ -78,24 +78,6 @@ class ProductList extends React.Component {
     );
   }
 
-  private menu() {
-    return (
-      <Menu>
-        <Menu.Item>
-          <h4>Номенклатура</h4>
-        </Menu.Item>
-        <Menu.Item style={{ flexGrow: 1 }}>
-          <Input
-            className="icon"
-            icon="search"
-            value={this.state.filterPattern}
-            onChange={this.handleFilterChange}
-          />
-        </Menu.Item>
-      </Menu>
-    );
-  }
-
   render() {
     const height = this.state.formHeight;
     return (

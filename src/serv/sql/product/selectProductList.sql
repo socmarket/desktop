@@ -13,10 +13,12 @@ from
       left join category on category.id = product.categoryId
     where
       (product.barcode = $pattern)
-      or (product.titleLower like '%' || $patternLower || '%')
-      or (category.titleLower like '%' || $patternLower || '%')
-      or ((category.titleLower like $key0) and (product.titleLower like $key1) and (product.titleLower like $key2))
+      or (product.titleLower like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%' || $key3 || '%' || $key4 || '%')
       or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
+      or (
+        (category.titleLower like '%' || $key0 || '%')
+        and (product.titleLower like '%' || $key1 || '%' || $key2 || '%' || $key3 || '%' || $key4 || '%')
+      )
     limit 30
   )
 order by

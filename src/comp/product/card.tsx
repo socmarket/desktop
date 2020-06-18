@@ -53,7 +53,7 @@ class ProductCard extends React.Component {
   }
 
   printLabel() {
-    this.props.printLabel(this.state.barcode, this.state.title, this.state.labelCount);
+    this.props.printLabel(this.state.barcode, this.state.title, this.state.categoryTitle, this.state.labelCount);
   }
 
   genBarcode() {

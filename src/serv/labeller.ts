@@ -117,10 +117,11 @@ function genBarcode() {
   };
 }
 
-function printLabel(barcode, label, count = 1) {
+function printLabel(barcode, productTitle, categoryTitle, count = 1) {
   return function (dispatch, getState, { db, usb }) {
     const { labeller: { labelSize, barcodePrinterVid, barcodePrinterPid } } = getState();
     var code = ""
+    const label = `${categoryTitle}: ${productTitle}`.toUpperCase();
     if (labelSize === "60x40") {
       if (label.length > 18) {
         const lbl = label.match(/.{1,18}/g)
@@ -140,7 +141,7 @@ function printLabel(barcode, label, count = 1) {
         ;
       }
     } else if (labelSize === "30x20") {
-      const lbl = label.toUpperCase().match(/.{1,20}/g)
+      const lbl = label.match(/.{1,20}/g)
       while (lbl.length < 3) lbl.push("");
       code = labelFullMultilineS30x20
         .replace(/__BARCODE__/g, barcode)
