@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Modal, Menu, Grid, Container, Divider, Form, Table, Card,
-  Input, Select, TextArea, Button, Segment, Image, Label } from "semantic-ui-react"
+  Input, Select, TextArea, Button, Segment, Image, Label, Message } from "semantic-ui-react"
 import { AppActions } from "../../serv/app"
 import { ProductActions } from "../../serv/product"
 import { LabellerActions } from "../../serv/labeller"
@@ -265,6 +265,9 @@ class ProductDialog extends React.Component {
                 {this.props.errorMsg.length > 0 && <Message danger>{this.props.errorMsg}</Message> }
               </Form.Group>
             </Form>
+            <Button fluid onClick={this.genBarcode}>
+              Новый штрихкод
+            </Button>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
