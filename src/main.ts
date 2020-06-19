@@ -27,25 +27,23 @@ const createWindow = async () => {
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
   win.show();
 
-  Promise.resolve({});
-
   return win;
 }
 
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('ready', () => {
+app.on("ready", () => {
   mainWindow = createWindow();
 });
 
-app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
+app.on("activate", () => {
+  // On macOS it"s common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null)
     mainWindow = createWindow();

@@ -1,8 +1,8 @@
 {
   "private": true,
-  "name": "socmag-electro",
+  "name": "socmag",
   "version": "0.0.1",
-  "description": "SocMag POS",
+  "description": "Socmag",
   "main": "./.webpack/main",
   "license": "MIT",
   "author": {
