@@ -1,13 +1,13 @@
 {
   "private": true,
-  "name": "socmag",
+  "name": "Socmag",
   "version": "0.0.1",
   "description": "Socmag",
   "main": "./.webpack/main",
   "license": "MIT",
   "author": {
-    "name": "sherzod",
-    "email": "sherzod.gapirov@mail.ru"
+    "name": "socmag",
+    "email": "sh.gapirov@gmail.com"
   },
   "dependencies": {
     "@nivo/bar": "^0.62.0",

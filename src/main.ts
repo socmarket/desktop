@@ -1,16 +1,16 @@
-import path from "path";
-import { format as formatUrl } from "url";
-import { app, BrowserWindow } from "electron";
+import path from "path"
+import proc from "process"
+import { format as formatUrl } from "url"
+import { app, BrowserWindow, autoUpdater, ipcMain } from "electron"
 
 let mainWindow = null
 const isDevelopment = process.env.NODE_ENV !== "production"
 
-const createWindow = async () => {
-
+function createMainWindow() {
   let webp = {
     preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     contextIsolation: true
-  };
+  }
 
   let win = new BrowserWindow({
     width: 800,
@@ -30,21 +30,32 @@ const createWindow = async () => {
   return win;
 }
 
-app.on("window-all-closed", () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== "darwin") {
-    app.quit();
+function setupUpdater() {
+}
+
+if (!isDevelopment) {
+  if (proc.platform === "win32" || proc.platform === "darwin") {
+    if (require("electron-squirrel-startup")) {
+      app.quit();
+    }
   }
-});
+}
 
 app.on("ready", () => {
-  mainWindow = createWindow();
+  mainWindow = createMainWindow();
 });
 
 app.on("activate", () => {
   // On macOS it"s common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null)
-    mainWindow = createWindow();
+    mainWindow = createMainWindow();
+});
+
+app.on("window-all-closed", () => {
+  // Respect the OSX convention of having the application in memory even
+  // after all windows have been closed
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });
