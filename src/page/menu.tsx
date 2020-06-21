@@ -83,7 +83,7 @@ class MainMenu extends React.Component {
             active={this.props.app.showSettingsDialog}
             onClick={() => this.props.openSettings()}
           >
-            Н
+            Настройки
           </Menu.Item>
 
           <Menu.Item

@@ -1,7 +1,8 @@
+import os from "os"
 import path from "path"
 import proc from "process"
 import { format as formatUrl } from "url"
-import { app, BrowserWindow, autoUpdater, ipcMain } from "electron"
+import { app, BrowserWindow, autoUpdater, ipcMain, dialog } from "electron"
 
 let mainWindow = null
 const isDevelopment = process.env.NODE_ENV !== "production"
@@ -30,7 +31,56 @@ function createMainWindow() {
   return win;
 }
 
-function setupUpdater() {
+function sendMsg(win, msg) {
+  win.webContents.send("async-msg", msg);
+}
+
+function setupUpdater(win) {
+  const server = "http://127.0.0.1"
+
+  let platform = process.arch === "x64" ? "win64" : "win32"
+
+  if (process.platform === "darwin") {
+    platform = "osx"
+  }
+
+  const url = `${server}/update/${platform}/${app.getVersion()}/stable/`
+
+  autoUpdater.setFeedURL({ url })
+
+  setInterval(() => {
+    autoUpdater.checkForUpdates()
+  }, 300000)
+
+  autoUpdater.on("checking-for-update", (event) => {
+    sendMsg(win, { msg: "checking-for-update" });
+  })
+
+  autoUpdater.on("update-available", (event, arg) => {
+    sendMsg(win, { msg: "update-available", arg: arg });
+  })
+
+  autoUpdater.on("update-not-available", (event, arg) => {
+    sendMsg(win, { msg: "update-not-available", arg: arg });
+  })
+
+  autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
+    const dialogOpts = {
+      type: 'info',
+      buttons: ['Restart', 'Later'],
+      title: 'Application Update',
+      message: process.platform === 'win32' ? releaseNotes : releaseName,
+      detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+    }
+    sendMsg(win, { msg: "update-downloaded", releaseNotes: releaseNotes, releaseName: releaseName });
+    dialog.showMessageBox(dialogOpts).then((returnValue) => {
+      if (returnValue.response === 0) autoUpdater.quitAndInstall()
+    })
+  })
+
+  autoUpdater.on("error", (event, msg) => {
+    sendMsg(win, { msg: "update-error", msg: msg });
+  })
 }
 
 if (!isDevelopment) {
@@ -43,6 +93,7 @@ if (!isDevelopment) {
 
 app.on("ready", () => {
   mainWindow = createMainWindow();
+  setupUpdater(mainWindow);
 });
 
 app.on("activate", () => {

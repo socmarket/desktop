@@ -1,13 +1,13 @@
 {
   "private": true,
-  "name": "Socmag",
-  "version": "0.0.1",
-  "description": "Socmag",
+  "name": "2C",
+  "version": "0.0.1-alpha",
+  "description": "Social Market",
   "main": "./.webpack/main",
   "license": "MIT",
   "author": {
-    "name": "socmag",
-    "email": "sh.gapirov@gmail.com"
+    "name": "Socmarket",
+    "email": "contactsocmarket@gmail.com"
   },
   "dependencies": {
     "@nivo/bar": "^0.62.0",

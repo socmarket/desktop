@@ -12,8 +12,6 @@ import ErrorPage from "./page/error";
 
 import "./i18n";
 
-import { ipcRenderer } from "electron";
-
 getStore()
   .then(store => {
     ReactDom.render(

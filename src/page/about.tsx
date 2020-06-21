@@ -15,6 +15,8 @@ class AboutDialog extends React.Component {
                 <p>Версия</p>
                 <p>Сборка</p>
                 <p>Дата сборки</p>
+                <p>Yay it works!</p>
+                <p>Yay it worked again!</p>
               </Grid.Column>
               <Grid.Column>
                 <p>{VERSION.value}</p>
