@@ -1,20 +1,18 @@
-import initApi from "./api";
+import { initApi } from "./api"
+import { initDb } from "./lib/db/api"
+import { initUsb } from "./lib/usb/api"
 
-const os = require("os");
-const path = require("path");
-const { app } = require("electron").remote;
-const { contextBridge, ipcRenderer } = require("electron");
+const os = require("os")
+const path = require("path")
+const { app } = require("electron").remote
+const { contextBridge } = require("electron")
 
-function initApp() {
-  const dbPath = path.join(app.getPath("userData"), "socmag.db");
-  const api = initApi(dbPath);
-  contextBridge.exposeInMainWorld("api", api);
-  contextBridge.exposeInMainWorld("db", api._db);
-  contextBridge.exposeInMainWorld("usb", api._usb);
-
-  ipcRenderer.on("async-msg", (msg, arg) => {
-    console.log(msg, arg);
-  });
+function initApp(isDev) {
+  const dbFilePath = isDev ? "socmag.db" : path.join(app.getPath("userData"), "socmag.db")
+  const db  = initDb(dbFilePath)
+  const usb = initUsb()
+  const api = initApi(db, usb)
+  contextBridge.exposeInMainWorld("api", api)
 }
 
-initApp();
+initApp(process.env.NODE_ENV !== "production")

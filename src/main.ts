@@ -5,7 +5,7 @@ import { format as formatUrl } from "url"
 import { app, BrowserWindow, autoUpdater, ipcMain, dialog } from "electron"
 
 let mainWindow = null
-const isDevelopment = process.env.NODE_ENV !== "production"
+const isDev = process.env.NODE_ENV !== "production"
 
 function createMainWindow() {
   let webp = {
@@ -20,19 +20,24 @@ function createMainWindow() {
     webPreferences: webp
   })
 
-  if (isDevelopment) {
-    win.webContents.openDevTools();
+  if (isDev) {
+    const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+    installExtension(REACT_DEVELOPER_TOOLS)
+        .then((name) => console.log(`Added Extension:  ${name}`))
+        .catch((err) => console.log('An error occurred: ', err));
+    win.webContents.openDevTools()
   }
 
-  win.maximize();
-  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  win.show();
+  win.maximize()
+  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
+  win.setMenuBarVisibility(false)
+  win.show()
 
-  return win;
+  return win
 }
 
 function sendMsg(win, msg) {
-  win.webContents.send("async-msg", msg);
+  win.webContents.send("async-msg", msg)
 }
 
 function setupUpdater(win) {
@@ -53,15 +58,15 @@ function setupUpdater(win) {
   }, 300000)
 
   autoUpdater.on("checking-for-update", (event) => {
-    sendMsg(win, { msg: "checking-for-update" });
+    sendMsg(win, { msg: "checking-for-update" })
   })
 
   autoUpdater.on("update-available", (event, arg) => {
-    sendMsg(win, { msg: "update-available", arg: arg });
+    sendMsg(win, { msg: "update-available", arg: arg })
   })
 
   autoUpdater.on("update-not-available", (event, arg) => {
-    sendMsg(win, { msg: "update-not-available", arg: arg });
+    sendMsg(win, { msg: "update-not-available", arg: arg })
   })
 
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
@@ -72,41 +77,41 @@ function setupUpdater(win) {
       message: process.platform === 'win32' ? releaseNotes : releaseName,
       detail: 'A new version has been downloaded. Restart the application to apply the updates.'
     }
-    sendMsg(win, { msg: "update-downloaded", releaseNotes: releaseNotes, releaseName: releaseName });
+    sendMsg(win, { msg: "update-downloaded", releaseNotes: releaseNotes, releaseName: releaseName })
     dialog.showMessageBox(dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) autoUpdater.quitAndInstall()
     })
   })
 
   autoUpdater.on("error", (event, msg) => {
-    sendMsg(win, { msg: "update-error", msg: msg });
+    sendMsg(win, { msg: "update-error", msg: msg })
   })
 }
 
-if (!isDevelopment) {
+if (!isDev) {
   if (proc.platform === "win32" || proc.platform === "darwin") {
     if (require("electron-squirrel-startup")) {
-      app.quit();
+      app.quit()
     }
   }
 }
 
 app.on("ready", () => {
-  mainWindow = createMainWindow();
-  setupUpdater(mainWindow);
-});
+  mainWindow = createMainWindow()
+  setupUpdater(mainWindow)
+})
 
 app.on("activate", () => {
   // On macOS it"s common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null)
-    mainWindow = createMainWindow();
-});
+    mainWindow = createMainWindow()
+})
 
 app.on("window-all-closed", () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== "darwin") {
-    app.quit();
+    app.quit()
   }
-});
+})

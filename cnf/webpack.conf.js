@@ -1,4 +1,5 @@
 const webpack = require("webpack")
+const path = require("path")
 const proc = require("process")
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const pckg = require("../package.json")
@@ -19,6 +20,13 @@ module.exports = {
   ],
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+    alias: {
+      Api: path.resolve("src/api"),
+      Ui: path.resolve("src/ui"),
+      View: path.resolve("src/ui/view"),
+      Store: path.resolve("src/ui/store"),
+      Style: path.resolve("src/ui/style"),
+    }
   },
   module: {
     rules: [
