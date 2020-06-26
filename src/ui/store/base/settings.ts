@@ -20,7 +20,8 @@ function SettingsReducer (state = {
   switch (action.type) {
     case "SETTINGS_RELOADED": {
       return Object.assign({}, state, {
-        appMode: action.settings.appMode,
+        appMode         : action.settings.appMode,
+        defaultClientId : action.settings.defaultClientId ? +action.settings.defaultClientId : -1,
       })
     }
     default:

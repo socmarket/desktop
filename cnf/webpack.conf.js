@@ -23,6 +23,7 @@ module.exports = {
     alias: {
       Api: path.resolve("src/api"),
       Ui: path.resolve("src/ui"),
+      Util: path.resolve("src/util"),
       View: path.resolve("src/ui/view"),
       Store: path.resolve("src/ui/store"),
       Style: path.resolve("src/ui/style"),

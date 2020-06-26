@@ -178,7 +178,6 @@ class ProductForm extends React.Component {
   }
 
   form() {
-    const existing  = this.state.id > 0
     return (
       <Form size="small" width={16} onKeyDown={this.onKeyDown}>
         <Form.Group>
@@ -222,7 +221,6 @@ class ProductForm extends React.Component {
   }
 
   buttons() {
-    const existing = this.state.id > 0
     return (
       <Form>
         <Form.Group>
