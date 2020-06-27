@@ -1,6 +1,9 @@
 const AppActions = {
-  openAutoPartsSaleCheck: () => ({
+  openAutoPartsSaleCheckEditor: () => ({
     type: "APP_OPEN_AUTO_PARTS_SALE_CHECK_EDITOR",
+  }),
+  openAutoPartsSaleJournal: () => ({
+    type: "APP_OPEN_AUTO_PARTS_SALE_JOURNAL",
   }),
   openAutoPartsProductEditor: () => ({
     type: "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR",
@@ -15,6 +18,8 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "autoPartsProductEditor" });
     case "APP_OPEN_AUTO_PARTS_SALE_CHECK_EDITOR":
       return Object.assign({}, state, { activePage: "autoPartsSaleCheckEditor" });
+    case "APP_OPEN_AUTO_PARTS_SALE_JOURNAL":
+      return Object.assign({}, state, { activePage: "autoPartsSaleJournal" });
     default:
       return state
   }

@@ -1,3 +1,40 @@
 .ui.menu > a.active.item {
   border-bottom: 2px solid white;
 }
+
+.light-focus:focus {
+  outline: none;
+  box-shadow: 0 0 1 1 #21ba45;
+}
+
+#root {
+  background: #ffffff50
+}
+
+#root::after {
+  content: "";
+  background-image: url("~Img/auto-parts-tile.jpg");
+  background-position: center center;
+  background-size: repeat;
+  opacity: 0.08;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+@font-face {
+  font-family: "rumono";
+  src: url('~Font/anonymouspro.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+}
+
+.ui.segment {
+}
+
+.ui.header {
+  font-family: "rumono";
+}

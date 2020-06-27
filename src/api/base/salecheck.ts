@@ -3,6 +3,8 @@ import insertCurrentSaleCheckItemSql  from "./sql/salecheck/insertCurrentSaleChe
 import updateCurrentSaleCheckItemSql  from "./sql/salecheck/updateCurrentSaleCheckItem.sql"
 import deleteCurrentSaleCheckItemSql  from "./sql/salecheck/deleteCurrentSaleCheckItem.sql"
 import closeCurrentSaleCheckSql       from "./sql/salecheck/closeCurrentSaleCheck.sql"
+import selectSaleChecksSql            from "./sql/salecheck/selectSaleChecks.sql"
+import selectSaleCheckItemsForSql     from "./sql/salecheck/selectSaleCheckItemsFor.sql"
 
 export default function initSaleCheckApi(db) {
   return {
@@ -70,5 +72,17 @@ export default function initSaleCheckApi(db) {
           return db.exec("rollback");
         })
     },
+    selectSaleJournal: () => {
+      return db.select(selectSaleChecksSql)
+        .then(items => {
+          return Promise.all(
+            items.map(saleCheck =>
+              db.select(selectSaleCheckItemsForSql, { $saleCheckId: saleCheck.id })
+                .then(items => ({ saleCheck: saleCheck, items: items }))
+            )
+          )
+        })
+      ;
+    }
   }
 }

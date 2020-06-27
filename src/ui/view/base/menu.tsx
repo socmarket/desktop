@@ -1,12 +1,17 @@
-import { AppActions } from "Store/base/app"
+import { AppActions }      from "Store/base/app"
 
 import React, { Fragment } from "react";
-import { connect } from "react-redux";
-import { Button, Menu, Segment, Label, Icon } from "semantic-ui-react"
+import { connect }         from "react-redux";
+import {
+  Button, Menu, Segment, Label, Icon,
+  Dropdown,
+}                          from "semantic-ui-react"
 
 class MainMenu extends React.Component {
 
   menu() {
+    const activePage = this.props.app.activePage
+    const salesActive = (activePage === "autoPartsSaleCheckEditor" || activePage === "autoPartsSaleJournal") ? "active" : ""
     return (
       <Menu attached="top" pointing secondary inverted borderless color="blue" style={{ fontSize: 16 }}>
         <Menu.Item style={{ paddingLeft: 0, paddingTop: 0, paddingRight: 0, paddingBottom: 7, marginLeft: 5, marginRight: 15 }}>
@@ -16,12 +21,23 @@ class MainMenu extends React.Component {
         </Menu.Item>
         { (this.props.opt.appMode === "auto/parts") &&
           <Fragment>
-            <Menu.Item
-              active={this.props.app.activePage === "autoPartsSaleCheckEditor"}
-              onClick={() => this.props.openAutoPartsSaleCheck()}
-            >
-              Продажа
-            </Menu.Item>
+            <Dropdown text="Продажи" pointing className={"link item " + salesActive}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  icon="cart"
+                  active={this.props.app.activePage === "autoPartsSaleCheckEditor"}
+                  onClick={() => this.props.openAutoPartsSaleCheckEditor()}
+                  text="Касса"
+                />
+                <Dropdown.Item
+                  icon="list layout"
+                  active={this.props.app.activePage === "autoPartsSaleJournal"}
+                  onClick={() => this.props.openAutoPartsSaleJournal()}
+                  text="Журнал"
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+
             <Menu.Item
               active={this.props.app.activePage === "autoPartsProductEditor"}
               onClick={() => this.props.openAutoPartsProductEditor()}

@@ -1,4 +1,5 @@
 import SaleCheckItem from "./itemEditor"
+
 import DTable        from "View/comp/dtable"
 import ProductPicker from "View/auto/parts/product/picker"
 import ClientPicker  from "View/base/client/picker"
@@ -15,7 +16,7 @@ import {
   Header, Grid, Table, Form, Input, Select,
   TextArea, Button, Segment, Image, Icon,
   Label, Container, Menu, Message, Divider,
-  Rail,
+  Rail, Dropdown
 } from "semantic-ui-react"
 
 class SaleCheckEditor extends React.Component {
@@ -184,17 +185,18 @@ class SaleCheckEditor extends React.Component {
     return (
       <DTable
         ref={this.tableRef}
-        title="Текущий чек"
+        titleIcon="settings"
+        title="Комплектующие"
         items={this.state.items}
         columns={[
-          { key: "productTitle"  , title: "Товар"   ,                },
-          { key: "originalPrice" , title: "Цена"    , align: "right" },
-          { key: "price"         , title: "Со скид" , align: "right" },
-          { key: "quantity"      , title: "Кол-во"  , align: "right" },
-          { key: "unitTitle"     , title: "Ед."     ,                },
-          { key: "cost"          , title: "Сумма"   , align: "right" },
-          { key: "total"         , title: "Со скид" , align: "right" },
-          { key: "productBarcode", title: "Штрихкод",                },
+          { key: "productTitle"  , title: "Товар"   ,                             },
+          { key: "originalPrice" , title: "Цена"    , align: "right"              },
+          { key: "price"         , title: "Со скид" , align: "right"              },
+          { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
+          { key: "unitTitle"     , title: "Ед."     ,                             },
+          { key: "cost"          , title: "Сумма"   , align: "right"              },
+          { key: "total"         , title: "Со скид" , align: "right", positive: 1 },
+          { key: "productBarcode", title: "Штрихкод",                             },
         ]}
         onOpenRow={this.onOpenItem}
         onDeleteRow={this.onDeleteItem}
@@ -208,74 +210,75 @@ class SaleCheckEditor extends React.Component {
     return (
       <Translation ns={"salecheck.form"}>
       { (t, { i18n }) => (
-        <Fragment>
-          <Segment textAlign="left">
-            <Header as="h2" dividing textAlign="center">Текущий чек</Header>
-            <Grid>
-              <Grid.Row>
-                <Grid.Column width={6}><Header as="h2">{t("cost")}</Header></Grid.Column>
-                <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{this.state.cost}</Header></Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={6}><Header as="h2">{t("discount")}</Header></Grid.Column>
-                <Grid.Column width={10}>
-                  <Header as="h2" dividing textAlign="right">
-                    {this.state.discount} + {this.state.extraDiscount} = {(+this.state.discount) + (+this.state.extraDiscount)}
-                  </Header>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
-                <Grid.Column width={10}>
-                  <Header dividing as="h1" textAlign="right">
-                    {this.state.total - this.state.extraDiscount}
-                  </Header>
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Column width={6}><Header as="h2">{t("change")}</Header></Grid.Column>
-                <Grid.Column width={10}>
-                  <Header dividing as="h2" textAlign="right">
-                    {change > 0 ? change : "0" }
-                  </Header>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-            <br />
-            <Form>
-              <Form.Field>
-                <label>Клиент</label>
-                <ClientPicker
-                  api={this.props.api}
-                  forwardRef={this.clientPickerRef}
-                  value={this.state.clientId}
-                  onPick={this.onClientChange}
-                />
-              </Form.Field>
-              <Form.Group>
-                <Form.Input
-                  width={16}
-                  label={t("discount")}
-                  value={this.state.extraDiscount}
-                  onChange={this.onExtraDiscountChange}
-                  control={this.extraDiscountInput}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Input
-                  width={16}
-                  label={t("cash")}
-                  value={this.state.cash}
-                  onChange={this.onCashChange}
-                  control={this.cashInput}
-                />
-              </Form.Group>
-            </Form>
-            <Container align="right">
-              <Button onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
-            </Container>
-          </Segment>
-        </Fragment>
+        <Segment textAlign="left" color="green" raised>
+          <Header as="h2" dividing color="green" textAlign="center">
+            <Icon name="clipboard list" />
+            Текущий чек
+          </Header>
+          <Grid padded>
+            <Grid.Row>
+              <Grid.Column width={6}><Header as="h2">{t("cost")}</Header></Grid.Column>
+              <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{this.state.cost}</Header></Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={6}><Header as="h2">{t("discount")}</Header></Grid.Column>
+              <Grid.Column width={10}>
+                <Header as="h2" dividing textAlign="right">
+                  {this.state.discount} + {this.state.extraDiscount} = {(+this.state.discount) + (+this.state.extraDiscount)}
+                </Header>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
+              <Grid.Column width={10}>
+                <Header dividing as="h1" textAlign="right" color="green">
+                  {this.state.total - this.state.extraDiscount}
+                </Header>
+              </Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={6}><Header as="h2">{t("change")}</Header></Grid.Column>
+              <Grid.Column width={10}>
+                <Header dividing as="h2" textAlign="right">
+                  {change > 0 ? change : "0" }
+                </Header>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+          <br />
+          <Form>
+            <Form.Field>
+              <label>Клиент</label>
+              <ClientPicker
+                api={this.props.api}
+                forwardRef={this.clientPickerRef}
+                value={this.state.clientId}
+                onPick={this.onClientChange}
+              />
+            </Form.Field>
+            <Form.Group>
+              <Form.Input
+                width={16}
+                label={t("discount")}
+                value={this.state.extraDiscount}
+                onChange={this.onExtraDiscountChange}
+                control={this.extraDiscountInput}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Input
+                width={16}
+                label={t("cash")}
+                value={this.state.cash}
+                onChange={this.onCashChange}
+                control={this.cashInput}
+              />
+            </Form.Group>
+          </Form>
+          <Container align="right">
+            <Button color="blue" onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
+          </Container>
+        </Segment>
       )}
       </Translation>
     )
@@ -283,20 +286,16 @@ class SaleCheckEditor extends React.Component {
 
   render() {
     return (
-      <Grid padded onKeyDown={this.onGlobalKeyDown} tabIndex={100000}>
+      <Grid padded onKeyDown={this.onGlobalKeyDown} tabIndex={100000} className="light-focus">
         <Grid.Row>
           <Grid.Column width={16}>
             <Segment>
-              <Grid columns={2} verticalAlign="middle">
-                <Grid.Column width={16}>
-                  <ProductPicker
-                    floated="right"
-                    api={this.props.api}
-                    forwardRef={this.productPickerRef}
-                    onPick={this.onProductPick}
-                  />
-                </Grid.Column>
-              </Grid>
+              <ProductPicker
+                floated="right"
+                api={this.props.api}
+                forwardRef={this.productPickerRef}
+                onPick={this.onProductPick}
+              />
             </Segment>
           </Grid.Column>
         </Grid.Row>

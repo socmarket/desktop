@@ -1,6 +1,7 @@
 import MainMenu from "./menu"
 import AutoPartsProductEditor   from "View/auto/parts/product/editor"
 import AutoPartsSaleCheckEditor from "View/auto/parts/salecheck/editor"
+import AutoPartsSaleJournal     from "View/auto/parts/salecheck/journal"
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
@@ -8,6 +9,7 @@ import { connect } from "react-redux"
 const ViewMap = {
   "autoPartsProductEditor"   : (props) => <AutoPartsProductEditor   api={props.api} />,
   "autoPartsSaleCheckEditor" : (props) => <AutoPartsSaleCheckEditor api={props.api} defaultClientId={props.opt.defaultClientId} />,
+  "autoPartsSaleJournal"     : (props) => <AutoPartsSaleJournal     api={props.api} />,
 }
 
 const view = (page, props) => (typeof ViewMap[page] === "function") ? ViewMap[page](props) : ""

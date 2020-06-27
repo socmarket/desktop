@@ -163,12 +163,17 @@ export default class ProductPicker extends React.Component {
           DropdownIndicator:() => null,
           IndicatorSeparator:() => null,
         }}
+        theme={theme => ({
+          ...theme,
+        })}
         styles={{
           container: (base) => ({
             ...base,
           }),
-          control: (base) => ({
+          control: (base, state) => ({
             ...base,
+            borderColor: state.isFocused ? "#cce2ff" : "rgba(34,36,38,.15)",
+            boxShadow: "none",
           }),
           input: (provided) => ({
             ...provided,

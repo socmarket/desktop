@@ -1,5 +1,3 @@
-import "Style/main.css"
-
 import { createStore } from "Ui/store/creator"
 
 import StartPage from "Ui/start"
@@ -15,6 +13,8 @@ import { Provider } from "react-redux"
 import "react-dates/initialize"
 import "react-dates/lib/css/_datepicker.css"
 import "semantic-ui-css/semantic.min.css"
+
+import "Style/main.css"
 
 const api = window.api
 

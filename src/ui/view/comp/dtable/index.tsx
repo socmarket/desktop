@@ -1,7 +1,7 @@
 import React from "react"
 import moment from "moment"
 import {
-  Table, Header
+  Table, Header, Segment, Icon
 } from "semantic-ui-react"
 
 class DTable extends React.Component {
@@ -75,31 +75,38 @@ class DTable extends React.Component {
 
   table() {
     return (
-      <table className="ui compact celled selectable table" tabIndex={1000} onKeyDown={this.onKeyDown} ref={this.props.innerRef}>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell colSpan={this.props.columns.length} textAlign="center">
-              <Header as='h3' textAlign="center">{this.props.title}</Header>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Header>
-          <Table.Row>
-            { this.props.columns.map((col, idx) => (
-              <Table.HeaderCell key={idx} textAlign={col.align || "left"}>{col.title}</Table.HeaderCell>
-            ))}
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          { this.props.items.map((item, ridx) => (
-            <Table.Row key={ridx} active={ridx === this.state.idx} onClick={() => this.onOpenRow(ridx)}>
-              { this.props.columns.map((col, cidx) => (
-                <Table.Cell key={cidx} textAlign={col.align || "left"}>{item[col.key]}</Table.Cell>
+      <Segment raised color="green"
+        tabIndex={1000}
+        onKeyDown={this.onKeyDown}
+      >
+        <Header as="h2" dividing color="green" textAlign="center">
+          <Icon name={this.props.titleIcon} />
+          {this.props.title}
+        </Header>
+        <table
+          className="ui compact celled selectable table light-focus"
+          ref={this.props.innerRef}
+        >
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell textAlign="center" >#</Table.HeaderCell>
+              { this.props.columns.map((col, idx) => (
+                <Table.HeaderCell key={idx} textAlign={col.align || "left"} {...(col.positive ? {positive: true} : {})} >{col.title}</Table.HeaderCell>
               ))}
             </Table.Row>
-          ))}
-        </Table.Body>
-      </table>
+          </Table.Header>
+          <Table.Body>
+            { this.props.items.map((item, ridx) => (
+              <Table.Row key={ridx} active={ridx === this.state.idx} onClick={() => this.onOpenRow(ridx)}>
+                <Table.Cell textAlign="right">{ridx+1}</Table.Cell>
+                { this.props.columns.map((col, cidx) => (
+                  <Table.Cell key={cidx} textAlign={col.align || "left"} {...(col.positive ? {positive: true} : {})} >{item[col.key]}</Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </table>
+      </Segment>
     )
   }
 

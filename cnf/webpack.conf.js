@@ -24,6 +24,8 @@ module.exports = {
       Api: path.resolve("src/api"),
       Ui: path.resolve("src/ui"),
       Util: path.resolve("src/util"),
+      Img: path.resolve("src/ui/img"),
+      Font: path.resolve("src/ui/font"),
       View: path.resolve("src/ui/view"),
       Store: path.resolve("src/ui/store"),
       Style: path.resolve("src/ui/style"),
