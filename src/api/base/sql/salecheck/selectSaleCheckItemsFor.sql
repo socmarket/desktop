@@ -1,16 +1,25 @@
 select
-  salecheckitem.id,
-  salecheckitem.salecheckId,
-  salecheckitem.productId,
-  salecheckitem.quantity / 100.00  as quantity,
-  salecheckitem.price / 100.00     as price,
-  (salecheckitem.quantity * salecheckitem.price) / 10000.00 as costBeforeRet,
-  ((salecheckitem.quantity - coalesce(ret.quantity, 0)) * salecheckitem.price) / 10000.00 as cost,
-  salecheckitem.unitId,
-  salecheckitem.currencyId,
-  product.title as productTitle,
-  unit.notation as unitNotation,
-  coalesce(ret.quantity / 100.00, 0) as retQuantity
+  salecheckitem.id                                         as id,
+  salecheckitem.saleCheckId                                as saleCheckId,
+  salecheckitem.productId                                  as productId,
+  round(salecheckitem.quantity / 100.00, 2)                as quantity,
+  round(salecheckitem.price / 100.00, 2)                   as price,
+
+  round(
+    salecheckitem.quantity * salecheckitem.price /
+    10000.0,
+    2
+  )                                                        as costBeforeRet,
+  round(
+    (salecheckitem.quantity - coalesce(ret.quantity, 0)) *
+    salecheckitem.price / 10000.00,
+    2
+  )                                                        as cost,
+  salecheckitem.unitId                                     as uniId,
+  salecheckitem.currencyId                                 as currencyId,
+  product.title                                            as productTitle,
+  unit.notation                                            as unitNotation,
+  coalesce(ret.quantity / 100.00, 0)                       as retQuantity
 from
   salecheckitem
   left join product on product.id = salecheckitem.productId

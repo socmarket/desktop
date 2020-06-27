@@ -21,7 +21,7 @@ class MainMenu extends React.Component {
         </Menu.Item>
         { (this.props.opt.appMode === "auto/parts") &&
           <Fragment>
-            <Dropdown text="Продажи" pointing className={"link item " + salesActive}>
+            <Dropdown tabIndex={-1} text="Продажи" pointing className={"link item " + salesActive}>
               <Dropdown.Menu>
                 <Dropdown.Item
                   icon="cart"

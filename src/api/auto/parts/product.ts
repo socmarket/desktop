@@ -9,6 +9,8 @@ import updateProductSql                from "./sql/product/updateProduct.sql"
 import path from "path"
 import xlsx from "xlsx"
 
+import { traverseF, ifF, ifNotF } from "../../util"
+
 const { dialog } = require("electron").remote
 
 export interface Product {
@@ -65,16 +67,18 @@ function getC(target) {
 }
 
 function getR(sheet, col, r) {
-  const $title       = col.titleC  ? getV(sheet, col.titleC , r) : ""
-  const $model       = col.modelC  ? getV(sheet, col.modelC , r) : ""
-  const $engine      = col.engineC ? getV(sheet, col.engineC, r) : ""
-  const $brand       = col.brandC  ? getV(sheet, col.brandC , r) : ""
-  const $oemNo       = col.oemNoC  ? getV(sheet, col.oemNoC , r) : ""
-  const $serial      = col.serialC ? getV(sheet, col.serialC, r) : ""
+  const $title       = col.titleC  ? String(getV(sheet, col.titleC , r)) : ""
+  const $model       = col.modelC  ? String(getV(sheet, col.modelC , r)) : ""
+  const $engine      = col.engineC ? String(getV(sheet, col.engineC, r)) : ""
+  const $brand       = col.brandC  ? String(getV(sheet, col.brandC , r)) : ""
+  const $oemNo       = col.oemNoC  ? String(getV(sheet, col.oemNoC , r)) : ""
+  const $serial      = col.serialC ? String(getV(sheet, col.serialC, r)) : ""
+
   const $titleLower  = $title  ? $title.toLowerCase()  : ""
   const $modelLower  = $model  ? $model.toLowerCase()  : ""
   const $engineLower = $engine ? $engine.toLowerCase() : ""
   const $brandLower  = $brand  ? $brand.toLowerCase()  : ""
+
   return {
     $title         : $title
     , $titleLower  : $titleLower
@@ -87,6 +91,19 @@ function getR(sheet, col, r) {
     , $oemNo       : $oemNo
     , $serial      : $serial
   }
+}
+
+async function productExistsF(db, row) {
+  const p = await db.selectOne(
+    "select id from product where title = $title and model = $model and engine = $engine and brand = $brand",
+    {
+      $title : row.$title,
+      $model : row.$model,
+      $engine: row.$engine,
+      $brand : row.$brand,
+    }
+  )
+  return Boolean(p)
 }
 
 export default function initProductApi(db: Database): ProductApi {
@@ -143,44 +160,26 @@ export default function initProductApi(db: Database): ProductApi {
       const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, onRowDone, onError } = args
       const cols = getC(target)
       return db.exec("begin")
-        .then(async () => console.log(`Import started: ${target}`))
-        .then(_ => rect.rows.reduce(
-          (prevP, r) => {
-            if (!excludedRows.includes(r)) {
-              const row = getR(sheet, cols, r)
-              return prevP.then(_ =>
-                db.selectOne("select id from product where title = $title and model = $model and engine = $engine and brand = $brand", {
-                    $title: row.$title,
-                    $model: row.$model,
-                    $engine: row.$engine,
-                    $brand: row.$brand,
+        .then(() => console.log("Import started"))
+        .then(_ => traverseF(rect.rows, (ridx) => {
+          const row = getR(sheet, cols, ridx)
+          if (!excludedRows.includes(ridx)) {
+            return ifNotF(productExistsF(db, row), _ =>
+              genBarcode(db, barcodePrefix)
+                .then(barcode =>
+                  db.exec(insertProductSql, {
+                    $barcode: barcode,
+                    $unitId: unitId,
+                    $categoryId: categoryId,
+                    $notes: "",
+                    $notesLower: "",
+                    ...row
                   })
-                  .then(p => {
-                    if (p) {
-                      console.log("already exists:", row)
-                      return Promise.resolve()
-                    } else {
-                      return genBarcode(db, barcodePrefix)
-                        .then(barcode =>
-                          db.exec(insertProductSql, {
-                            $barcode: barcode,
-                            $unitId: unitId,
-                            $categoryId: categoryId,
-                            $notes: "",
-                            $notesLower: "",
-                            ...row
-                          })
-                        )
-                        .then(_ => onRowDone(r, row))
-                    }
-                  })
-              )
-            } else {
-              return prevP
-            }
+                )
+                .then(_ => onRowDone(ridx, row))
+            )
           }
-          , Promise.resolve())
-        )
+        }))
         .then(_ => db.exec("commit"))
         .catch(err => {
           return db.exec("rollback")

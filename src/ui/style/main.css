@@ -8,7 +8,9 @@
 }
 
 #root {
-  background: #ffffff50
+  background: #ffffff50;
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 #root::after {

@@ -57,6 +57,8 @@ class SaleCheckEditor extends React.Component {
     this.extraDiscountInput    = numberInputWithRef(this.extraDiscountInputRef)
     this.cashInput             = numberInputWithRef(this.cashInputRef)
 
+    this.activateLock = React.createRef(false)
+
     this.saleCheckApi = props.api.saleCheck
     this.state = {
       items             : [],
@@ -120,6 +122,7 @@ class SaleCheckEditor extends React.Component {
       }
       case "Enter": {
         if (ev.shiftKey) {
+          ev.preventDefault()
           this.onActivate()
         }
         break
@@ -127,11 +130,23 @@ class SaleCheckEditor extends React.Component {
     }
   }
 
+  lockActivation() {
+    if (this.activateLock.current)
+      return false
+    this.activateLock.current = true
+    setTimeout(() => {
+      this.activateLock.current = false
+    }, 2000)
+    return true
+  }
+
   onActivate() {
-    if (!this.state.clientId || this.state.clientId < 0) {
-      this.clientPickerRef.current.focus()
-    } else if (this.state.items.length === 0) {
+    if (!this.lockActivation())
+      return
+    if (this.state.items.length === 0) {
       this.productPickerRef.current.focus()
+    } else if (!this.state.clientId || this.state.clientId < 0) {
+      this.clientPickerRef.current.focus()
     } else if ((this.state.cash + "").length === 0) {
       this.cashInputRef.current.focus()
     } else {
@@ -210,7 +225,7 @@ class SaleCheckEditor extends React.Component {
     return (
       <Translation ns={"salecheck.form"}>
       { (t, { i18n }) => (
-        <Segment textAlign="left" color="green" raised>
+        <Segment textAlign="left" color="green" raised clearing>
           <Header as="h2" dividing color="green" textAlign="center">
             <Icon name="clipboard list" />
             Текущий чек
@@ -274,10 +289,8 @@ class SaleCheckEditor extends React.Component {
                 control={this.cashInput}
               />
             </Form.Group>
+            <Button floated="right" color="blue" onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
           </Form>
-          <Container align="right">
-            <Button color="blue" onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
-          </Container>
         </Segment>
       )}
       </Translation>
@@ -286,7 +299,7 @@ class SaleCheckEditor extends React.Component {
 
   render() {
     return (
-      <Grid padded onKeyDown={this.onGlobalKeyDown} tabIndex={100000} className="light-focus">
+      <Grid padded tabIndex={-1} onKeyDown={this.onGlobalKeyDown} className="light-focus">
         <Grid.Row>
           <Grid.Column width={16}>
             <Segment>

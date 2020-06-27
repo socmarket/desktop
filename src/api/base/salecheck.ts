@@ -68,8 +68,8 @@ export default function initSaleCheckApi(db) {
         })
         .then(_ => db.exec("commit"))
         .catch(err => {
-          console.log(err);
-          return db.exec("rollback");
+          console.log(err)
+          return db.exec("rollback")
         })
     },
     selectSaleJournal: () => {
@@ -82,7 +82,22 @@ export default function initSaleCheckApi(db) {
             )
           )
         })
-      ;
+    },
+    returnSaleCheckItem: (saleCheckItemId, quantity) => {
+      return db.selectOne("select id, quantity from salecheckreturn where saleCheckItemId = ?", [ saleCheckItemId ])
+        .then(item => {
+          if (item) {
+            return db.exec(
+              "update salecheckreturn set quantity = quantity + ?, returnedAt = current_timestamp where saleCheckItemId = ?",
+              [ quantity * 100, saleCheckItemId ]
+            )
+          } else {
+            return db.exec(
+              "insert into salecheckreturn(saleCheckItemId, quantity) values(?, ?)",
+              [ saleCheckItemId, quantity * 100 ]
+            )
+          }
+        })
     }
   }
 }

@@ -75,17 +75,15 @@ class DTable extends React.Component {
 
   table() {
     return (
-      <Segment raised color="green"
-        tabIndex={1000}
-        onKeyDown={this.onKeyDown}
-      >
+      <Segment raised color="green" onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color="green" textAlign="center">
           <Icon name={this.props.titleIcon} />
           {this.props.title}
         </Header>
         <table
-          className="ui compact celled selectable table light-focus"
+          className="ui compact celled selectable table"
           ref={this.props.innerRef}
+          tabIndex={1000}
         >
           <Table.Header>
             <Table.Row>

@@ -11,7 +11,7 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage: "autoPartsSaleCheckEditor"
+  activePage: "autoPartsSaleJournal"
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
