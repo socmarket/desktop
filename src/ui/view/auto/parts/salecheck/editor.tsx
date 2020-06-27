@@ -202,6 +202,7 @@ class SaleCheckEditor extends React.Component {
         ref={this.tableRef}
         titleIcon="settings"
         title="Комплектующие"
+        color={this.props.theme.mainColor}
         items={this.state.items}
         columns={[
           { key: "productTitle"  , title: "Товар"   ,                             },
@@ -225,8 +226,8 @@ class SaleCheckEditor extends React.Component {
     return (
       <Translation ns={"salecheck.form"}>
       { (t, { i18n }) => (
-        <Segment textAlign="left" color="green" raised clearing>
-          <Header as="h2" dividing color="green" textAlign="center">
+        <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
+          <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
             <Icon name="clipboard list" />
             Текущий чек
           </Header>
@@ -246,7 +247,7 @@ class SaleCheckEditor extends React.Component {
             <Grid.Row>
               <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
               <Grid.Column width={10}>
-                <Header dividing as="h1" textAlign="right" color="green">
+                <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
                   {this.state.total - this.state.extraDiscount}
                 </Header>
               </Grid.Column>
@@ -289,7 +290,7 @@ class SaleCheckEditor extends React.Component {
                 control={this.cashInput}
               />
             </Form.Group>
-            <Button floated="right" color="blue" onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
+            <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
           </Form>
         </Segment>
       )}

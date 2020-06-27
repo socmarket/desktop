@@ -75,8 +75,8 @@ class DTable extends React.Component {
 
   table() {
     return (
-      <Segment raised color="green" onKeyDown={this.onKeyDown} tabIndex={-1}>
-        <Header as="h2" dividing color="green" textAlign="center">
+      <Segment raised color={this.props.color} onKeyDown={this.onKeyDown} tabIndex={-1}>
+        <Header as="h2" dividing color={this.props.color} textAlign="center">
           <Icon name={this.props.titleIcon} />
           {this.props.title}
         </Header>

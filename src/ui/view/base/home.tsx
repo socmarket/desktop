@@ -7,9 +7,9 @@ import React, { Fragment } from "react"
 import { connect } from "react-redux"
 
 const ViewMap = {
-  "autoPartsProductEditor"   : (props) => <AutoPartsProductEditor   api={props.api} />,
-  "autoPartsSaleCheckEditor" : (props) => <AutoPartsSaleCheckEditor api={props.api} defaultClientId={props.opt.defaultClientId} />,
-  "autoPartsSaleJournal"     : (props) => <AutoPartsSaleJournal     api={props.api} />,
+  "autoPartsProductEditor"   : (props) => <AutoPartsProductEditor   api={props.api} theme={props.opt.theme} />,
+  "autoPartsSaleCheckEditor" : (props) => <AutoPartsSaleCheckEditor api={props.api} theme={props.opt.theme} defaultClientId={props.opt.defaultClientId} />,
+  "autoPartsSaleJournal"     : (props) => <AutoPartsSaleJournal     api={props.api} theme={props.opt.theme} />,
 }
 
 const view = (page, props) => (typeof ViewMap[page] === "function") ? ViewMap[page](props) : ""

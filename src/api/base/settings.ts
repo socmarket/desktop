@@ -1,7 +1,10 @@
+import upsertOptionSql from "./sql/settings/upsertOption.sql"
 
 const defaultSettings = {
   appMode          : "auto/parts",
-  productLabelSize : "30x20", 
+  productLabelSize : "30x20",
+  defaultClientId  : 1,
+  theme            : "violet",
 }
 
 function readSettings(rows) {
@@ -12,11 +15,16 @@ function readSettings(rows) {
   }
 }
 
+function setKey(db, key, value) {
+  return db.exec(upsertOptionSql, { $key: key, $value: value })
+}
+
 export default function initSettingsApi(db) {
   return {
     getSettings: () => (
       db.select("select * from settings")
         .then(rows => readSettings(rows ? rows : []))
-    )
+    ),
+    changeTheme: (themeName) => setKey(db, "theme", themeName)
   }
 }
