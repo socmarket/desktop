@@ -10,6 +10,10 @@ import initUnitApi, {
   UnitApi,
 } from "./base/unit"
 
+import initCurrencyApi, {
+  CurrencyApi,
+} from "./base/currency"
+
 import initClientApi, {
   ClientApi,
 } from "./base/client"
@@ -36,6 +40,7 @@ export function initApi(db, usb) {
       product: initAutoProductApi(db),
     },
     unit: initUnitApi(db),
+    currency: initCurrencyApi(db),
     client: initClientApi(db),
     supplier: initSupplierApi(db),
     category: initCategoryApi(db),

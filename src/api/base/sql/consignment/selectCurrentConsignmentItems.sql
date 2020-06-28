@@ -14,8 +14,14 @@ select
 
   unit.notation                        as unitTitle,
   currency.notation                    as currencyTitle,
+
   product.title                        as productTitle,
-  product.barcode                      as productBarcode
+  product.barcode                      as productBarcode,
+  product.model                        as productModel,
+  product.engine                       as productEngine,
+  product.brand                        as productBrand,
+  product.oemNo                        as productOemNo,
+  product.serial                       as productSerial
 from
   currentconsignment c
   left join unit     on unit.id     = c.unitId

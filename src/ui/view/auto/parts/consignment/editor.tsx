@@ -86,10 +86,13 @@ class ConsignmentEditor extends React.Component {
         price     : 0,
       })
       .then(_ => this.reloadCurrentConsignment())
-      .then(_ => this.setState({
-        item: this.state.items[this.state.items.length - 1],
-        itemEditorVisible : true,
-      }))
+      .then(_ => {
+        const idx = this.state.items.findIndex(x => x.productId === product.id)
+        return this.setState({
+          item: this.state.items[idx],
+          itemEditorVisible : true,
+        })
+      })
   }
 
   onSupplierChange(supplier) {
@@ -171,6 +174,7 @@ class ConsignmentEditor extends React.Component {
       <ConsignmentItem
         open
         api={this.props.api}
+        theme={this.props.theme}
         item={this.state.item}
         onClose={this.onItemEditorClose}
         onUpdate={this.onItemUpdate}
@@ -191,7 +195,7 @@ class ConsignmentEditor extends React.Component {
           { key: "price"         , title: "Цена"    , align: "right", positive: 1 },
           { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
           { key: "unitTitle"     , title: "Ед."     ,                             },
-          { key: "cost"          , title: "Сумма"   , align: "right"              },
+          { key: "cost"          , title: "Сумма"   , align: "right", positive: 1 },
           { key: "currencyTitle" , title: "Валюта"  ,                             },
           { key: "productBarcode", title: "Штрихкод",                             },
         ]}

@@ -55,12 +55,6 @@ class MainMenu extends React.Component {
             <Dropdown tabIndex={-1} text="Товары" pointing className={"link item " + productsActive}>
               <Dropdown.Menu>
                 <Dropdown.Item
-                  icon="book"
-                  active={this.props.app.activePage === "autoPartsProductEditor"}
-                  onClick={() => this.props.openAutoPartsProductEditor()}
-                  text="Описание товаров"
-                />
-                <Dropdown.Item
                   icon="zip"
                   active={this.props.app.activePage === "autoPartsConsignmentEditor"}
                   onClick={() => this.props.openAutoPartsConsignmentEditor()}
@@ -71,6 +65,12 @@ class MainMenu extends React.Component {
                   active={this.props.app.activePage === "autoPartsConsignmentJournal"}
                   onClick={() => this.props.openAutoPartsConsignmentJournal()}
                   text="Журнал поступлений"
+                />
+                <Dropdown.Item
+                  icon="book"
+                  active={this.props.app.activePage === "autoPartsProductEditor"}
+                  onClick={() => this.props.openAutoPartsProductEditor()}
+                  text="Описание товаров"
                 />
                 <Dropdown.Item
                   icon="file excel"

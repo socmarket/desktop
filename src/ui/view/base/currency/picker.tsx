@@ -2,7 +2,7 @@ import React          from "react"
 import { components } from "react-select"
 import AsyncSelect    from "react-select/async"
 
-export default class UnitPicker extends React.Component {
+export default class CurrencyPicker extends React.Component {
 
   constructor(props) {
     super(props)
@@ -14,12 +14,12 @@ export default class UnitPicker extends React.Component {
 
   updateLabel(value) {
     const self = this
-    return this.props.api.unit.pick(value)
-      .then(unit => {
-        if (unit) {
+    return this.props.api.currency.pick(value)
+      .then(currency => {
+        if (currency) {
           self.setState({
-            value: unit.id,
-            label: unit.title,
+            value: currency.id,
+            label: currency.title,
           })
         } else {
           self.setState({
@@ -43,12 +43,12 @@ export default class UnitPicker extends React.Component {
 
   loadOptions(pattern, cb) {
     const self = this
-    this.props.api.unit.find(pattern)
+    this.props.api.currency.find(pattern)
       .then(cats => {
         const opts = cats.map(cat => ({
           label: cat.title,
           value: cat.id,
-          unit: cat,
+          currency: cat,
         }))
         cb(opts)
       })
@@ -57,11 +57,11 @@ export default class UnitPicker extends React.Component {
 
   onPick(option) {
     this.setState({
-      value: option.unit.id,
-      label: option.unit.title,
+      value: option.currency.id,
+      label: option.currency.title,
     }, () => {
       if (this.props.onPick) {
-        this.props.onPick(option.unit)
+        this.props.onPick(option.currency)
       }
     })
   }

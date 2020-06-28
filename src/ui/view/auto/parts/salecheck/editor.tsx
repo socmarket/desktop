@@ -189,6 +189,7 @@ class SaleCheckEditor extends React.Component {
       <SaleCheckItem
         open
         api={this.props.api}
+        theme={this.props.theme}
         item={this.state.item}
         onClose={this.onItemEditorClose}
         onUpdate={this.onItemUpdate}
@@ -207,7 +208,7 @@ class SaleCheckEditor extends React.Component {
         columns={[
           { key: "productTitle"  , title: "Товар"   ,                             },
           { key: "originalPrice" , title: "Цена"    , align: "right"              },
-          { key: "price"         , title: "Со скид" , align: "right"              },
+          { key: "price"         , title: "Со скид" , align: "right", positive: 1 },
           { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
           { key: "unitTitle"     , title: "Ед."     ,                             },
           { key: "cost"          , title: "Сумма"   , align: "right"              },

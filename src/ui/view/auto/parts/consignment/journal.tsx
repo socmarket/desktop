@@ -72,14 +72,14 @@ class ConsignmentJournal extends React.Component {
                   </Table.Cell>
                   { items.slice(0, 1).map(item => (
                     <Fragment key={item.id}>
-                      <Table.Cell>{item.productTitle.substring(0, 80)}</Table.Cell>
-                      <Table.Cell textAlign="right">{item.quantity}</Table.Cell>
-                      <Table.Cell textAlign="right">{item.retQuantity}</Table.Cell>
-                      <Table.Cell>{item.unitNotation}</Table.Cell>
-                      <Table.Cell textAlign="right">{item.price}</Table.Cell>
-                      <Table.Cell textAlign="right">{item.costBeforeRet}</Table.Cell>
-                      <Table.Cell textAlign="right">{item.cost}</Table.Cell>
-                      <Table.Cell textAlign="right">
+                      <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.productTitle.substring(0, 80)}</Table.Cell>
+                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.quantity}</Table.Cell>
+                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.retQuantity}</Table.Cell>
+                      <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.unitNotation}</Table.Cell>
+                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
+                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
+                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
                         { (item.retQuantity > 0) && <Button size="mini" icon="plus" onClick={() => this.returnConsignmentItem(item.id, -1)} /> }
                         { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnConsignmentItem(item.id, 1)} /> }
                       </Table.Cell>
@@ -88,14 +88,14 @@ class ConsignmentJournal extends React.Component {
                 </Table.Row>
                 { items.slice(1).map(item => (
                   <Table.Row key={item.id}>
-                    <Table.Cell>{item.productTitle.substring(0, 50)}</Table.Cell>
-                    <Table.Cell textAlign="right">{item.quantity}</Table.Cell>
-                    <Table.Cell textAlign="right">{item.retQuantity}</Table.Cell>
-                    <Table.Cell>{item.unitNotation}</Table.Cell>
-                    <Table.Cell textAlign="right">{item.price}</Table.Cell>
-                    <Table.Cell textAlign="right">{item.costBeforeRet}</Table.Cell>
-                    <Table.Cell textAlign="right">{item.cost}</Table.Cell>
-                    <Table.Cell textAlign="right">
+                    <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.productTitle.substring(0, 50)}</Table.Cell>
+                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.quantity}</Table.Cell>
+                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.retQuantity}</Table.Cell>
+                    <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.unitNotation}</Table.Cell>
+                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
+                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
+                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
                       { (item.retQuantity > 0) && <Button size="mini" icon="plus" onClick={() => this.returnConsignmentItem(item.id, -1)} /> }
                       { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnConsignmentItem(item.id, 1)} /> }
                     </Table.Cell>
