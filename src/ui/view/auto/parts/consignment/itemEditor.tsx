@@ -12,7 +12,7 @@ import {
   Container, Header
 } from "semantic-ui-react"
 
-class SaleCheckItem extends React.Component {
+class ConsignmentItem extends React.Component {
 
   constructor(props) {
     super(props)
@@ -28,7 +28,7 @@ class SaleCheckItem extends React.Component {
     this.priceInput       = numberInputWithRef(this.priceInputRef)
     this.quantityInput    = numberInputWithRef(this.quantityInputRef)
 
-    this.saleCheckApi = props.api.saleCheck
+    this.consignmentApi = props.api.consignment
 
     this.state = {
       ...props.item,
@@ -57,8 +57,8 @@ class SaleCheckItem extends React.Component {
   }
 
   onUpdate() {
-    this.saleCheckApi
-      .updateCurrentSaleCheckItem(this.state)
+    this.consignmentApi
+      .updateCurrentConsignmentItem(this.state)
       .then(_ => this.props.onUpdate(this.state))
   }
 
@@ -135,7 +135,7 @@ class SaleCheckItem extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Продажа: {this.state.productTitle}
+          Приёмка на склад: {this.state.productTitle}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -145,4 +145,4 @@ class SaleCheckItem extends React.Component {
   }
 }
 
-export default SaleCheckItem
+export default ConsignmentItem

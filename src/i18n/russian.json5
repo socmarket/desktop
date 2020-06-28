@@ -7,4 +7,12 @@
     cash: "Наличными: ",
     closeReceipt: "Закрыть чек",
   },
+  "consignment.form": {
+    cost: "Сумма: ",
+    discount: "Скидка: ",
+    total: "Итог: ",
+    change: "Сдача: ",
+    cash: "Наличными: ",
+    acceptConsignment: "Принять партию на склад",
+  },
 }

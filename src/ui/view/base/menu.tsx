@@ -8,12 +8,24 @@ import {
   Dropdown,
 }                          from "semantic-ui-react"
 
+const sales = [
+  "autoPartsSaleCheckEditor",
+  "autoPartsSaleJournal",
+]
+
+const products = [
+  "autoPartsProductEditor",
+  "autoPartsConsignmentEditor",
+  "autoPartsConsignmentJournal",
+]
+
 class MainMenu extends React.Component {
 
   menu() {
     const theme = this.props.opt.theme
     const activePage = this.props.app.activePage
-    const salesActive = (activePage === "autoPartsSaleCheckEditor" || activePage === "autoPartsSaleJournal") ? "active" : ""
+    const salesActive = sales.includes(activePage) ? "active" : ""
+    const productsActive = products.includes(activePage) ? "active" : ""
     return (
       <Menu attached="top" pointing secondary inverted borderless color={theme.mainColor} style={{ fontSize: 16 }}>
         <Menu.Item style={{ paddingLeft: 0, paddingTop: 0, paddingRight: 0, paddingBottom: 7, marginLeft: 5, marginRight: 15 }}>
@@ -35,20 +47,56 @@ class MainMenu extends React.Component {
                   icon="list layout"
                   active={this.props.app.activePage === "autoPartsSaleJournal"}
                   onClick={() => this.props.openAutoPartsSaleJournal()}
-                  text="Журнал"
+                  text="Журнал продаж"
                 />
               </Dropdown.Menu>
             </Dropdown>
 
-            <Menu.Item
-              active={this.props.app.activePage === "autoPartsProductEditor"}
-              onClick={() => this.props.openAutoPartsProductEditor()}
-            >
-              Товары
-            </Menu.Item>
+            <Dropdown tabIndex={-1} text="Товары" pointing className={"link item " + productsActive}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  icon="book"
+                  active={this.props.app.activePage === "autoPartsProductEditor"}
+                  onClick={() => this.props.openAutoPartsProductEditor()}
+                  text="Описание товаров"
+                />
+                <Dropdown.Item
+                  icon="zip"
+                  active={this.props.app.activePage === "autoPartsConsignmentEditor"}
+                  onClick={() => this.props.openAutoPartsConsignmentEditor()}
+                  text="Приёмка на склад"
+                />
+                <Dropdown.Item
+                  icon="list layout"
+                  active={this.props.app.activePage === "autoPartsConsignmentJournal"}
+                  onClick={() => this.props.openAutoPartsConsignmentJournal()}
+                  text="Журнал поступлений"
+                />
+                <Dropdown.Item
+                  icon="file excel"
+                  active={this.props.app.activePage === "autoPartsProductEditor"}
+                  onClick={() => this.props.openAutoPartsProductEditor()}
+                  text="Загрузка описаний из Excel"
+                />
+              </Dropdown.Menu>
+            </Dropdown>
           </Fragment>
         }
         <Menu.Menu position="right">
+          <Menu.Item>
+            <Dropdown tabIndex={-1} text="Обучающие игры" pointing>
+              <Dropdown.Menu>
+                { Object.keys(this.props.opt.themes).map(name => (
+                  <Dropdown.Item
+                    key={name}
+                    label={{ color: this.props.opt.themes[name].mainColor, empty: true, circular: true, size: "huge" }}
+                    active={theme === theme.name}
+                    onClick={() => this.props.changeTheme(name) }
+                  />
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Item>
           <Menu.Item>
             <Dropdown tabIndex={-1} text="Цвет" pointing>
               <Dropdown.Menu>

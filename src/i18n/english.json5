@@ -7,4 +7,12 @@
     cash: "With cash: ",
     closeReceipt: "Close receipt",
   },
+  "consignment.form": {
+    cost: "Cost: ",
+    discount: "Discount: ",
+    total: "Total: ",
+    change: "Change: ",
+    cash: "With cash: ",
+    acceptConsignment: "Accept",
+  },
 }

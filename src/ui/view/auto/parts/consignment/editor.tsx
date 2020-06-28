@@ -1,8 +1,8 @@
-import SaleCheckItem from "./itemEditor"
+import ConsignmentItem from "./itemEditor"
 
 import DTable        from "View/comp/dtable"
 import ProductPicker from "View/auto/parts/product/picker"
-import ClientPicker  from "View/base/client/picker"
+import SupplierPicker  from "View/base/supplier/picker"
 import {
   numberInputWithRef,
   ifNumberF
@@ -19,7 +19,7 @@ import {
   Rail, Dropdown
 } from "semantic-ui-react"
 
-class SaleCheckEditor extends React.Component {
+class ConsignmentEditor extends React.Component {
 
   emptyItem = {
     id             : -1,
@@ -39,9 +39,7 @@ class SaleCheckEditor extends React.Component {
     super(props)
 
     this.onProductPick          = this.onProductPick.bind(this)
-    this.onClientChange         = this.onClientChange.bind(this)
-    this.onExtraDiscountChange  = this.onExtraDiscountChange.bind(this)
-    this.onCashChange           = this.onCashChange.bind(this)
+    this.onSupplierChange       = this.onSupplierChange.bind(this)
     this.onOpenItem             = this.onOpenItem.bind(this)
     this.onDeleteItem           = this.onDeleteItem.bind(this)
     this.onItemUpdate           = this.onItemUpdate.bind(this)
@@ -50,68 +48,54 @@ class SaleCheckEditor extends React.Component {
     this.onActivate             = this.onActivate.bind(this)
 
     this.productPickerRef      = React.createRef()
-    this.clientPickerRef       = React.createRef()
+    this.supplierPickerRef     = React.createRef()
     this.tableRef              = React.createRef()
-    this.cashInputRef          = React.createRef()
-    this.extraDiscountInputRef = React.createRef()
-    this.extraDiscountInput    = numberInputWithRef(this.extraDiscountInputRef)
-    this.cashInput             = numberInputWithRef(this.cashInputRef)
 
     this.activateLock = React.createRef(false)
 
-    this.saleCheckApi = props.api.saleCheck
+    this.consignmentApi = props.api.consignment
     this.state = {
       items             : [],
       cost              : 0,
-      discount          : 0,
-      total             : 0,
-      change            : 0,
-      extraDiscount     : 0,
-      cash              : "",
       itemEditorVisible : false,
-      clientId          : props.defaultClientId || 1,
+      supplierId        : props.defaultSupplierId || 1,
       item              : this.emptyItem,
     }
   }
 
   componentDidMount() {
-    this.reloadCurrentSaleCheck()
+    this.reloadCurrentConsignment()
       .then(_ => this.productPickerRef.current.focus())
   }
 
-  reloadCurrentSaleCheck() {
-    return this.saleCheckApi.selectCurrentSaleCheck()
-      .then(saleCheck => {
+  reloadCurrentConsignment() {
+    return this.consignmentApi.selectCurrentConsignment()
+      .then(consignment => {
         this.setState({
-          ...saleCheck,
-          cash          : "",
-          extraDiscount : 0,
-          clientId      : this.props.defaultClientId || 1,
+          ...consignment,
+          supplierId      : this.props.defaultSupplierId || 1,
         })
       })
   }
 
   onProductPick(product) {
-    this.saleCheckApi
-      .insertCurrentSaleCheckItem({
-        productId  : product.id,
-        quantity   : 1,
+    this.consignmentApi
+      .insertCurrentConsignmentItem({
+        productId : product.id,
+        quantity  : 1,
+        price     : 0,
       })
-      .then(_ => this.reloadCurrentSaleCheck())
+      .then(_ => this.reloadCurrentConsignment())
+      .then(_ => this.setState({
+        item: this.state.items[this.state.items.length - 1],
+        itemEditorVisible : true,
+      }))
   }
 
-  onClientChange(client) {
+  onSupplierChange(supplier) {
     this.setState({
-      clientId: client.id
+      supplierId: supplier.id,
     })
-  }
-
-  onCashChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ cash: value }))
-  }
-
-  onExtraDiscountChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ extraDiscount: value }))
   }
 
   onGlobalKeyDown(ev) {
@@ -145,13 +129,11 @@ class SaleCheckEditor extends React.Component {
       return
     if (this.state.items.length === 0) {
       this.productPickerRef.current.focus()
-    } else if (!this.state.clientId || this.state.clientId < 0) {
-      this.clientPickerRef.current.focus()
-    } else if ((this.state.cash + "").length === 0) {
-      this.cashInputRef.current.focus()
+    } else if (!this.state.supplierId || this.state.supplierId < 0) {
+      this.supplierPickerRef.current.focus()
     } else {
-      this.saleCheckApi.closeCurrentSaleCheck(this.state)
-        .then(_ => this.reloadCurrentSaleCheck())
+      this.consignmentApi.closeCurrentConsignment(this.state)
+        .then(_ => this.reloadCurrentConsignment())
         .then(_ => this.productPickerRef.current.focus())
     }
   }
@@ -164,9 +146,9 @@ class SaleCheckEditor extends React.Component {
   }
 
   onDeleteItem(item, idx) {
-    this.saleCheckApi
-      .deleteCurrentSaleCheckItem(item)
-      .then(_ => this.reloadCurrentSaleCheck())
+    this.consignmentApi
+      .deleteCurrentConsignmentItem(item)
+      .then(_ => this.reloadCurrentConsignment())
   }
 
   onItemEditorClose() {
@@ -179,14 +161,14 @@ class SaleCheckEditor extends React.Component {
     this.setState({
       itemEditorVisible: false,
     }, () => {
-      this.reloadCurrentSaleCheck()
+      this.reloadCurrentConsignment()
         .then(_ => this.tableRef.current.focus())
     })
   }
 
   itemEditor() {
     return (
-      <SaleCheckItem
+      <ConsignmentItem
         open
         api={this.props.api}
         item={this.state.item}
@@ -206,12 +188,11 @@ class SaleCheckEditor extends React.Component {
         items={this.state.items}
         columns={[
           { key: "productTitle"  , title: "Товар"   ,                             },
-          { key: "originalPrice" , title: "Цена"    , align: "right"              },
-          { key: "price"         , title: "Со скид" , align: "right"              },
+          { key: "price"         , title: "Цена"    , align: "right", positive: 1 },
           { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
           { key: "unitTitle"     , title: "Ед."     ,                             },
           { key: "cost"          , title: "Сумма"   , align: "right"              },
-          { key: "total"         , title: "Со скид" , align: "right", positive: 1 },
+          { key: "currencyTitle" , title: "Валюта"  ,                             },
           { key: "productBarcode", title: "Штрихкод",                             },
         ]}
         onOpenRow={this.onOpenItem}
@@ -222,14 +203,13 @@ class SaleCheckEditor extends React.Component {
   }
 
   summary() {
-    const change = +this.state.cash - (this.state.total - this.state.extraDiscount)
     return (
-      <Translation ns={"salecheck.form"}>
+      <Translation ns={"consignment.form"}>
       { (t, { i18n }) => (
         <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
           <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
             <Icon name="clipboard list" />
-            Текущий чек
+            Текущая партия
           </Header>
           <Grid padded>
             <Grid.Row>
@@ -237,26 +217,10 @@ class SaleCheckEditor extends React.Component {
               <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{this.state.cost}</Header></Grid.Column>
             </Grid.Row>
             <Grid.Row>
-              <Grid.Column width={6}><Header as="h2">{t("discount")}</Header></Grid.Column>
-              <Grid.Column width={10}>
-                <Header as="h2" dividing textAlign="right">
-                  {this.state.discount} + {this.state.extraDiscount} = {(+this.state.discount) + (+this.state.extraDiscount)}
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
               <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
               <Grid.Column width={10}>
                 <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
-                  {this.state.total - this.state.extraDiscount}
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={6}><Header as="h2">{t("change")}</Header></Grid.Column>
-              <Grid.Column width={10}>
-                <Header dividing as="h2" textAlign="right">
-                  {change > 0 ? change : "0" }
+                  {this.state.cost}
                 </Header>
               </Grid.Column>
             </Grid.Row>
@@ -264,33 +228,15 @@ class SaleCheckEditor extends React.Component {
           <br />
           <Form>
             <Form.Field>
-              <label>Клиент</label>
-              <ClientPicker
+              <label>Поставщик</label>
+              <SupplierPicker
                 api={this.props.api}
-                forwardRef={this.clientPickerRef}
-                value={this.state.clientId}
-                onPick={this.onClientChange}
+                forwardRef={this.supplierPickerRef}
+                value={this.state.supplierId}
+                onPick={this.onSupplierChange}
               />
             </Form.Field>
-            <Form.Group>
-              <Form.Input
-                width={16}
-                label={t("discount")}
-                value={this.state.extraDiscount}
-                onChange={this.onExtraDiscountChange}
-                control={this.extraDiscountInput}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Input
-                width={16}
-                label={t("cash")}
-                value={this.state.cash}
-                onChange={this.onCashChange}
-                control={this.cashInput}
-              />
-            </Form.Group>
-            <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
+            <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{t("acceptConsignment")} (Shift + Enter)</Button>
           </Form>
         </Segment>
       )}
@@ -329,4 +275,4 @@ class SaleCheckEditor extends React.Component {
   }
 }
 
-export default SaleCheckEditor
+export default ConsignmentEditor
