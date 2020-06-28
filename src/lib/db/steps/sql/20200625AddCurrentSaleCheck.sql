@@ -15,4 +15,5 @@ update salecheckitem set originalPrice = price;
 alter table salecheck add column discount long;
 
 -- Quantity was written as is in previous versions
-update salecheckitem set quantity = round(quantity * 100)
+update salecheckitem set quantity = round(quantity * 100);
+update salecheck set cash = round(cash * 100), change = round(change * 100);

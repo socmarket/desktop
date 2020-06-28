@@ -6,6 +6,12 @@ const numberInputWithRef = (ref) => (props) => (
   </div>
 )
 
+const inputWithRef = (ref) => (props) => (
+  <div className="ui input">
+    <input ref={ref} {...props} />
+  </div>
+)
+
 const ifNumberF = (ev, f) => {
   try {
     const value = +event.target.value;
@@ -18,4 +24,4 @@ const ifNumberF = (ev, f) => {
   }
 }
 
-export { numberInputWithRef, ifNumberF }
+export { numberInputWithRef, inputWithRef, ifNumberF }

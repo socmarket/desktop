@@ -1,10 +1,11 @@
 import upsertOptionSql from "./sql/settings/upsertOption.sql"
 
 const defaultSettings = {
-  appMode          : "auto/parts",
-  productLabelSize : "30x20",
-  defaultClientId  : 1,
-  theme            : "violet",
+  appMode           : "auto/parts",
+  productLabelSize  : "30x20",
+  defaultClientId   : 1,
+  defaultCurrencyId : 1,
+  theme             : "violet",
 }
 
 function readSettings(rows) {

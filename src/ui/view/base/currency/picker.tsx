@@ -67,7 +67,7 @@ export default class CurrencyPicker extends React.Component {
   }
 
   render() {
-    var height = 35
+    var height = 38
     switch (this.props.size) {
       case "small":
         height = 35

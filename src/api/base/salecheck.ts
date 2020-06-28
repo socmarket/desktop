@@ -59,7 +59,12 @@ export default function initSaleCheckApi(db) {
       const change = +cash - (total - extraDiscount)
       return Promise.resolve()
         .then(_ => db.exec("begin"))
-        .then(_ => db.exec("insert into salecheck(cash, discount, change, clientId) values(?, ?, ?, ?)", [ cash, extraDiscount, change, clientId ]))
+        .then(_ => db.exec("insert into salecheck(cash, discount, change, clientId) values(?, ?, ?, ?)", [
+          cash * 100,
+          extraDiscount * 100,
+          change * 100,
+          clientId
+        ]))
         .then(_ => db.selectOne("select id as saleCheckId from salecheck where id in (select max(id) from salecheck)"))
         .then(({ saleCheckId }) => {
           return db.exec(closeCurrentSaleCheckSql, { $saleCheckId: saleCheckId })

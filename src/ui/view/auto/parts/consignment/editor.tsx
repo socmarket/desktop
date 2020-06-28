@@ -58,7 +58,7 @@ class ConsignmentEditor extends React.Component {
       items             : [],
       cost              : 0,
       itemEditorVisible : false,
-      supplierId        : props.defaultSupplierId || 1,
+      supplierId        : props.opt.defaultSupplierId || 1,
       item              : this.emptyItem,
     }
   }
@@ -73,7 +73,7 @@ class ConsignmentEditor extends React.Component {
       .then(consignment => {
         this.setState({
           ...consignment,
-          supplierId      : this.props.defaultSupplierId || 1,
+          supplierId      : this.props.opt.defaultSupplierId || 1,
         })
       })
   }

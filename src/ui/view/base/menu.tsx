@@ -19,6 +19,13 @@ const products = [
   "autoPartsConsignmentJournal",
 ]
 
+const calcs = [
+  "exchangeRates",
+  "prices",
+  "clientEditor",
+  "supplierEditor",
+]
+
 class MainMenu extends React.Component {
 
   menu() {
@@ -26,6 +33,7 @@ class MainMenu extends React.Component {
     const activePage = this.props.app.activePage
     const salesActive = sales.includes(activePage) ? "active" : ""
     const productsActive = products.includes(activePage) ? "active" : ""
+    const calcsActive = calcs.includes(activePage) ? "active" : ""
     return (
       <Menu attached="top" pointing secondary inverted borderless color={theme.mainColor} style={{ fontSize: 16 }}>
         <Menu.Item style={{ paddingLeft: 0, paddingTop: 0, paddingRight: 0, paddingBottom: 7, marginLeft: 5, marginRight: 15 }}>
@@ -82,6 +90,34 @@ class MainMenu extends React.Component {
             </Dropdown>
           </Fragment>
         }
+        <Dropdown tabIndex={-1} text="Расчёты" pointing className={"link item " + calcsActive}>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              icon="chart line"
+              active={this.props.app.activePage === "prices"}
+              onClick={() => this.props.openPrices()}
+              text="Цены"
+            />
+            <Dropdown.Item
+              icon="dollar sign"
+              active={this.props.app.activePage === "exchangeRates"}
+              onClick={() => this.props.openExchangeRates()}
+              text="Курсы валют"
+            />
+            <Dropdown.Item
+              icon="users"
+              active={this.props.app.activePage === "clientEditor"}
+              onClick={() => this.props.openClientEditor()}
+              text="Клиенты"
+            />
+            <Dropdown.Item
+              icon="truck"
+              active={this.props.app.activePage === "supplierEditor"}
+              onClick={() => this.props.openSupplierEditor()}
+              text="Поставщики"
+            />
+          </Dropdown.Menu>
+        </Dropdown>
         <Menu.Menu position="right">
           <Menu.Item>
             <Dropdown tabIndex={-1} text="Обучающие игры" pointing>

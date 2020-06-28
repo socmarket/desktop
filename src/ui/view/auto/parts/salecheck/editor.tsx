@@ -10,7 +10,6 @@ import {
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
-import moment from "moment"
 import { Translation } from 'react-i18next'
 import {
   Header, Grid, Table, Form, Input, Select,
@@ -69,7 +68,7 @@ class SaleCheckEditor extends React.Component {
       extraDiscount     : 0,
       cash              : "",
       itemEditorVisible : false,
-      clientId          : props.defaultClientId || 1,
+      clientId          : props.opt.defaultClientId || 1,
       item              : this.emptyItem,
     }
   }
@@ -86,7 +85,7 @@ class SaleCheckEditor extends React.Component {
           ...saleCheck,
           cash          : "",
           extraDiscount : 0,
-          clientId      : this.props.defaultClientId || 1,
+          clientId      : this.props.opt.defaultClientId || 1,
         })
       })
   }
