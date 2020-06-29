@@ -53,6 +53,52 @@ class UnitInfoEditor extends React.Component {
   }
 
   onCreate() {
+    console.log(this.state)
+    this.unitApi.insert(this.state)
+      .then(_ => this.props.onCreate(this.state))
+  }
+
+  onUpdate() {
+    console.log(this.props)
+    this.unitApi.update(this.state)
+      .then(_ => this.props.onUpdate(this.state))
+  }
+
+  onKeyDown(ev) {
+    if (ev.key === "Enter" && ev.shiftKey && this.validated()) {
+      if (this.props.unit.id < 0) {
+        this.onCreate()
+      } else {
+        this.onUpdate()
+      }
+    }
+  }
+
+  form() {
+    return (
+      <Form>
+        <Form.Field>
+          <Form.Input
+            label="Наименование"
+            value={this.state.title || ""}
+            control={this.titleInput}
+            onChange={this.onTitleChange}
+          />
+        </Form.Field>
+        <Form.Field>
+          <Form.Input
+            label="Сокращение"
+            value={this.state.notation || ""}
+            onChange={this.onNotationChange}
+          />
+        </Form.Field>
+        {this.props.unit.id < 0 &&
+          <Button color={this.props.theme.mainColor}
+            type="button"
+            disabled={!this.validated()}
+            onClick={this.onCreate}>Создать (Shift + Enter)
+        </Button>}
+        {this.props.unit.id > 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
@@ -71,7 +117,7 @@ class UnitInfoEditor extends React.Component {
   }
 
   unitDesc() {
-    return `#${this.props.unit.id}: ${this.props.unit.title}`
+    return `#${this.props.unit.id}: ${this.props.unit.title}` 
   }
 
   render() {
