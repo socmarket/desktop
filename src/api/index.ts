@@ -34,6 +34,10 @@ import initConsignmentApi, {
   ConsignmentApi,
 } from "./base/consignment"
 
+import initPriceApi, {
+  PriceApi,
+} from "./base/price"
+
 export function initApi(db, usb) {
   return {
     autoParts: {
@@ -47,6 +51,7 @@ export function initApi(db, usb) {
     settings: initSettingsApi(db),
     saleCheck: initSaleCheckApi(db),
     consignment: initConsignmentApi(db),
+    price: initPriceApi(db),
     migrateDb: () => db.migrate(),
   }
 }

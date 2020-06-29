@@ -191,8 +191,8 @@ class ConsignmentEditor extends React.Component {
     return (
       <DTable
         ref={this.tableRef}
-        titleIcon="settings"
-        title="Комплектующие"
+        titleIcon="clipboard list"
+        title="Партия"
         color={this.props.theme.mainColor}
         items={this.state.items}
         columns={[
@@ -217,8 +217,8 @@ class ConsignmentEditor extends React.Component {
       { (t, { i18n }) => (
         <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
           <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
-            <Icon name="clipboard list" />
-            Текущая партия
+            <Icon name="warehouse" />
+            Приёмка на склад
           </Header>
           <Grid padded>
             <Grid.Row>

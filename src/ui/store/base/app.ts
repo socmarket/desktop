@@ -29,10 +29,13 @@ const AppActions = {
   openUnitEditor: () => ({
     type: "APP_OPEN_BASE_UNIT_EDITOR",
   }),
+  openPriceEditor: () => ({
+    type: "APP_OPEN_BASE_PRICE_EDITOR",
+  }),
 }
 
 function AppReducer (state = {
-  activePage: "baseCurrencyEditor"
+  activePage: "basePriceEditor"
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
@@ -55,6 +58,8 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "baseCategoryEditor" });
     case "APP_OPEN_BASE_UNIT_EDITOR":
       return Object.assign({}, state, { activePage: "baseUnitEditor" });
+    case "APP_OPEN_BASE_PRICE_EDITOR":
+      return Object.assign({}, state, { activePage: "basePriceEditor" });
     default:
       return state
   }

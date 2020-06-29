@@ -108,8 +108,8 @@ class MainMenu extends React.Component {
           <Dropdown.Menu>
             <Dropdown.Item
               icon="chart line"
-              active={this.props.app.activePage === "prices"}
-              onClick={() => this.props.openPrices()}
+              active={this.props.app.activePage === "basePriceEditor"}
+              onClick={() => this.props.openPriceEditor()}
               text="Цены"
             />
             <Dropdown.Item

@@ -5,9 +5,13 @@ import deleteCurrentConsignmentItemSql  from "./sql/consignment/deleteCurrentCon
 import closeCurrentConsignmentSql       from "./sql/consignment/closeCurrentConsignment.sql"
 import selectConsignmentsSql            from "./sql/consignment/selectConsignments.sql"
 import selectConsignmentItemsForSql     from "./sql/consignment/selectConsignmentItemsFor.sql"
+import selectConsignmentByProductIdSql  from "./sql/consignment/selectConsignmentByProductId.sql"
 
 export default function initConsignmentApi(db) {
   return {
+    productHistory: (productId) => (
+      db.select(selectConsignmentByProductIdSql, { $productId: productId })
+    ),
     selectCurrentConsignment: () => (
       db.select(selectCurrentConsignmentItemsSql)
         .then(rows => {

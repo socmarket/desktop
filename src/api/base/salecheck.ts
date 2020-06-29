@@ -31,11 +31,10 @@ export default function initSaleCheckApi(db) {
         })
     ),
     insertCurrentSaleCheckItem: (item) => {
-      const price = Math.round(Math.random() * 100)
       return db.exec(insertCurrentSaleCheckItemSql, {
         $productId     : item.productId,
         $quantity      : item.quantity,
-        $price         : price,
+        $price         : item.price,
         $unitId        : 1,
         $currencyId    : 1,
       })

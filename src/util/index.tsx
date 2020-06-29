@@ -1,4 +1,5 @@
 import React from "react"
+import moment from "moment"
 
 const numberInputWithRef = (ref) => (props) => (
   <div className="ui input">
@@ -24,4 +25,8 @@ const ifNumberF = (ev, f) => {
   }
 }
 
-export { numberInputWithRef, inputWithRef, ifNumberF }
+function asDate(value) {
+  return moment.utc(value).local().format("DD-MM-YYYY HH:mm")
+}
+
+export { numberInputWithRef, inputWithRef, ifNumberF, asDate }

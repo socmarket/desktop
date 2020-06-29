@@ -87,10 +87,13 @@ function SettingsReducer (state = {
   switch (action.type) {
     case "SETTINGS_RELOADED": {
       return Object.assign({}, state, {
-        appMode           : action.settings.appMode,
-        defaultClientId   : action.settings.defaultClientId,
-        defaultCurrencyId : action.settings.defaultCurrencyId,
-        theme             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
+        appMode                           : action.settings.appMode,
+        defaultClientId                   : action.settings.defaultClientId,
+        defaultCurrencyId                 : action.settings.defaultCurrencyId,
+        defaultSaleMargin                 : action.settings.defaultSaleMargin,
+        defaultUnitId                     : action.settings.defaultUnitId,
+        theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
+        showConsignmentHistoryInSaleCheck : true,
       })
     }
     case "SETTINGS_THEME_CHANGED": {

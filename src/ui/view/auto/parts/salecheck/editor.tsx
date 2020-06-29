@@ -58,7 +58,9 @@ class SaleCheckEditor extends React.Component {
 
     this.activateLock = React.createRef(false)
 
+    this.priceApi     = props.api.price
     this.saleCheckApi = props.api.saleCheck
+
     this.state = {
       items             : [],
       cost              : 0,
@@ -91,12 +93,21 @@ class SaleCheckEditor extends React.Component {
   }
 
   onProductPick(product) {
-    this.saleCheckApi
-      .insertCurrentSaleCheckItem({
+    this.priceApi.getPriceFor({
         productId  : product.id,
-        quantity   : 1,
+        currencyId : this.props.opt.defaultCurrencyId,
+        margin     : this.props.opt.defaultSaleMargin,
       })
-      .then(_ => this.reloadCurrentSaleCheck())
+      .then(priceRow => priceRow ? priceRow.price : 0)
+      .then(price => {
+        this.saleCheckApi
+          .insertCurrentSaleCheckItem({
+            productId  : product.id,
+            quantity   : 1,
+            price      : price,
+          })
+          .then(_ => this.reloadCurrentSaleCheck())
+      })
   }
 
   onClientChange(client) {
@@ -188,6 +199,7 @@ class SaleCheckEditor extends React.Component {
       <SaleCheckItem
         open
         api={this.props.api}
+        opt={this.props.opt}
         theme={this.props.theme}
         item={this.state.item}
         onClose={this.onItemEditorClose}

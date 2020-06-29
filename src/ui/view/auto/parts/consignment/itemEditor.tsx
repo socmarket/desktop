@@ -2,7 +2,8 @@ import UnitPicker     from "View/base/unit/picker"
 import CurrencyPicker from "View/base/currency/picker"
 import {
   numberInputWithRef,
-  ifNumberF
+  ifNumberF,
+  asDate,
 }                     from "Util"
 
 import React, { Fragment } from "react"
@@ -10,7 +11,8 @@ import { connect } from "react-redux"
 import {
   Grid, Form, Input, Button,
   Segment, Message, Modal,
-  Container, Header
+  Container, Header, Table,
+  Menu
 } from "semantic-ui-react"
 
 class ConsignmentItem extends React.Component {
@@ -25,26 +27,55 @@ class ConsignmentItem extends React.Component {
     this.onKeyDown        = this.onKeyDown.bind(this)
     this.onUpdate         = this.onUpdate.bind(this)
 
-    this.priceInputRef    = React.createRef()
-    this.quantityInputRef = React.createRef()
-    this.priceInput       = numberInputWithRef(this.priceInputRef)
-    this.quantityInput    = numberInputWithRef(this.quantityInputRef)
+    this.priceInputRef     = React.createRef()
+    this.salePriceInputRef = React.createRef()
+    this.quantityInputRef  = React.createRef()
+    this.priceInput        = numberInputWithRef(this.priceInputRef)
+    this.salePriceInput    = numberInputWithRef(this.salePriceInputRef)
+    this.quantityInput     = numberInputWithRef(this.quantityInputRef)
 
+    this.priceApi       = props.api.price
     this.consignmentApi = props.api.consignment
 
     this.state = {
       ...props.item,
       errorMsg: "",
+      history: [],
+      activeTab: "history",
+      salePrice: 0,
+      saleCurrencyId: props.item.currencyId,
     }
   }
 
   componentDidMount() {
     this.priceInputRef.current.focus()
     this.priceInputRef.current.select()
+    this.consignmentApi
+      .productHistory(this.props.item.productId)
+      .then(history => this.setState({
+        history: history,
+      }))
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.item.productId !== this.props.item.productId) { 
+      this.consignmentApi
+        .productHistory(this.state.productId)
+        .then(history => this.setState({
+          history: history,
+        }))
+    }
   }
 
   onPriceChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ price: value }))
+    ifNumberF(ev, (value) => this.setState({
+      price: value,
+      salePrice: (this.props.opt.defaultSaleMargin / 100.0) * Number(value) + Number(value),
+    }))
+  }
+
+  onSalePriceChange(ev) {
+    ifNumberF(ev, (value) => this.setState({ salePrice: value }))
   }
 
   onQuantityChange(ev) {
@@ -65,9 +96,26 @@ class ConsignmentItem extends React.Component {
     })
   }
 
+  onSaleCurrencyChange(currency) {
+    this.setState({
+      saleCurrencyChange: currency.id,
+    })
+  }
+
   onUpdate() {
     this.consignmentApi
       .updateCurrentConsignmentItem(this.state)
+      .then(_ => {
+        if (this.state.salePrice > 0) {
+          return this.priceApi.setPrice({
+            productId  : this.state.productId,
+            price      : this.state.salePrice,
+            currencyId : this.state.saleCurrencyId,
+          })
+        } else {
+          return Promise.resolve()
+        }
+      })
       .then(_ => this.props.onUpdate(this.state))
   }
 
@@ -86,13 +134,13 @@ class ConsignmentItem extends React.Component {
           <Form.Input
             autoFocus
             width={10}
-            label="Цена"
+            label="Цена покупки"
             onChange={this.onPriceChange}
             value={this.state.price || 0}
             control={this.priceInput}
           />
           <Form.Field width={6}>
-            <label>Валюта</label>
+            <label>Валюта покупки</label>
             <CurrencyPicker
               size="large"
               api={this.props.api}
@@ -119,6 +167,25 @@ class ConsignmentItem extends React.Component {
             />
           </Form.Field>
         </Form.Group>
+        <Form.Group>
+          <Form.Input
+            autoFocus
+            width={10}
+            label="Цена продажи"
+            onChange={this.onSalePriceChange}
+            value={this.state.salePrice || 0}
+            control={this.salePriceInput}
+          />
+          <Form.Field width={6}>
+            <label>Валюта продажи</label>
+            <CurrencyPicker
+              size="large"
+              api={this.props.api}
+              value={this.state.saleCurrencyId}
+              onPick={this.onSaleCurrencyChange}
+            />
+          </Form.Field>
+        </Form.Group>
         <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>Изменить (Shift + Enter)</Button>
         <Message size="mini" header="Модель" content={this.state.productModel} />
         <Message size="mini" header="Мотор"  content={this.state.productEngine} />
@@ -131,21 +198,59 @@ class ConsignmentItem extends React.Component {
     )
   }
 
+  photos() {
+    return (
+      <Segment inverted color={this.props.theme.mainColor} style={{ height: "100%" }}>
+        { this.state.errorMsg.length > 0 &&
+          <Message error>
+            {this.state.errorMsg}
+          </Message>
+        }
+        <p>Фотографии товара</p>
+        <p>Добавление фотографий будет доступно в новых обновлениях программы</p>
+      </Segment>
+    )
+  }
+
+  history() {
+    return (
+      <Table>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell>Дата     </Table.HeaderCell>
+            <Table.HeaderCell>Поставщик</Table.HeaderCell>
+            <Table.HeaderCell>Кол-во   </Table.HeaderCell>
+            <Table.HeaderCell>Цена     </Table.HeaderCell>
+            <Table.HeaderCell>Валюта   </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {this.state.history.map((item, idx) => (
+            <Table.Row key={idx}>
+              <Table.Cell                  >{asDate(item.acceptedAt)}</Table.Cell>
+              <Table.Cell                  >{item.supplierName      }</Table.Cell>
+              <Table.Cell textAlign="right">{item.quantity          }</Table.Cell>
+              <Table.Cell textAlign="right">{item.price             }</Table.Cell>
+              <Table.Cell                  >{item.currencyNotation  }</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    )
+  }
+
   content() {
     return (
       <Grid>
         <Grid.Row>
           <Grid.Column width={8}>
-            <Segment style={{ height: "100%" }}>
-              <Segment inverted color={this.props.theme.mainColor} style={{ height: "100%" }}>
-                { this.state.errorMsg.length > 0 &&
-                  <Message error>
-                    {this.state.errorMsg}
-                  </Message>
-                }
-                <p>Фотографии товара</p>
-                <p>Добавление фотографий будет доступно в новых обновлениях программы</p>
-              </Segment>
+            <Menu attached="top" inverted color={this.props.theme.mainColor}>
+              <Menu.Item name="История" active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
+              <Menu.Item name="Фото"    active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
+            </Menu>
+            <Segment attached="bottom" style={{ height: "92%" }}>
+              { this.state.activeTab === "history" && this.history() }
+              { this.state.activeTab === "photos"  && this.photos()  }
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
@@ -166,7 +271,7 @@ class ConsignmentItem extends React.Component {
         size="large"
         onClose={this.props.onClose}
       >
-        <Modal.Header>
+        <Modal.Header color={this.props.theme.mainColor} >
           Приёмка на склад: {this.state.productTitle}
         </Modal.Header>
         <Modal.Content>
