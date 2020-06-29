@@ -17,6 +17,8 @@ const products = [
   "autoPartsProductEditor",
   "autoPartsConsignmentEditor",
   "autoPartsConsignmentJournal",
+  "baseCategoryEditor",
+  "baseUnitEditor",
 ]
 
 const calcs = [
@@ -85,6 +87,18 @@ class MainMenu extends React.Component {
                   active={this.props.app.activePage === "autoPartsProductEditor"}
                   onClick={() => this.props.openAutoPartsProductEditor()}
                   text="Загрузка описаний из Excel"
+                />
+                <Dropdown.Item
+                  icon="sitemap"
+                  active={this.props.app.activePage === "baseCategoryEditor"}
+                  onClick={() => this.props.openCategoryEditor()}
+                  text="Группы товаров"
+                />
+                <Dropdown.Item
+                  icon="law"
+                  active={this.props.app.activePage === "baseUnitEditor"}
+                  onClick={() => this.props.openUnitEditor()}
+                  text="Единицы измерения"
                 />
               </Dropdown.Menu>
             </Dropdown>

@@ -1,9 +1,10 @@
 select
   unit.id,
-  unit.title
+  unit.title,
+  unit.notation
 from
   unit
 where
-  unit.title like '%' || $pattern || '%'
+  unit.titleLower like '%' || $pattern || '%'
 order by
   unit.title asc

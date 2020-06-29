@@ -1,3 +1,5 @@
+import insertCategorySql        from "./sql/category/insertCategory.sql"
+import updateCategorySql        from "./sql/category/updateCategory.sql"
 import selectCategoryByIdSql    from "./sql/category/selectCategoryById.sql"
 import selectCategoryByTitleSql from "./sql/category/selectCategoryByTitle.sql"
 
@@ -16,6 +18,21 @@ export interface CategoryApi {
 export default function initCategoryApi(db: Database): CategoryApi {
   return {
     pick: (id: number) => db.selectOne<Category>(selectCategoryByIdSql, { $categoryId: id }),
-    find: (titlePattern: string) => db.select<Category>(selectCategoryByTitleSql, { $pattern: titlePattern.toLowerCase() })
+    find: (titlePattern: string) => db.select<Category>(selectCategoryByTitleSql, { $pattern: titlePattern.toLowerCase() }),
+    insert: (category) => (
+      db.exec(insertCategorySql, {
+        $title      : category.title  || "",
+        $titleLower : (category.title || "").toLowerCase(),
+        $notes      : category.notes  || "",
+      })
+    ),
+    update: (category) => (
+      db.exec(updateCategorySql, {
+        $id         : category.id          ,
+        $title      : category.title  || "",
+        $titleLower : (category.title || "").toLowerCase(),
+        $notes      : category.notes  || "",
+      })
+    ),
   }
 }

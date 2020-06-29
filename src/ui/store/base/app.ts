@@ -23,6 +23,12 @@ const AppActions = {
   openCurrencyEditor: () => ({
     type: "APP_OPEN_BASE_CURRENCY_EDITOR",
   }),
+  openCategoryEditor: () => ({
+    type: "APP_OPEN_BASE_CATEGORY_EDITOR",
+  }),
+  openUnitEditor: () => ({
+    type: "APP_OPEN_BASE_UNIT_EDITOR",
+  }),
 }
 
 function AppReducer (state = {
@@ -45,6 +51,10 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "baseSupplierEditor" });
     case "APP_OPEN_BASE_CURRENCY_EDITOR":
       return Object.assign({}, state, { activePage: "baseCurrencyEditor" });
+    case "APP_OPEN_BASE_CATEGORY_EDITOR":
+      return Object.assign({}, state, { activePage: "baseCategoryEditor" });
+    case "APP_OPEN_BASE_UNIT_EDITOR":
+      return Object.assign({}, state, { activePage: "baseUnitEditor" });
     default:
       return state
   }

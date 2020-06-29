@@ -8,6 +8,8 @@ import AutoPartsConsignmentJournal from "View/auto/parts/consignment/journal"
 import BaseClientEditor   from "View/base/client/editor"
 import BaseSupplierEditor from "View/base/supplier/editor"
 import BaseCurrencyEditor from "View/base/currency/editor"
+import BaseUnitEditor     from "View/base/unit/editor"
+import BaseCategoryEditor from "View/base/category/editor"
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
@@ -22,6 +24,8 @@ const ViewMap = {
   "baseClientEditor"   : (props) => <BaseClientEditor   api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseSupplierEditor" : (props) => <BaseSupplierEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseCurrencyEditor" : (props) => <BaseCurrencyEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "baseUnitEditor"     : (props) => <BaseUnitEditor     api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "baseCategoryEditor" : (props) => <BaseCategoryEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
 }
 
 const view = (page, props) => (typeof ViewMap[page] === "function") ? ViewMap[page](props) : ""
