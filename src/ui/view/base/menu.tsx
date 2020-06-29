@@ -107,6 +107,12 @@ class MainMenu extends React.Component {
         <Dropdown tabIndex={-1} text="Расчёты" pointing className={"link item " + calcsActive}>
           <Dropdown.Menu>
             <Dropdown.Item
+              icon="dashboard"
+              active={this.props.app.activePage === "baseDashboard"}
+              onClick={() => this.props.openDashboard()}
+              text="Дашборд"
+            />
+            <Dropdown.Item
               icon="chart line"
               active={this.props.app.activePage === "basePriceEditor"}
               onClick={() => this.props.openPriceEditor()}

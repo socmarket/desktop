@@ -38,6 +38,10 @@ import initPriceApi, {
   PriceApi,
 } from "./base/price"
 
+import initReportApi, {
+  ReportApi,
+} from "./base/report"
+
 export function initApi(db, usb) {
   return {
     autoParts: {
@@ -52,6 +56,7 @@ export function initApi(db, usb) {
     saleCheck: initSaleCheckApi(db),
     consignment: initConsignmentApi(db),
     price: initPriceApi(db),
+    report: initReportApi(db),
     migrateDb: () => db.migrate(),
   }
 }

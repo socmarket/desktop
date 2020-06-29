@@ -32,34 +32,39 @@ const AppActions = {
   openPriceEditor: () => ({
     type: "APP_OPEN_BASE_PRICE_EDITOR",
   }),
+  openDashboard: () => ({
+    type: "APP_OPEN_BASE_DASHBOARD",
+  }),
 }
 
 function AppReducer (state = {
-  activePage: "autoPartsSaleJournal"
+  activePage: "baseDashboard"
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
-      return Object.assign({}, state, { activePage: "autoPartsProductEditor" });
+      return Object.assign({}, state, { activePage: "autoPartsProductEditor" })
     case "APP_OPEN_AUTO_PARTS_SALE_CHECK_EDITOR":
-      return Object.assign({}, state, { activePage: "autoPartsSaleCheckEditor" });
+      return Object.assign({}, state, { activePage: "autoPartsSaleCheckEditor" })
     case "APP_OPEN_AUTO_PARTS_SALE_JOURNAL":
-      return Object.assign({}, state, { activePage: "autoPartsSaleJournal" });
+      return Object.assign({}, state, { activePage: "autoPartsSaleJournal" })
     case "APP_OPEN_AUTO_PARTS_CONSIGNMENT_EDITOR":
-      return Object.assign({}, state, { activePage: "autoPartsConsignmentEditor" });
+      return Object.assign({}, state, { activePage: "autoPartsConsignmentEditor" })
     case "APP_OPEN_AUTO_PARTS_CONSIGNMENT_JOURNAL":
-      return Object.assign({}, state, { activePage: "autoPartsConsignmentJournal" });
+      return Object.assign({}, state, { activePage: "autoPartsConsignmentJournal" })
     case "APP_OPEN_BASE_CLIENT_EDITOR":
-      return Object.assign({}, state, { activePage: "baseClientEditor" });
+      return Object.assign({}, state, { activePage: "baseClientEditor" })
     case "APP_OPEN_BASE_SUPPLIER_EDITOR":
-      return Object.assign({}, state, { activePage: "baseSupplierEditor" });
+      return Object.assign({}, state, { activePage: "baseSupplierEditor" })
     case "APP_OPEN_BASE_CURRENCY_EDITOR":
-      return Object.assign({}, state, { activePage: "baseCurrencyEditor" });
+      return Object.assign({}, state, { activePage: "baseCurrencyEditor" })
     case "APP_OPEN_BASE_CATEGORY_EDITOR":
-      return Object.assign({}, state, { activePage: "baseCategoryEditor" });
+      return Object.assign({}, state, { activePage: "baseCategoryEditor" })
     case "APP_OPEN_BASE_UNIT_EDITOR":
-      return Object.assign({}, state, { activePage: "baseUnitEditor" });
+      return Object.assign({}, state, { activePage: "baseUnitEditor" })
     case "APP_OPEN_BASE_PRICE_EDITOR":
-      return Object.assign({}, state, { activePage: "basePriceEditor" });
+      return Object.assign({}, state, { activePage: "basePriceEditor" })
+    case "APP_OPEN_BASE_DASHBOARD":
+      return Object.assign({}, state, { activePage: "baseDashboard" })
     default:
       return state
   }
