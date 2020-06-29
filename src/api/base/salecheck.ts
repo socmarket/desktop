@@ -6,6 +6,8 @@ import closeCurrentSaleCheckSql       from "./sql/salecheck/closeCurrentSaleChec
 import selectSaleChecksSql            from "./sql/salecheck/selectSaleChecks.sql"
 import selectSaleCheckItemsForSql     from "./sql/salecheck/selectSaleCheckItemsFor.sql"
 
+import { groupBy } from "../util"
+
 export default function initSaleCheckApi(db) {
   return {
     selectCurrentSaleCheck: () => (
@@ -86,6 +88,7 @@ export default function initSaleCheckApi(db) {
             )
           )
         })
+        .then(items => groupBy(x => x.saleCheck.soldAtDate, items, x => x.saleCheck.soldAt))
     },
     returnSaleCheckItem: (saleCheckItemId, quantity) => {
       return db.selectOne("select id, quantity from salecheckreturn where saleCheckItemId = ?", [ saleCheckItemId ])

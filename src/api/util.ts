@@ -24,4 +24,35 @@ async function traverseF(list, f) {
   return p
 }
 
-export { traverseF, ifF, ifNotF }
+function groupBy(lens, items, maxf) {
+  var maxK = ""
+  var prev = ""
+  var curr = false
+  var result = []
+  items.forEach(item => {
+    const key = lens(item)
+    const keyM = maxf(item)
+    if (keyM > maxK)
+      maxK = keyM
+    if (key !== prev) {
+      prev = key
+      if (curr) {
+        result.push(curr)
+      }
+      curr = {
+        key: key,
+        maxKey: maxK,
+        items: [ item ],
+      }
+      maxK = ""
+    } else {
+      curr.items.push(item)
+      curr.maxKey = maxK
+    }
+  })
+  if (curr)
+    result.push(curr)
+  return result
+}
+
+export { traverseF, ifF, ifNotF, groupBy }

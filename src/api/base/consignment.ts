@@ -7,6 +7,8 @@ import selectConsignmentsSql            from "./sql/consignment/selectConsignmen
 import selectConsignmentItemsForSql     from "./sql/consignment/selectConsignmentItemsFor.sql"
 import selectConsignmentByProductIdSql  from "./sql/consignment/selectConsignmentByProductId.sql"
 
+import { groupBy } from "../util"
+
 export default function initConsignmentApi(db) {
   return {
     productHistory: (productId) => (
@@ -79,6 +81,7 @@ export default function initConsignmentApi(db) {
             )
           )
         })
+        .then(items => groupBy(x => x.consignment.acceptedAtDate, items, x => x.consignment.acceptedAt))
     },
     returnConsignmentItem: (consignmentItemId, quantity) => {
       return db.selectOne("select id, quantity from consignmentreturn where consignmentItemId = ?", [ consignmentItemId ])

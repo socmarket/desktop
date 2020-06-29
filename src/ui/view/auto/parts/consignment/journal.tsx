@@ -49,57 +49,65 @@ class ConsignmentJournal extends React.Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            { this.state.items.map(({ consignment, items }) => (
-              <Fragment key={consignment.id}>
-                <Table.Row warning><Table.Cell colSpan={9}></Table.Cell></Table.Row>
-                <Table.Row>
-                  <Table.Cell rowSpan={items.length}>
-                    {moment.utc(consignment.soldAt).local().format("DD-MM-YYYY HH:mm")}
-                    <br />{consignment.supplierName}
-                    <br />Сумма: {consignment.cost}
-                    { (consignment.cash < consignment.cost) &&
-                      <Fragment>
-                        <br />Оплачено: {consignment.cash}
-                        <br />Долг: {consignment.cost - consignment.cash}
-                      </Fragment>
-                    }
-                    { (consignment.cash >= consignment.cost) &&
-                      <Fragment>
-                        <br />Наличными: {consignment.cash}
-                        <br />Сдача: {consignment.cash - consignment.cost}
-                      </Fragment>
-                    }
-                  </Table.Cell>
-                  { items.slice(0, 1).map(item => (
-                    <Fragment key={item.id}>
-                      <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.productTitle.substring(0, 80)}</Table.Cell>
-                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.quantity}</Table.Cell>
-                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.retQuantity}</Table.Cell>
-                      <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.unitNotation}</Table.Cell>
-                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
-                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
-                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
-                      <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
-                        { (item.retQuantity > 0) && <Button size="mini" icon="plus" onClick={() => this.returnConsignmentItem(item.id, -1)} /> }
-                        { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnConsignmentItem(item.id, 1)} /> }
+            { this.state.items.map(day => (
+              <Fragment key={day.key}>
+                <Table.Row><Table.Cell colSpan={9} textAlign="center">
+                  <Label color={this.props.theme.mainColor} size="large">{moment.utc(day.maxKey).fromNow()}</Label>
+                  <Label color={this.props.theme.mainColor} size="large">{moment.utc(day.key).local().format("dddd, MMMM Do YYYY")}</Label>
+                </Table.Cell></Table.Row>
+                { day.items.map(({ consignment, items }) => (
+                  <Fragment key={consignment.id}>
+                    <Table.Row warning><Table.Cell colSpan={9}></Table.Cell></Table.Row>
+                    <Table.Row>
+                      <Table.Cell rowSpan={items.length}>
+                        {moment.utc(consignment.soldAt).local().format("DD-MM-YYYY HH:mm")}
+                        <br />{consignment.supplierName}
+                        <br />Сумма: {consignment.cost}
+                        { (consignment.cash < consignment.cost) &&
+                          <Fragment>
+                            <br />Оплачено: {consignment.cash}
+                            <br />Долг: {consignment.cost - consignment.cash}
+                          </Fragment>
+                        }
+                        { (consignment.cash >= consignment.cost) &&
+                          <Fragment>
+                            <br />Наличными: {consignment.cash}
+                            <br />Сдача: {consignment.cash - consignment.cost}
+                          </Fragment>
+                        }
                       </Table.Cell>
-                    </Fragment>
-                  ))}
-                </Table.Row>
-                { items.slice(1).map(item => (
-                  <Table.Row key={item.id}>
-                    <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.productTitle.substring(0, 50)}</Table.Cell>
-                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.quantity}</Table.Cell>
-                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.retQuantity}</Table.Cell>
-                    <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.unitNotation}</Table.Cell>
-                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
-                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
-                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
-                    <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
-                      { (item.retQuantity > 0) && <Button size="mini" icon="plus" onClick={() => this.returnConsignmentItem(item.id, -1)} /> }
-                      { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnConsignmentItem(item.id, 1)} /> }
-                    </Table.Cell>
-                  </Table.Row>
+                      { items.slice(0, 1).map(item => (
+                        <Fragment key={item.id}>
+                          <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.productTitle.substring(0, 80)}</Table.Cell>
+                          <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.quantity}</Table.Cell>
+                          <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.retQuantity}</Table.Cell>
+                          <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.unitNotation}</Table.Cell>
+                          <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
+                          <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
+                          <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                          <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
+                            { (item.retQuantity > 0) && <Button size="mini" icon="plus" onClick={() => this.returnConsignmentItem(item.id, -1)} /> }
+                            { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnConsignmentItem(item.id, 1)} /> }
+                          </Table.Cell>
+                        </Fragment>
+                      ))}
+                    </Table.Row>
+                    { items.slice(1).map(item => (
+                      <Table.Row key={item.id}>
+                        <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.productTitle.substring(0, 50)}</Table.Cell>
+                        <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.quantity}</Table.Cell>
+                        <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.retQuantity}</Table.Cell>
+                        <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.unitNotation}</Table.Cell>
+                        <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
+                        <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
+                        <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                        <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
+                          { (item.retQuantity > 0) && <Button size="mini" icon="plus" onClick={() => this.returnConsignmentItem(item.id, -1)} /> }
+                          { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnConsignmentItem(item.id, 1)} /> }
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Fragment>
                 ))}
               </Fragment>
             ))}

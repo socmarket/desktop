@@ -10,6 +10,8 @@ import React, { Fragment } from "react"
 import ReactDom from "react-dom"
 import { Provider } from "react-redux"
 
+import "moment/locale/ru"
+
 import "react-dates/initialize"
 import "react-dates/lib/css/_datepicker.css"
 import "semantic-ui-css/semantic.min.css"
