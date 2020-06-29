@@ -53,6 +53,28 @@ class UnitInfoEditor extends React.Component {
   }
 
   onCreate() {
+          <Button color={this.props.theme.mainColor}
+            type="button"
+            disabled={!this.validated()}
+            onClick={this.onUpdate}>Изменить (Shift + Enter)
+        </Button>}
+      </Form>
+    )
+  }
+
+  content() {
+    return (
+      <Segment onKeyDown={this.onKeyDown}>
+        {this.form()}
+      </Segment>
+    )
+  }
+
+  unitDesc() {
+    return `#${this.props.unit.id}: ${this.props.unit.title}`
+  }
+
+  render() {
     const header =
       this.state.id ?
         (this.state.id > 0 ? this.unitDesc() : "Регистрация новой единицы измерения") :
