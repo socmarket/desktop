@@ -4,31 +4,52 @@ select
   category.title as categoryTitle,
   outQuantity,
   inQuantity,
-  (inQuantity - outQuantity) as remainingQuantity,
+  (inQuantity - outQuantity - outReservedQuantity) as remainingQuantity,
   clientQuantity
 from
   (
     select
       productId,
-      sum(salecheckitem.quantity - coalesce(ret.quantity, 0)) as outQuantity,
-      count(distinct salecheck.id) as clientQuantity,
-      (select coalesce(sum(quantity), 0) from consignmentitem where productId = salecheckitem.productId) as inQuantity
+      outQuantity,
+      clientQuantity,
+      (select
+        coalesce(sum(consignmentitem.quantity - coalesce(ret.quantity, 0)) / 100.00, 0)
+        from consignmentitem
+        left join (
+          select consignmentItemId, sum(quantity) as quantity
+          from consignmentreturn
+          group by consignmentItemId
+        ) as ret on ret.consignmentItemId = consignmentitem.id
+        where productId = t.productId
+      ) as inQuantity,
+      (select coalesce(sum(quantity) / 100.00, 0)
+        from currentsalecheck
+        where productId = t.productId
+      ) as outReservedQuantity
     from
-      salecheckitem
-      left join salecheck on salecheck.id = salecheckitem.saleCheckId
-      left join (
-        select saleCheckItemId, sum(quantity) as quantity
-        from salecheckreturn
-        group by saleCheckItemId
-      ) as ret on ret.saleCheckItemId = salecheckitem.id
-    where
-      salecheck.soldAt between $start and $end
-    group by
-      productId
-  ) t
-  left join product on product.id = t.productId
+      (
+        select
+          productId,
+          sum(salecheckitem.quantity - coalesce(ret.quantity, 0)) / 100.00 as outQuantity,
+          count(distinct salecheck.id) as clientQuantity
+        from
+          salecheckitem
+          left join salecheck on salecheck.id = salecheckitem.saleCheckId
+          left join (
+            select saleCheckItemId, sum(quantity) as quantity
+            from salecheckreturn
+            group by saleCheckItemId
+          ) as ret on ret.saleCheckItemId = salecheckitem.id
+        group by
+          productId
+        order by
+          salecheck.soldAt desc
+        limit 50
+      ) as t
+  ) q
+  left join product on product.id = q.productId
   left join category on category.id = product.categoryId
-where (inQuantity - outQuantity) < 3
+where (inQuantity - outQuantity - outReservedQuantity) <= 2
 order by
   outQuantity desc,
-  (inQuantity - outQuantity) asc
+  (inQuantity - outQuantity - outReservedQuantity) asc

@@ -33,7 +33,6 @@ export default function initReportApi(db: Database): ReportApi {
             }
           }
         })
-      
     },
     selectProductPie: () => {
       return db.select(selectProductPieSql)
@@ -58,7 +57,7 @@ export default function initReportApi(db: Database): ReportApi {
       
     },
     selectLowCountProducts: (start, end) => {
-      return db.select<Object>(selectLowCountProductsSql, { $start: start, $end: end })
+      return db.select<Object>(selectLowCountProductsSql)
         .then(items => {
           if (items) {
             return { items: items }

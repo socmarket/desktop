@@ -1,15 +1,24 @@
 select
   *,
-  inQuantity - outQuantity as quantity
+  inQuantity - outQuantity - outReservedQuantity as quantity
 from
   (
     select
       product.*,
       unit.title as unitTitle,
       category.title as categoryTitle,
-      (select coalesce(sum(quantity), 0) from consignmentitem where productId = product.id) as inQuantity,
       (select
-        coalesce(sum(salecheckitem.quantity - coalesce(ret.quantity, 0)), 0)
+        coalesce(sum(consignmentitem.quantity - coalesce(ret.quantity, 0)) / 100.00, 0)
+        from consignmentitem
+        left join (
+          select consignmentItemId, sum(quantity) as quantity
+          from consignmentreturn
+          group by consignmentItemId
+        ) as ret on ret.consignmentItemId = consignmentitem.id
+        where productId = product.id
+      ) as inQuantity,
+      (select
+        coalesce(sum(salecheckitem.quantity - coalesce(ret.quantity, 0)) / 100.00, 0)
         from salecheckitem
         left join (
           select saleCheckItemId, sum(quantity) as quantity
@@ -18,6 +27,11 @@ from
         ) as ret on ret.saleCheckItemId = salecheckitem.id
         where productId = product.id
       ) as outQuantity,
+      (select
+        coalesce(sum(quantity) / 100.00, 0)
+        from currentsalecheck
+        where productId = product.id
+      ) as outReservedQuantity,
       (select
         coalesce(price.price / 100.00, 0) as price
         from

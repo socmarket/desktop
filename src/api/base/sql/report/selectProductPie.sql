@@ -6,7 +6,7 @@ from
   (
     select
       productId,
-      sum(quantity) as quantity
+      sum(quantity) / 100.00 as quantity
     from
       salecheckitem
     group by

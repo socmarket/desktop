@@ -20,7 +20,7 @@ function initDb(fileName: string): Database {
         } else {
           db.exec(sql, function (err: Error) {
             if (err) {
-              console.log(err)
+              console.error(err, sql, params)
               reject(err)
             } else {
               resolve()
@@ -37,7 +37,7 @@ function initDb(fileName: string): Database {
         } else {
           db.run(sql, params, function (err: Error) {
             if (err) {
-              console.log(err)
+              console.error(err, sql, params)
               reject(err)
             } else {
               resolve()
@@ -50,7 +50,7 @@ function initDb(fileName: string): Database {
       return new Promise<A[]>((resolve, reject) => {
         db.all(sql, params, function (err: Error, rows: A[]) {
           if (err) {
-            console.log(err)
+            console.error(err, sql, params)
             reject(err)
           } else {
             resolve(rows)
@@ -62,6 +62,7 @@ function initDb(fileName: string): Database {
       return new Promise<A>((resolve, reject) => {
         db.get(sql, params, function (err: Error, item: A) {
           if (err) {
+            console.error(err, sql, params)
             reject(err)
           } else {
             resolve(item)

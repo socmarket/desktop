@@ -9,9 +9,9 @@ from
     select
       date(soldAt) as day,
       sum(quantity * netprice) as cost,
-      sum(quantity * price) as revenue,
+      sum(quantity * price) - discount as revenue,
       case
-        when cash < sum(quantity * price) then sum(quantity * price) - cash
+        when cash < sum(quantity * price) then sum(quantity * price) - cash - discount
         else 0
       end credit
     from
@@ -32,7 +32,8 @@ from
               consignment.acceptedAt <= salecheck.soldAt and
               consignmentitem.productId == salecheckitem.productId
           ) as netprice,
-          cash
+          coalesce(salecheck.discount, 0) / 100.00 as discount,
+          coalesce(cash, 0) / 100.00 as cash
         from
           salecheckitem
           left join salecheck on salecheck.id = salecheckitem.saleCheckId
