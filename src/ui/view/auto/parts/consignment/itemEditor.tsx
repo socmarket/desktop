@@ -20,12 +20,14 @@ class ConsignmentItem extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onPriceChange    = this.onPriceChange.bind(this)
-    this.onQuantityChange = this.onQuantityChange.bind(this)
-    this.onUnitChange     = this.onUnitChange.bind(this)
-    this.onCurrencyChange = this.onCurrencyChange.bind(this)
-    this.onKeyDown        = this.onKeyDown.bind(this)
-    this.onUpdate         = this.onUpdate.bind(this)
+    this.onPriceChange        = this.onPriceChange.bind(this)
+    this.onSalePriceChange    = this.onSalePriceChange.bind(this)
+    this.onQuantityChange     = this.onQuantityChange.bind(this)
+    this.onUnitChange         = this.onUnitChange.bind(this)
+    this.onCurrencyChange     = this.onCurrencyChange.bind(this)
+    this.onSaleCurrencyChange = this.onSaleCurrencyChange.bind(this)
+    this.onKeyDown            = this.onKeyDown.bind(this)
+    this.onUpdate             = this.onUpdate.bind(this)
 
     this.priceInputRef     = React.createRef()
     this.salePriceInputRef = React.createRef()
