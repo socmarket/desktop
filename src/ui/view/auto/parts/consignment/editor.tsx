@@ -55,11 +55,12 @@ class ConsignmentEditor extends React.Component {
 
     this.consignmentApi = props.api.consignment
     this.state = {
-      items             : [],
-      cost              : 0,
-      itemEditorVisible : false,
-      supplierId        : props.opt.defaultSupplierId || 1,
-      item              : this.emptyItem,
+      items              : [],
+      cost               : 0,
+      itemEditorVisible  : false,
+      supplierId         : props.opt.defaultSupplierId || 1,
+      lastUsedCurrencyId : props.opt.defaultCurrencyId || 1,
+      item               : this.emptyItem,
     }
   }
 
@@ -81,9 +82,11 @@ class ConsignmentEditor extends React.Component {
   onProductPick(product) {
     this.consignmentApi
       .insertCurrentConsignmentItem({
-        productId : product.id,
-        quantity  : 1,
-        price     : 0,
+        productId  : product.id,
+        quantity   : 1,
+        price      : 0,
+        currencyId : this.state.lastUsedCurrencyId,
+        unitId     : product.unitId,
       })
       .then(_ => this.reloadCurrentConsignment())
       .then(_ => {
@@ -162,7 +165,8 @@ class ConsignmentEditor extends React.Component {
 
   onItemUpdate(item) {
     this.setState({
-      itemEditorVisible: false,
+      itemEditorVisible  : false,
+      lastUsedCurrencyId : item.currencyId,
     }, () => {
       this.reloadCurrentConsignment()
         .then(_ => this.tableRef.current.focus())
@@ -174,6 +178,7 @@ class ConsignmentEditor extends React.Component {
       <ConsignmentItem
         open
         api={this.props.api}
+        opt={this.props.opt}
         theme={this.props.theme}
         item={this.state.item}
         onClose={this.onItemEditorClose}
