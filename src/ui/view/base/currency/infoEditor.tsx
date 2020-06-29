@@ -60,13 +60,11 @@ class CurrencyInfoEditor extends React.Component {
   }
 
   onCreate() {
-    console.log(this.state)
     this.currencyApi.insert(this.state)
       .then(_ => this.props.onCreate(this.state))
   }
 
   onUpdate() {
-    console.log(this.props)
     this.currencyApi.update(this.state)
       .then(_ => this.props.onUpdate(this.state))
   }

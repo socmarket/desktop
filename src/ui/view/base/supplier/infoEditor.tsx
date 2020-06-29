@@ -60,13 +60,11 @@ class SupplierInfoEditor extends React.Component {
   }
 
   onCreate() {
-    console.log(this.state)
     this.supplierApi.insert(this.state)
       .then(_ => this.props.onCreate(this.state))
   }
 
   onUpdate() {
-    console.log(this.props)
     this.supplierApi.update(this.state)
       .then(_ => this.props.onUpdate(this.state))
   }
