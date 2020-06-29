@@ -89,7 +89,7 @@ class ProductForm extends React.Component {
   }
 
   onNewBarcode() {
-    this.productApi.genBarcode()
+    this.productApi.genBarcode(this.props.opt.barcodePrefix)
       .then(
         barcode => this.setState({
           barcode: barcode,

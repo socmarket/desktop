@@ -38,10 +38,13 @@ const AppActions = {
   openDashboard: () => ({
     type: "APP_OPEN_BASE_DASHBOARD",
   }),
+  openSettingsEditor: () => ({
+    type: "APP_OPEN_BASE_SETTINGS_EDITOR",
+  }),
 }
 
 function AppReducer (state = {
-  activePage: "autoPartsProductImporter"
+  activePage: "baseSettingsEditor"
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
@@ -70,6 +73,8 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "basePriceEditor" })
     case "APP_OPEN_BASE_DASHBOARD":
       return Object.assign({}, state, { activePage: "baseDashboard" })
+    case "APP_OPEN_BASE_SETTINGS_EDITOR":
+      return Object.assign({}, state, { activePage: "baseSettingsEditor" })
     default:
       return state
   }

@@ -32,6 +32,17 @@ const calcs = [
 
 class MainMenu extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.onColorDoubleClick = this.onColorDoubleClick.bind(this)
+  }
+
+  onColorDoubleClick(ev) {
+    if (ev.shiftKey && ev.ctrlKey) {
+      this.props.openSettingsEditor()
+    }
+  }
+
   menu() {
     const theme = this.props.opt.theme
     const activePage = this.props.app.activePage
@@ -142,28 +153,14 @@ class MainMenu extends React.Component {
         </Dropdown>
         <Menu.Menu position="right">
           <Menu.Item>
-            <Dropdown tabIndex={-1} text="Обучающие игры" pointing>
+            <Dropdown tabIndex={-1} text="Цвет" pointing onDoubleClick={this.onColorDoubleClick}>
               <Dropdown.Menu>
                 { Object.keys(this.props.opt.themes).map(name => (
                   <Dropdown.Item
                     key={name}
                     label={{ color: this.props.opt.themes[name].mainColor, empty: true, circular: true, size: "huge" }}
                     active={theme === theme.name}
-                    onClick={() => this.props.changeTheme(name) }
-                  />
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Item>
-          <Menu.Item>
-            <Dropdown tabIndex={-1} text="Цвет" pointing>
-              <Dropdown.Menu>
-                { Object.keys(this.props.opt.themes).map(name => (
-                  <Dropdown.Item
-                    key={name}
-                    label={{ color: this.props.opt.themes[name].mainColor, empty: true, circular: true, size: "huge" }}
-                    active={theme === theme.name}
-                    onClick={() => this.props.changeTheme(name) }
+                    onClick={() => this.props.changeTheme(name)}
                   />
                 ))}
               </Dropdown.Menu>

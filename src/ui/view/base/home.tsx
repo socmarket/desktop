@@ -14,6 +14,7 @@ import BaseUnitEditor     from "View/base/unit/editor"
 import BaseCategoryEditor from "View/base/category/editor"
 import BasePriceEditor    from "View/base/price/editor"
 import BaseDashboard      from "View/base/dashboard"
+import BaseSettingsEditor from "View/base/settings/editor"
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
@@ -33,6 +34,7 @@ const ViewMap = {
   "baseCategoryEditor" : (props) => <BaseCategoryEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "basePriceEditor"    : (props) => <BasePriceEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseDashboard"      : (props) => <BaseDashboard      api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "baseSettingsEditor" : (props) => <BaseSettingsEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
 }
 
 const view = (page, props) => (typeof ViewMap[page] === "function") ? ViewMap[page](props) : ""

@@ -89,12 +89,14 @@ function SettingsReducer (state = {
       return Object.assign({}, state, {
         appMode                           : action.settings.appMode,
         defaultClientId                   : action.settings.defaultClientId,
+        defaultSupplierId                 : action.settings.defaultSupplierId,
         defaultCurrencyId                 : action.settings.defaultCurrencyId,
         defaultSaleMargin                 : action.settings.defaultSaleMargin,
         defaultUnitId                     : action.settings.defaultUnitId,
-        barcodePrefix                     : "Z",
+        barcodePrefix                     : action.settings.barcodePrefix,
+        productLabelSize                  : action.settings.productLabelSize,
         theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
-        showConsignmentHistoryInSaleCheck : true,
+        showConsignmentHistoryInSaleCheck : Boolean(+action.settings.showConsignmentHistoryInSaleCheck),
       })
     }
     case "SETTINGS_THEME_CHANGED": {

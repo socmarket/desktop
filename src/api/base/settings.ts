@@ -4,6 +4,7 @@ const defaultSettings = {
   appMode                           : "auto/parts",
   productLabelSize                  : "30x20",
   defaultClientId                   : 1,
+  defaultSupplierId                 : 1,
   defaultCurrencyId                 : 1,
   defaultUnitId                     : 1,
   barcodePrefix                     : "Z",
@@ -30,6 +31,15 @@ export default function initSettingsApi(db) {
       db.select("select * from settings")
         .then(rows => readSettings(rows ? rows : []))
     ),
-    changeTheme: (themeName) => setKey(db, "theme", themeName)
+    changeTheme             : (themeName)  => setKey(db, "theme"            , themeName ),
+    changeAppMode           : (appMode)    => setKey(db, "appMode"          , appMode   ),
+    changeDefaultClient     : (clientId)   => setKey(db, "defaultClientId"  , clientId  ),
+    changeDefaultSupplier   : (supplierId) => setKey(db, "defaultSupplierId", supplierId),
+    changeDefaultUnit       : (unitId)     => setKey(db, "defaultUnitId"    , unitId    ),
+    changeDefaultCurrency   : (currencyId) => setKey(db, "defaultCurrencyId", currencyId),
+    changeBarcodePrefix     : (prefix)     => setKey(db, "barcodePrefix"    , prefix    ),
+    changeDefaultSaleMargin : (margin)     => setKey(db, "defaultSaleMargin", margin    ),
+    changeProductLabelSize  : (size)       => setKey(db, "productLabelSize" , size      ),
+    changeShowConsignmentHistoryInSaleCheck : (boolFlag) => setKey(db, "showConsignmentHistoryInSaleCheck", boolFlag),
   }
 }

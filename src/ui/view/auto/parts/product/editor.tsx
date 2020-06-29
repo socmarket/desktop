@@ -100,7 +100,7 @@ class ProductEditor extends React.Component {
   }
 
   newProduct() {
-    this.props.api.autoParts.product.genBarcode()
+    this.props.api.autoParts.product.genBarcode(this.props.opt.barcodePrefix)
       .then(barcode => this.setState({
         product: Object.assign({}, this.emptyProduct, {
           barcode: barcode,
