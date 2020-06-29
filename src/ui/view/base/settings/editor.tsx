@@ -50,9 +50,18 @@ class SettingsEditor extends React.Component {
 
     this.onShowConsignmentHistoryInSaleCheckChanged = this.onShowConsignmentHistoryInSaleCheckChanged.bind(this)
 
+    this.printerApi = props.api.printer
     this.settingsApi = props.api.settings
     this.state = {
+      printers: []
     }
+  }
+
+  componentDidMount() {
+    this.printerApi.rescanPrinters()
+      .then(items => this.setState({
+        printers: items,
+      }))
   }
 
   onAppModeChange(ev, { value }) {
@@ -107,6 +116,41 @@ class SettingsEditor extends React.Component {
     this.settingsApi
       .changeShowConsignmentHistoryInSaleCheck(+checked)
       .then(_ => this.props.reloadSettings())
+  }
+
+  onChoosePrinter(printer) {
+    this.settingsApi
+      .choosePrinter(printer.id)
+      .then(_ => this.props.reloadSettings())
+  }
+
+  printers() {
+    return (
+      <Segment raised color={this.props.theme.mainColor}>
+        <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
+          <Icon name="print" />
+          Принтеры
+        </Header>
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Модель</Table.HeaderCell>
+              <Table.HeaderCell>Производитель</Table.HeaderCell>
+              <Table.HeaderCell>ID</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {this.state.printers.map(printer => (
+              <Table.Row key={printer.id} onClick={() => this.onChoosePrinter(printer)} positive={printer.id === this.props.opt.labelPrinterId}>
+                <Table.Cell>{printer.iProduct}</Table.Cell>
+                <Table.Cell>{printer.iManufacturer}</Table.Cell>
+                <Table.Cell>{printer.id}</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
+      </Segment>
+    )
   }
 
   table() {
@@ -205,6 +249,9 @@ class SettingsEditor extends React.Component {
           <Grid.Row>
             <Grid.Column width={8}>
               {this.table()}
+            </Grid.Column>
+            <Grid.Column width={6}>
+              {this.printers()}
             </Grid.Column>
           </Grid.Row>
         </Grid>

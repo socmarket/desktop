@@ -3,7 +3,7 @@ import { SettingsActions } from "Store/base/settings"
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
-import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react"
+import { Button, Form, Grid, Header, Image, Message, Segment, Label } from "semantic-ui-react"
 
 const users = [
   { key: "cashier", value: "cashier", text: "Кассир"   },
@@ -61,10 +61,14 @@ class Door extends React.Component {
 
   render() {
     const needReg = this.needR()
+    const theme = this.props.opt.theme
     return (
       <Fragment>
         <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
           <Grid.Column style={{ maxWidth: 350 }}>
+            <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>SOC</Label>
+            <Label color="green" size="big" style={{ padding: 5, margin: 0 }}>Market</Label>
+            <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>2C</Label>
             <Header as="h2" color="teal" textAlign="center">
               { !needReg && "Войдите чтобы продолжить работу" }
               { needReg && "Установите пароль чтобы продолжить работу" }

@@ -17,6 +17,8 @@ const defaultSettings = {
   cashierPinHash                    : false,
   managerPinHash                    : false,
   adminPinHash                      : false,
+
+  labelPrinterId                    : "",
 }
 
 function readSettings(rows) {
@@ -46,6 +48,7 @@ export default function initSettingsApi(db) {
     changeBarcodePrefix     : (prefix)     => setKey(db, "barcodePrefix"    , prefix    ),
     changeDefaultSaleMargin : (margin)     => setKey(db, "defaultSaleMargin", margin    ),
     changeProductLabelSize  : (size)       => setKey(db, "productLabelSize" , size      ),
+    choosePrinter           : (id)         => setKey(db, "labelPrinterId"   , id        ),
     changeShowConsignmentHistoryInSaleCheck : (boolFlag) => setKey(db, "showConsignmentHistoryInSaleCheck", boolFlag),
     setUserPin : (user, pin) => {
       const hash = sha256(pin) + "";

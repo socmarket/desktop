@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 import {
   Grid, Form, Input, Button,
   Segment, Message, Modal,
-  Container,
+  Container, Divider,
 } from "semantic-ui-react"
 
 const inputWithRef = (ref, icon, onClickF) => (props) => (
@@ -22,29 +22,35 @@ class ProductForm extends React.Component {
     super(props)
     this.productApi = props.api.autoParts.product
 
-    this.onCreate         = this.onCreate.bind(this)
-    this.onUpdate         = this.onUpdate.bind(this)
-    this.onNewBarcode     = this.onNewBarcode.bind(this)
-    this.onBarcodeChange  = this.onBarcodeChange.bind(this)
-    this.onTitleChange    = this.onTitleChange.bind(this)
-    this.onBrandChange    = this.onBrandChange.bind(this)
-    this.onModelChange    = this.onModelChange.bind(this)
-    this.onEngineChange   = this.onEngineChange.bind(this)
-    this.onOemNoChange    = this.onOemNoChange.bind(this)
-    this.onSerialChange   = this.onSerialChange.bind(this)
-    this.onUnitChange     = this.onUnitChange.bind(this)
-    this.onCategoryChange = this.onCategoryChange.bind(this)
-    this.onKeyDown        = this.onKeyDown.bind(this)
+    this.onCreate           = this.onCreate.bind(this)
+    this.onUpdate           = this.onUpdate.bind(this)
+    this.onNewBarcode       = this.onNewBarcode.bind(this)
+    this.onBarcodeChange    = this.onBarcodeChange.bind(this)
+    this.onTitleChange      = this.onTitleChange.bind(this)
+    this.onBrandChange      = this.onBrandChange.bind(this)
+    this.onModelChange      = this.onModelChange.bind(this)
+    this.onEngineChange     = this.onEngineChange.bind(this)
+    this.onOemNoChange      = this.onOemNoChange.bind(this)
+    this.onSerialChange     = this.onSerialChange.bind(this)
+    this.onUnitChange       = this.onUnitChange.bind(this)
+    this.onCategoryChange   = this.onCategoryChange.bind(this)
+    this.onKeyDown          = this.onKeyDown.bind(this)
+    this.onPrintLabel       = this.onPrintLabel.bind(this)
+    this.onLabelCountChange = this.onLabelCountChange.bind(this)
 
+    this.printerApi = this.props.api.printer
     this.state = props.product
     this.state.errorMsg = ""
     this.state.barcodeValidated = props.product.barcode.length > 0
     this.state.titleValidated   = props.product.title.length > 0
+    this.state.labelCount = 1
 
     this.barcodeInputRef     = React.createRef()
+    this.labelCountInputRef  = React.createRef()
     this.barcodeDupCheckerId = React.createRef(-1)
 
-    this.barcodeInput = inputWithRef(this.barcodeInputRef, "add", this.onNewBarcode)
+    this.barcodeInput    = inputWithRef(this.barcodeInputRef, "add", this.onNewBarcode)
+    this.labelCountInput = inputWithRef(this.labelCountInputRef, "barcode", this.onPrintLabel)
   }
 
   componentDidMount() {
@@ -177,6 +183,22 @@ class ProductForm extends React.Component {
       .then(_ => this.props.onUpdate(this.state))
   }
 
+  onLabelCountChange(ev) {
+    this.setState({
+      labelCount: +ev.target.value,
+    })
+  }
+
+  onPrintLabel() {
+    this.printerApi.printLabel({
+      barcode   : this.state.barcode,
+      text      : this.state.title + ": " + this.state.oemNo + ": " + this.state.brand,
+      count     : this.state.labelCount,
+      labelSize : this.props.opt.productLabelSize,
+      printerId : this.props.opt.labelPrinterId,
+    })
+  }
+
   form() {
     return (
       <Form size="small" width={16} onKeyDown={this.onKeyDown}>
@@ -218,6 +240,16 @@ class ProductForm extends React.Component {
           {this.state.id > 0 && <Button type="button" color={this.props.theme.mainColor}
             disabled={!this.validated()} onClick={this.onUpdate}>Изменить (Shift + Enter)</Button>}
         </Button.Group>
+        <Divider />
+        <Form.Group>
+          <Form.Input
+            width={16}
+            label="Печатать штрихкод"
+            onChange={this.onLabelCountChange}
+            value={this.state.labelCount || 0}
+            control={this.labelCountInput}
+          />
+        </Form.Group>
       </Form>
     )
   }

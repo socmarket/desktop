@@ -98,6 +98,7 @@ function SettingsReducer (state = {
         cashierPinHash                    : action.settings.cashierPinHash,
         managerPinHash                    : action.settings.managerPinHash,
         adminPinHash                      : action.settings.adminPinHash,
+        labelPrinterId                    : action.settings.labelPrinterId,
         theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
         showConsignmentHistoryInSaleCheck : Boolean(+action.settings.showConsignmentHistoryInSaleCheck),
       })

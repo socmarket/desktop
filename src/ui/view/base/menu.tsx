@@ -38,7 +38,7 @@ class MainMenu extends React.Component {
   }
 
   onColorDoubleClick(ev) {
-    if (ev.shiftKey && ev.ctrlKey) {
+    if (ev.shiftKey && ev.ctrlKey && this.props.app.user === "admin") {
       this.props.openSettingsEditor()
     }
   }
