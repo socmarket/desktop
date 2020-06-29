@@ -22,8 +22,8 @@ const products = [
 const calcs = [
   "exchangeRates",
   "prices",
-  "clientEditor",
-  "supplierEditor",
+  "baseClientEditor",
+  "baseSupplierEditor",
 ]
 
 class MainMenu extends React.Component {
@@ -106,13 +106,13 @@ class MainMenu extends React.Component {
             />
             <Dropdown.Item
               icon="users"
-              active={this.props.app.activePage === "clientEditor"}
+              active={this.props.app.activePage === "baseClientEditor"}
               onClick={() => this.props.openClientEditor()}
               text="Клиенты"
             />
             <Dropdown.Item
               icon="truck"
-              active={this.props.app.activePage === "supplierEditor"}
+              active={this.props.app.activePage === "baseSupplierEditor"}
               onClick={() => this.props.openSupplierEditor()}
               text="Поставщики"
             />

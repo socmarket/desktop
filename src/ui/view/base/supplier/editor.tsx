@@ -1,5 +1,5 @@
-import ClientInfoEditor from "./infoEditor"
-import ClientJournal    from "./journal"
+import SupplierInfoEditor from "./infoEditor"
+import SupplierJournal    from "./journal"
 import {
   inputWithRef
 }                    from "Util"
@@ -14,9 +14,9 @@ import {
   Rail, Dropdown
 } from "semantic-ui-react"
 
-class ClientEditor extends React.Component {
+class SupplierEditor extends React.Component {
 
-  emptyClient = {
+  emptySupplier = {
     id       : -1,
     name     : "",
     contacts : "",
@@ -38,9 +38,9 @@ class ClientEditor extends React.Component {
     this.patternInputRef = React.createRef()
     this.patternInput    = inputWithRef(this.patternInputRef)
 
-    this.clientApi = props.api.client
+    this.supplierApi = props.api.supplier
     this.state = {
-      client            : this.emptyClient,
+      supplier            : this.emptySupplier,
       items             : [],
       journal           : [],
       pattern           : "",
@@ -49,9 +49,9 @@ class ClientEditor extends React.Component {
     }
   }
 
-  reloadClientList() {
+  reloadSupplierList() {
     const idx = this.state.idx
-    return this.clientApi
+    return this.supplierApi
       .find(this.state.pattern)
       .then(items => this.setState({
         items: items,
@@ -60,12 +60,12 @@ class ClientEditor extends React.Component {
   }
 
   componentDidMount() {
-    this.reloadClientList()
+    this.reloadSupplierList()
   }
 
-  openClient(client, idx) {
+  openSupplier(supplier, idx) {
     this.setState({
-      client            : client,
+      supplier            : supplier,
       infoEditorVisible : true,
     })
   }
@@ -78,21 +78,21 @@ class ClientEditor extends React.Component {
     })
   }
 
-  openJournalFor(client, idx) {
+  openJournalFor(supplier, idx) {
     this.setState({
       idx    : idx,
-      client : client,
+      supplier : supplier,
     })
   }
 
   onCreate() {
     this.closeInfoEditor()
-    this.reloadClientList()
+    this.reloadSupplierList()
   }
 
   onUpdate() {
     this.closeInfoEditor()
-    this.reloadClientList()
+    this.reloadSupplierList()
   }
 
   onKeyDown(ev) {
@@ -100,19 +100,19 @@ class ClientEditor extends React.Component {
     switch (ev.key) {
       case "ArrowUp": {
         const cidx = this.state.idx <= 0 ? count : this.state.idx
-        const client = this.state.items[cidx - 1]
+        const supplier = this.state.items[cidx - 1]
         this.setState({
           idx: cidx - 1,
-          client: client ? client : this.emptyClient,
+          supplier: supplier ? supplier : this.emptySupplier,
         })
         break
       }
       case "ArrowDown": {
         const cidx = this.state.idx === (count - 1) ? -1 : this.state.idx
-        const client = this.state.items[cidx + 1]
+        const supplier = this.state.items[cidx + 1]
         this.setState({
           idx: cidx + 1,
-          client: client ? client : this.emptyClient,
+          supplier: supplier ? supplier : this.emptySupplier,
         })
         break
       }
@@ -120,8 +120,8 @@ class ClientEditor extends React.Component {
         if (ev.shiftKey) {
           this.onActivate()
         } else {
-          const client = this.state.items[this.state.idx]
-          this.openClient(client ? client : emptyClient, this.state.idx)
+          const supplier = this.state.items[this.state.idx]
+          this.openSupplier(supplier ? supplier : emptySupplier, this.state.idx)
         }
         break
       }
@@ -139,16 +139,16 @@ class ClientEditor extends React.Component {
   onPatternChange(ev) {
     this.setState({
       pattern: ev.target.value,
-    }, () => this.reloadClientList())
+    }, () => this.reloadSupplierList())
   }
 
   infoEditor() {
     return (
-      <ClientInfoEditor
+      <SupplierInfoEditor
         open
         api={this.props.api}
         theme={this.props.theme}
-        client={this.state.client}
+        supplier={this.state.supplier}
         onCreate={this.onCreate}
         onUpdate={this.onUpdate}
         onClose={this.closeInfoEditor}
@@ -158,40 +158,36 @@ class ClientEditor extends React.Component {
 
   list() {
     return (
-      <Segment raised
-        color={this.props.theme.mainColor}
-        onKeyDown={this.onKeyDown}
-        tabIndex={-1}
-      >
+      <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="users" />
-          Клиенты
+          Поставщики
         </Header>
         <Form width={16}>
           <Form.Group>
             <Form.Input
               floated="left"
               icon="search"
-              placeholder="Поиск клиента"
+              placeholder="Поиск поставщика"
               value={this.state.pattern}
               control={this.patternInput}
               onChange={this.onPatternChange}
             />
-            <Button floated="right" icon="plus" onClick={() => this.openClient(this.emptyClient, -1)} />
+            <Button floated="right" icon="plus" onClick={() => this.openSupplier(this.emptySupplier, -1)} />
           </Form.Group>
         </Form>
         <Menu vertical fluid>
-          {this.state.items.map((client, idx) => (
+          {this.state.items.map((supplier, idx) => (
             <Menu.Item
-              key={client.id}
-              active={this.state.client.id === client.id}
+              key={supplier.id}
+              active={this.state.supplier.id === supplier.id}
               color={this.props.theme.mainColor}
-              onClick={() => this.openJournalFor(client, idx)}
-              onDoubleClick={() => this.openClient(client, idx)}
+              onClick={() => this.openJournalFor(supplier, idx)}
+              onDoubleClick={() => this.openSupplier(supplier, idx)}
             >
-              {client.name}
-              <Label size="large" color={client.balance < 0 ? "red" : "green"}>
-                {client.balance}
+              {supplier.name}
+              <Label size="large" color={supplier.balance < 0 ? "red" : "green"}>
+                {supplier.balance}
               </Label>
             </Menu.Item>
           ))}
@@ -202,13 +198,13 @@ class ClientEditor extends React.Component {
 
   journal() {
     return (
-      <ClientJournal
+      <SupplierJournal
         ref={this.tableRef}
         api={this.props.api}
-        client={this.state.client}
+        supplier={this.state.supplier}
         opt={this.props.opt}
         theme={this.props.theme}
-        onUpdate={() => this.reloadClientList()}
+        onUpdate={() => this.reloadSupplierList()}
       />
     )
   }
@@ -221,7 +217,7 @@ class ClientEditor extends React.Component {
             {this.list()}
           </Grid.Column>
           <Grid.Column width={6}>
-            {this.state.client.id > 0 && this.journal()}
+            {this.state.supplier.id > 0 && this.journal()}
           </Grid.Column>
         </Grid>
         {this.state.infoEditorVisible && this.infoEditor()}
@@ -230,4 +226,4 @@ class ClientEditor extends React.Component {
   }
 }
 
-export default ClientEditor
+export default SupplierEditor

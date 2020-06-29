@@ -10,7 +10,7 @@ import {
   Container, Header, Divider
 } from "semantic-ui-react"
 
-class ClientInfoEditor extends React.Component {
+class SupplierInfoEditor extends React.Component {
 
   constructor(props) {
     super(props)
@@ -25,9 +25,9 @@ class ClientInfoEditor extends React.Component {
     this.nameInputRef = React.createRef()
     this.nameInput    = inputWithRef(this.nameInputRef)
 
-    this.clientApi = props.api.client
+    this.supplierApi = props.api.supplier
     this.state = {
-      ...props.client,
+      ...props.supplier,
       errorMsg: "",
     }
   }
@@ -60,18 +60,20 @@ class ClientInfoEditor extends React.Component {
   }
 
   onCreate() {
-    this.clientApi.insert(this.state)
+    console.log(this.state)
+    this.supplierApi.insert(this.state)
       .then(_ => this.props.onCreate(this.state))
   }
 
   onUpdate() {
-    this.clientApi.update(this.state)
+    console.log(this.props)
+    this.supplierApi.update(this.state)
       .then(_ => this.props.onUpdate(this.state))
   }
 
   onKeyDown(ev) {
     if (ev.key === "Enter" && ev.shiftKey && this.validated()) {
-      if (this.state.id < 0) {
+      if (this.props.supplier.id < 0) {
         this.onCreate()
       } else {
         this.onUpdate()
@@ -104,13 +106,13 @@ class ClientInfoEditor extends React.Component {
             onChange={this.onNotesChange}
           />
         </Form.Field>
-        {this.state.id < 0 &&
+        {this.props.supplier.id < 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
             onClick={this.onCreate}>Создать (Shift + Enter)
         </Button>}
-        {this.state.id > 0 &&
+        {this.props.supplier.id > 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
@@ -128,14 +130,14 @@ class ClientInfoEditor extends React.Component {
     )
   }
 
-  clientDesc() {
-    return `#${this.props.client.id}: ${this.props.client.name}` 
+  supplierDesc() {
+    return `#${this.props.supplier.id}: ${this.props.supplier.name}` 
   }
 
   render() {
     const header =
       this.state.id ?
-        (this.state.id > 0 ? this.clientDesc() : "Регистрация нового клиента") :
+        (this.state.id > 0 ? this.supplierDesc() : "Регистрация нового поставщик") :
         "Ошибка открытия"
     return (
       <Modal
@@ -145,7 +147,7 @@ class ClientInfoEditor extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Клиент: {header}
+          Поставщик: {header}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -155,4 +157,4 @@ class ClientInfoEditor extends React.Component {
   }
 }
 
-export default ClientInfoEditor
+export default SupplierInfoEditor
