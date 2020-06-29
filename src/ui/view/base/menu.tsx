@@ -44,6 +44,7 @@ class MainMenu extends React.Component {
   }
 
   menu() {
+    const user = this.props.app.user
     const theme = this.props.opt.theme
     const activePage = this.props.app.activePage
     const salesActive = sales.includes(activePage) ? "active" : ""
@@ -58,6 +59,7 @@ class MainMenu extends React.Component {
         </Menu.Item>
         { (this.props.opt.appMode === "auto/parts") &&
           <Fragment>
+            { (user === "cashier" || user === "manager" || user === "admin") &&
             <Dropdown tabIndex={-1} text="Продажи" pointing className={"link item " + salesActive}>
               <Dropdown.Menu>
                 <Dropdown.Item
@@ -74,7 +76,9 @@ class MainMenu extends React.Component {
                 />
               </Dropdown.Menu>
             </Dropdown>
+            }
 
+            { (user === "manager" || user === "admin") &&
             <Dropdown tabIndex={-1} text="Товары" pointing className={"link item " + productsActive}>
               <Dropdown.Menu>
                 <Dropdown.Item
@@ -115,8 +119,10 @@ class MainMenu extends React.Component {
                 />
               </Dropdown.Menu>
             </Dropdown>
+            }
           </Fragment>
         }
+        { (user === "admin") &&
         <Dropdown tabIndex={-1} text="Расчёты" pointing className={"link item " + calcsActive}>
           <Dropdown.Menu>
             <Dropdown.Item
@@ -151,6 +157,7 @@ class MainMenu extends React.Component {
             />
           </Dropdown.Menu>
         </Dropdown>
+        }
         <Menu.Menu position="right">
           <Menu.Item>
             <Dropdown tabIndex={-1} text="Цвет" pointing onDoubleClick={this.onColorDoubleClick}>
@@ -166,7 +173,7 @@ class MainMenu extends React.Component {
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Item>
-          <Menu.Item>
+          <Menu.Item onClick={() => this.props.signOut()}>
             Выйти
           </Menu.Item>
         </Menu.Menu>

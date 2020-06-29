@@ -1,57 +1,101 @@
+import { AppActions }      from "Store/base/app"
+import { SettingsActions } from "Store/base/settings"
+
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { Button, Form, Grid, Header, Image, Message, Segment } from "semantic-ui-react"
 
+const users = [
+  { key: "cashier", value: "cashier", text: "Кассир"   },
+  { key: "manager", value: "manager", text: "Менеджер" },
+  { key: "admin"  , value: "admin"  , text: "Владелец" },
+]
+
 class Door extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.settingsApi  = props.api.settings
+    this.onPinChange  = this.onPinChange.bind(this)
+    this.onPin2Change = this.onPin2Change.bind(this)
+    this.state = {
+      pin: "",
+      pin2: "",
+    }
+  }
+
+  needR() {
+    const user = this.props.app.user
+    const opt = this.props.opt
+    return !(opt[user+"PinHash"] && opt[user+"PinHash"].length > 0)
+  }
+
+  regOrSignIn() {
+    if (this.needR()) {
+      if (this.state.pin.length > 0 && this.state.pin === this.state.pin2) {
+        this.settingsApi
+          .setUserPin(this.props.app.user, this.state.pin)
+          .then(_ => this.props.reloadSettings())
+          .then(_ => this.props.auth(this.state.pin))
+      }
+    } else {
+      this.props.auth(this.state.pin)
+    }
+  }
+
+  onPinChange(ev) {
+    if (ev.target.value.length < 5) {
+      this.setState({
+        pin: ev.target.value
+      }, () => this.regOrSignIn())
+    }
+  }
+
+  onPin2Change(ev) {
+    if (ev.target.value.length < 5) {
+      this.setState({
+        pin2: ev.target.value
+      }, () => this.regOrSignIn())
+    }
+  }
+
   render() {
+    const needReg = this.needR()
     return (
       <Fragment>
         <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
           <Grid.Column style={{ maxWidth: 350 }}>
             <Header as="h2" color="teal" textAlign="center">
-              { isReg && "Войдите чтобы продолжить работу" }
-              { !isReg && "Установите пароль чтобы продолжить работу" }
+              { !needReg && "Войдите чтобы продолжить работу" }
+              { needReg && "Установите пароль чтобы продолжить работу" }
             </Header>
-            <Form size="large" error={this.props.acl.lastError.length > 0}>
-              <Form.Input
+            <Form size="large" error={this.props.app.lastError.length > 0}>
+              <Form.Select
                 autoFocus
                 fluid
-                icon="user"
-                iconPosition="left"
-                placeholder="Логин"
-                value={this.props.acl.login}
-                onChange={this.props.onLoginChange}
-                onBlur={this.props.findUser}
+                value={this.props.app.user}
+                options={users}
+                onChange={(ev, { value }) => this.props.changeUser(value)}
               />
               <Form.Input
                 fluid
                 icon="lock"
                 iconPosition="left"
-                placeholder="Пароль"
+                placeholder="Пин"
                 type="password"
-                value={this.props.acl.password}
-                onChange={this.props.onPasswordChange}
+                value={this.state.pin}
+                onChange={this.onPinChange}
               />
-              {!isReg && <Form.Input
+              {needReg && <Form.Input
                 fluid
                 icon="lock"
                 iconPosition="left"
                 placeholder="Повторите пароль"
                 type="password"
-                value={this.props.acl.password2}
-                onChange={this.props.onPassword2Change}
+                value={this.state.pin2}
+                onChange={this.onPin2Change}
               />}
-              <Message error>{this.props.acl.lastError}</Message>
-              <Button
-                fluid
-                color="teal"
-                size="large"
-                disabled={!active}
-                onClick={this.props.authOrReg}
-              >
-                {isReg && "Войти"}
-                {!isReg && "Установить пароль"}
-              </Button>
+              <Message error>{}</Message>
             </Form>
           </Grid.Column>
         </Grid>
@@ -62,7 +106,9 @@ class Door extends React.Component {
 
 const stateMap = (state) => {
   return {
+    app: state.app,
+    opt: state.settings,
   }
 }
 
-export default connect(stateMap, {})(Door);
+export default connect(stateMap, { ...AppActions, ...SettingsActions })(Door);

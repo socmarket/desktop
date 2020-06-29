@@ -1,3 +1,35 @@
+import sha256 from 'crypto-js/sha256';
+
+function auth(pin) {
+  return function (dispatch, getState, { api }) {
+    const { app: { user }, settings: { cashierPinHash, managerPinHash, adminPinHash } } = getState()
+    const hash = sha256(pin) + ""
+    switch (user) {
+      case "cashier":
+        if (hash === cashierPinHash)
+          return dispatch({
+            type: "APP_AUTH_OK",
+          })
+        break
+      case "manager":
+        if (hash === managerPinHash)
+          return dispatch({
+            type: "APP_AUTH_OK",
+          })
+        break
+      case "admin":
+        if (hash === adminPinHash)
+          return dispatch({
+            type: "APP_AUTH_OK",
+          })
+        break
+    }
+    return dispatch({
+      type: "APP_AUTH_FAIL",
+    })
+  }
+}
+
 const AppActions = {
   openAutoPartsSaleCheckEditor: () => ({
     type: "APP_OPEN_AUTO_PARTS_SALE_CHECK_EDITOR",
@@ -41,10 +73,21 @@ const AppActions = {
   openSettingsEditor: () => ({
     type: "APP_OPEN_BASE_SETTINGS_EDITOR",
   }),
+  changeUser: (user) => ({
+    type: "APP_CHANGE_USER",
+    user: user,
+  }),
+  signOut: () => ({
+    type: "APP_SIGN_OUT",
+  }),
+  auth: auth,
 }
 
 function AppReducer (state = {
-  activePage: "baseSettingsEditor"
+  activePage    : "baseSaleCheckEditor",
+  user          : "cashier",
+  authenticated : false,
+  lastError     : "",
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
@@ -75,6 +118,14 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "baseDashboard" })
     case "APP_OPEN_BASE_SETTINGS_EDITOR":
       return Object.assign({}, state, { activePage: "baseSettingsEditor" })
+    case "APP_CHANGE_USER":
+      return Object.assign({}, state, { user: action.user })
+    case "APP_AUTH_OK":
+      return Object.assign({}, state, { authenticated: true })
+    case "APP_AUTH_FAIL":
+      return Object.assign({}, state, { authenticated: false })
+    case "APP_SIGN_OUT":
+      return Object.assign({}, state, { authenticated: false })
     default:
       return state
   }

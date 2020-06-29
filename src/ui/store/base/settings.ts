@@ -95,6 +95,9 @@ function SettingsReducer (state = {
         defaultUnitId                     : action.settings.defaultUnitId,
         barcodePrefix                     : action.settings.barcodePrefix,
         productLabelSize                  : action.settings.productLabelSize,
+        cashierPinHash                    : action.settings.cashierPinHash,
+        managerPinHash                    : action.settings.managerPinHash,
+        adminPinHash                      : action.settings.adminPinHash,
         theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
         showConsignmentHistoryInSaleCheck : Boolean(+action.settings.showConsignmentHistoryInSaleCheck),
       })

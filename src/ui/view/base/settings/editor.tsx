@@ -110,7 +110,6 @@ class SettingsEditor extends React.Component {
   }
 
   table() {
-    console.log(this.props.opt)
     return (
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
@@ -189,7 +188,7 @@ class SettingsEditor extends React.Component {
               <Radio
                 label="Показывать закупочные цены в кассе"
                 toggle
-                value={this.props.opt.showConsignmentHistoryInSaleCheck}
+                checked={this.props.opt.showConsignmentHistoryInSaleCheck}
                 onChange={this.onShowConsignmentHistoryInSaleCheckChanged}
               />
             </Form.Field>

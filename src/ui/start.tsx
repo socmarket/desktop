@@ -16,13 +16,13 @@ class StartPage extends React.Component {
   }
 
   render() {
-    return ViewSelector[true](api)
+    return ViewSelector[this.props.app.authenticated](api)
   }
 }
 
 const stateMap = (store) => {
   return {
-    acl: store.acl,
+    app: store.app,
   }
 }
 

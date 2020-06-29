@@ -1,5 +1,7 @@
 import upsertOptionSql from "./sql/settings/upsertOption.sql"
 
+import sha256 from 'crypto-js/sha256';
+
 const defaultSettings = {
   appMode                           : "auto/parts",
   productLabelSize                  : "30x20",
@@ -11,6 +13,10 @@ const defaultSettings = {
   theme                             : "violet",
   defaultSaleMargin                 : 20,
   showConsignmentHistoryInSaleCheck : true,
+
+  cashierPinHash                    : false,
+  managerPinHash                    : false,
+  adminPinHash                      : false,
 }
 
 function readSettings(rows) {
@@ -41,5 +47,9 @@ export default function initSettingsApi(db) {
     changeDefaultSaleMargin : (margin)     => setKey(db, "defaultSaleMargin", margin    ),
     changeProductLabelSize  : (size)       => setKey(db, "productLabelSize" , size      ),
     changeShowConsignmentHistoryInSaleCheck : (boolFlag) => setKey(db, "showConsignmentHistoryInSaleCheck", boolFlag),
+    setUserPin : (user, pin) => {
+      const hash = sha256(pin) + "";
+      return setKey(db, user + "PinHash", hash)
+    },
   }
 }
