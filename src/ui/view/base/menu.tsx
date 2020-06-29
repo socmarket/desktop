@@ -20,10 +20,10 @@ const products = [
 ]
 
 const calcs = [
-  "exchangeRates",
   "prices",
   "baseClientEditor",
   "baseSupplierEditor",
+  "baseCurrencyEditor",
 ]
 
 class MainMenu extends React.Component {
@@ -100,8 +100,8 @@ class MainMenu extends React.Component {
             />
             <Dropdown.Item
               icon="dollar sign"
-              active={this.props.app.activePage === "exchangeRates"}
-              onClick={() => this.props.openExchangeRates()}
+              active={this.props.app.activePage === "baseCurrencyEditor"}
+              onClick={() => this.props.openCurrencyEditor()}
               text="Курсы валют"
             />
             <Dropdown.Item

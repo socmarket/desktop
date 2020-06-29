@@ -12,6 +12,10 @@ export default class CurrencyPicker extends React.Component {
     }
   }
 
+  mkLabel(currency) {
+    return `${currency.notation}: ${currency.title}`
+  }
+
   updateLabel(value) {
     const self = this
     return this.props.api.currency.pick(value)
@@ -19,7 +23,7 @@ export default class CurrencyPicker extends React.Component {
         if (currency) {
           self.setState({
             value: currency.id,
-            label: currency.title,
+            label: this.mkLabel(currency),
           })
         } else {
           self.setState({
@@ -46,7 +50,7 @@ export default class CurrencyPicker extends React.Component {
     this.props.api.currency.find(pattern)
       .then(cats => {
         const opts = cats.map(cat => ({
-          label: cat.title,
+          label: this.mkLabel(cat),
           value: cat.id,
           currency: cat,
         }))

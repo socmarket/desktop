@@ -1,9 +1,11 @@
 select
   currency.id,
-  currency.title
+  currency.title,
+  currency.notation
 from
   currency
 where
-  currency.title like '%' || $pattern || '%'
+  currency.titleLower    like '%' || $pattern || '%' or
+  currency.notationLower like '%' || $pattern || '%'
 order by
   currency.title asc

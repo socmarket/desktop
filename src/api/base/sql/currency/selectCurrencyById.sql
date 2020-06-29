@@ -1,6 +1,7 @@
 select
   currency.id,
-  currency.title
+  currency.title,
+  currency.notation
 from
   currency
 where
