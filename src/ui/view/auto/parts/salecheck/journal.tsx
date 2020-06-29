@@ -62,17 +62,19 @@ class SaleJournal extends React.Component {
                       <Table.Cell rowSpan={items.length}>
                         {moment.utc(saleCheck.soldAt).local().format("DD-MM-YYYY HH:mm")}
                         <br />{saleCheck.clientName}
-                        <br />Сумма: {saleCheck.cost}
-                        { (saleCheck.cash < saleCheck.cost) &&
+                        <br />Сумма без скидки: {saleCheck.cost}
+                        <br />Скидка: {saleCheck.discount}
+                        <br />Сумма: {saleCheck.cost - saleCheck.discount}
+                        { (saleCheck.cash < (saleCheck.cost - saleCheck.discount)) &&
                           <Fragment>
                             <br />Оплачено: {saleCheck.cash}
-                            <br />Долг: {saleCheck.cost - saleCheck.cash}
+                            <br />Долг: {saleCheck.cost - saleCheck.cash - saleCheck.discount}
                           </Fragment>
                         }
-                        { (saleCheck.cash >= saleCheck.cost) &&
+                        { (saleCheck.cash >= (saleCheck.cost - saleCheck.discount)) &&
                           <Fragment>
                             <br />Наличными: {saleCheck.cash}
-                            <br />Сдача: {saleCheck.cash - saleCheck.cost}
+                            <br />Сдача: {saleCheck.cash - saleCheck.cost + saleCheck.discount}
                           </Fragment>
                         }
                       </Table.Cell>

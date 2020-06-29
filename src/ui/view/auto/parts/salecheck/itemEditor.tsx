@@ -70,7 +70,13 @@ class SaleCheckItem extends React.Component {
   onUpdate() {
     this.saleCheckApi
       .updateCurrentSaleCheckItem(this.state)
-      .then(_ => this.priceApi.setPrice(this.state))
+      .then(_ => {
+        if (this.state.originalPrice < this.state.price) {
+          return this.priceApi.setPrice(this.state)
+        } else {
+          return Promise.resolve()
+        }
+      })
       .then(_ => this.props.onUpdate(this.state))
   }
 
