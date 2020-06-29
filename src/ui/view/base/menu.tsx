@@ -15,6 +15,7 @@ const sales = [
 
 const products = [
   "autoPartsProductEditor",
+  "autoPartsProductImporter",
   "autoPartsConsignmentEditor",
   "autoPartsConsignmentJournal",
   "baseCategoryEditor",
@@ -22,7 +23,8 @@ const products = [
 ]
 
 const calcs = [
-  "prices",
+  "baseDashboard",
+  "basePriceEditor",
   "baseClientEditor",
   "baseSupplierEditor",
   "baseCurrencyEditor",
@@ -84,8 +86,8 @@ class MainMenu extends React.Component {
                 />
                 <Dropdown.Item
                   icon="file excel"
-                  active={this.props.app.activePage === "autoPartsProductEditor"}
-                  onClick={() => this.props.openAutoPartsProductEditor()}
+                  active={this.props.app.activePage === "autoPartsProductImporter"}
+                  onClick={() => this.props.openAutoPartsProductImporter()}
                   text="Загрузка описаний из Excel"
                 />
                 <Dropdown.Item

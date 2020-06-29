@@ -48,6 +48,7 @@ from
       left join category on category.id = product.categoryId
     where
       (product.barcode = $barcode)
+      or (product.oemNo like '%' || $barcode || '%')
       or (product.titleLower like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
       or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
       or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))

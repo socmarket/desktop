@@ -3,7 +3,6 @@ import CategoryPicker from "View/base/category/picker"
 
 import ProductForm     from "./form"
 import ProductList     from "./list"
-import ProductImporter from "./importer"
 
 import { AutoPartsProductActions } from "Store/auto/parts/product"
 
@@ -43,9 +42,6 @@ class ProductEditor extends React.Component {
     this.openProductForm  = this.openProductForm.bind(this)
     this.closeProductForm = this.closeProductForm.bind(this)
 
-    this.onProductListClick = this.onProductListClick.bind(this)
-    this.onImporterClick    = this.onImporterClick.bind(this)
-
     this.state = {
       product: this.emptyProduct,
       formVisible: false,
@@ -53,7 +49,6 @@ class ProductEditor extends React.Component {
         id: -1,
         pattern: "",
       },
-      activePage: "editor",
     }
   }
 
@@ -73,18 +68,6 @@ class ProductEditor extends React.Component {
 
   onFilterChange(ev) {
     this.setFilter(ev.target.value)
-  }
-
-  onProductListClick() {
-    this.setState({
-      activePage: "editor",
-    })
-  }
-
-  onImporterClick() {
-    this.setState({
-      activePage: "importer",
-    })
   }
 
   openProductForm(product, idx) {
@@ -131,6 +114,8 @@ class ProductEditor extends React.Component {
       <ProductForm
         open
         api={this.props.api}
+        opt={this.props.opt}
+        theme={this.props.theme}
         product={this.state.product}
         onCreate={this.onCreate}
         onUpdate={this.onUpdate}
@@ -151,51 +136,27 @@ class ProductEditor extends React.Component {
   render() {
     return (
       <Container fluid style={{ padding: 10 }}>
-        <Menu pointing secondary>
-          <Menu.Item
-            name="Список товаров"
-            active={this.state.activePage === "editor"}
-            onClick={this.onProductListClick}
-          />
-          <Menu.Item
-            name="Импорт товаров"
-            active={this.state.activePage === "importer"}
-            onClick={this.onImporterClick}
-          />
-          { this.state.activePage === "editor" &&
-            <Fragment>
-              <Menu.Item>
-                <Input
-                  icon="search"
-                  style={{ width: 300 }}
-                  value={this.state.search.pattern}
-                  onChange={this.onFilterChange}
-                />
-              </Menu.Item>
-              <Menu.Item position="right">
-                <Button
-                  floated="right"
-                  icon="plus"
-                  onClick={this.newProduct}
-                />
-              </Menu.Item>
-            </Fragment>
-          }
+        <Menu>
+          <Menu.Item>
+            <Input
+              icon="search"
+              style={{ width: 300 }}
+              value={this.state.search.pattern}
+              onChange={this.onFilterChange}
+            />
+          </Menu.Item>
+          <Menu.Item position="right">
+            <Button
+              floated="right"
+              icon="plus"
+              onClick={this.newProduct}
+            />
+          </Menu.Item>
         </Menu>
         {this.state.formVisible && this.form()}
-        {this.state.activePage === "editor" &&
-          <Container fluid>
-            {this.list()}
-          </Container>
-        }
-        {this.state.activePage === "importer" &&
-          <Container fluid>
-            <ProductImporter
-              api={this.props.api}
-              barcodePrefix="Z"
-            />
-          </Container>
-        }
+        <Container fluid>
+          {this.list()}
+        </Container>
       </Container>
     )
   }

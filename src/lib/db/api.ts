@@ -14,7 +14,6 @@ function initDb(fileName: string): Database {
   const dbApi = {
     batch: async function (sql: string, params: object) {
       return new Promise((resolve, reject) => {
-        console.log(`batch: ${sql}`)
         if (sql.trim().length === 0) {
           resolve()
         } else {
@@ -23,6 +22,7 @@ function initDb(fileName: string): Database {
               console.error(err, sql, params)
               reject(err)
             } else {
+              console.info("exec: " + sql)
               resolve()
             }
           })
@@ -31,7 +31,6 @@ function initDb(fileName: string): Database {
     },
     exec: async function (sql: string, params: object) {
       return new Promise((resolve, reject) => {
-        console.log(`exec: ${sql}`)
         if (sql.trim().length === 0) {
           resolve()
         } else {
@@ -40,6 +39,7 @@ function initDb(fileName: string): Database {
               console.error(err, sql, params)
               reject(err)
             } else {
+              console.info("exec: " + sql)
               resolve()
             }
           })

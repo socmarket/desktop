@@ -82,7 +82,9 @@ export default class ProductPicker extends React.Component {
       + " : " + product.quantity
       + " : " + product.price
       + " | " + product.barcode
-    
+      + " | " + product.oemNo
+      + " | " + product.model
+      + " | " + product.engine
   }
 
   mkOptsFrom(products) {

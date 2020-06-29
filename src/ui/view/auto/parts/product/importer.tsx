@@ -5,19 +5,30 @@ import {
   Header, Grid, Table, Form, Input, Select,
   TextArea, Button, Segment, Image,
   Label, Container, Menu, Message, Divider,
-  Dropdown, Dimmer, Loader, Statistic
+  Dropdown, Dimmer, Loader, Icon
 } from "semantic-ui-react"
 
 import UnitPicker     from "View/base/unit/picker"
 import CategoryPicker from "View/base/category/picker"
 
-class Importer extends React.Component {
+class ProductImporter extends React.Component {
 
   constructor(props) {
     super(props)
+
+    this.onOpenFile       = this.onOpenFile.bind(this)
+    this.onUnitPick       = this.onUnitPick.bind(this)
+    this.onCategoryPick   = this.onCategoryPick.bind(this)
+    this.onImportProducts = this.onImportProducts.bind(this)
+
+    this.counterRef = React.createRef()
+
     this.importerApi = props.api.autoParts.product
+
     this.state = {
       loading: false,
+      success: false,
+      failure: false,
       fileName: "",
       activeSheetName: "",
       wb: {
@@ -33,10 +44,6 @@ class Importer extends React.Component {
       unitId: -1,
       unitTitle: "",
     }
-    this.openFile = this.openFile.bind(this)
-    this.importProducts = this.importProducts.bind(this)
-    this.onUnitPick = this.onUnitPick.bind(this)
-    this.onCategoryPick = this.onCategoryPick.bind(this)
   }
 
   onUnitPick(unit) {
@@ -53,14 +60,14 @@ class Importer extends React.Component {
     })
   }
 
-  importProducts() {
+  onImportProducts() {
     const sheet = this.state.wb.Sheets[this.state.activeSheetName]
     const rect = this.rect(sheet)
     this.setState({
       loading: true,
     }, () => {
       this.importerApi.importProducts({
-        barcodePrefix: this.props.barcodePrefix,
+        barcodePrefix: this.props.opt.barcodePrefix,
         sheet: sheet,
         rect: rect,
         target: this.state.target,
@@ -68,18 +75,27 @@ class Importer extends React.Component {
         unitId: this.state.unitId,
         categoryId: this.state.categoryId,
         onRowDone: (r, row) => {
+          this.counterRef.current.innerText = r
         },
-        onError: (err) => {
-          console.log(err)
-        }
       })
-      .then(_ => this.setState({
-        loading: false,
-      }))
+      .then(_ => {
+        this.setState({
+          loading: false,
+          success: true,
+          failure: false,
+        })
+      })
+      .catch(_ => {
+        this.setState({
+          loading: false,
+          success: false,
+          failure: true,
+        })
+      })
     })
   }
 
-  openFile() {
+  onOpenFile() {
     this.setState({ loading: true })
     this.importerApi
       .chooseFile()
@@ -103,6 +119,7 @@ class Importer extends React.Component {
           } else {
             this.setState({
               loading: false,
+              success: false,
               fileName: fileName,
               target: [],
               excludedRows: [],
@@ -250,7 +267,7 @@ class Importer extends React.Component {
   menu() {
     const wb = this.state.wb
     return (
-      <Menu pointing secondary>
+      <Menu>
         { this.state.fileName.length > 0 &&
           <Menu.Item>
             {this.state.fileName}
@@ -273,14 +290,20 @@ class Importer extends React.Component {
           />
         </div>
         <Menu.Menu position="right">
-          <Loader active={this.state.loading} size="small" />
+          { this.state.loading && <Menu.Item><Loader active={this.state.loading} size="small" /></Menu.Item> }
+          { !this.state.loading && this.state.success && <Menu.Item><Icon name="check" color="green" /></Menu.Item> }
+          { !this.state.loading && this.state.failure && <Menu.Item><Icon name="x"     color="red"   /></Menu.Item> }
           { this.state.activeSheetName !== "" && (
             <Fragment>
-              <Statistic horizontal size="mini" label="Всего" value={this.state.rect.rows.length - this.state.excludedRows.length} />
-              <Statistic horizontal size="mini" label="Готово" value={this.state.importedRows} />
+              <Menu.Item>
+                Всего: {this.state.rect.rows.length - this.state.excludedRows.length}
+              </Menu.Item>
+              <Menu.Item>
+                Готово: <p ref={this.counterRef}></p>
+              </Menu.Item>
               { this.state.unitId > 0 && this.state.target.filter(t => t.key === "title").length > 0 &&
                 <Menu.Item>
-                  <Button onClick={this.importProducts}>
+                  <Button onClick={this.onImportProducts}>
                     Импорт
                   </Button>
                 </Menu.Item>
@@ -299,7 +322,7 @@ class Importer extends React.Component {
             </Fragment>
           )}
           <Menu.Item>
-            <Button onClick={this.openFile}>
+            <Button onClick={this.onOpenFile}>
               Открыть файл
             </Button>
           </Menu.Item>
@@ -311,11 +334,15 @@ class Importer extends React.Component {
   render() {
     return (
       <Dimmer.Dimmable dimmed={this.state.loading}>
-        {this.menu()}
-        {this.data()}
+        <Grid padded columns={1}>
+          <Grid.Column>
+            {this.menu()}
+            {this.data()}
+          </Grid.Column>
+        </Grid>
       </Dimmer.Dimmable>
     )
   }
 }
 
-export default Importer
+export default ProductImporter

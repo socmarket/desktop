@@ -92,6 +92,7 @@ function SettingsReducer (state = {
         defaultCurrencyId                 : action.settings.defaultCurrencyId,
         defaultSaleMargin                 : action.settings.defaultSaleMargin,
         defaultUnitId                     : action.settings.defaultUnitId,
+        barcodePrefix                     : "Z",
         theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
         showConsignmentHistoryInSaleCheck : true,
       })

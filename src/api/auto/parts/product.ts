@@ -157,7 +157,7 @@ export default function initProductApi(db: Database): ProductApi {
       return db.selectOne(selectProductWithSameBarcodeSql, { $barcode: barcode, $id: id })
     },
     importProducts: (args) => {
-      const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, onRowDone, onError } = args
+      const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, onRowDone } = args
       const cols = getC(target)
       return db.exec("begin")
         .then(() => console.log("Import started"))
@@ -181,10 +181,10 @@ export default function initProductApi(db: Database): ProductApi {
           }
         }))
         .then(_ => db.exec("commit"))
-        .catch(err => {
-          return db.exec("rollback")
-            .then(async () => onError(err))
-        })
+        .catch(err =>
+          db.exec("rollback")
+          .then(function(){ throw err; })
+        )
     },
     chooseFile: () => {
       const filesPromise = dialog.showOpenDialog({

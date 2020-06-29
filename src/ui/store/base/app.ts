@@ -14,6 +14,9 @@ const AppActions = {
   openAutoPartsProductEditor: () => ({
     type: "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR",
   }),
+  openAutoPartsProductImporter: () => ({
+    type: "APP_OPEN_AUTO_PARTS_PRODUCT_IMPORTER",
+  }),
   openClientEditor: () => ({
     type: "APP_OPEN_BASE_CLIENT_EDITOR",
   }),
@@ -38,11 +41,13 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage: "baseDashboard"
+  activePage: "autoPartsProductImporter"
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
       return Object.assign({}, state, { activePage: "autoPartsProductEditor" })
+    case "APP_OPEN_AUTO_PARTS_PRODUCT_IMPORTER":
+      return Object.assign({}, state, { activePage: "autoPartsProductImporter" })
     case "APP_OPEN_AUTO_PARTS_SALE_CHECK_EDITOR":
       return Object.assign({}, state, { activePage: "autoPartsSaleCheckEditor" })
     case "APP_OPEN_AUTO_PARTS_SALE_JOURNAL":

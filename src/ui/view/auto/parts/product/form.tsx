@@ -213,8 +213,10 @@ class ProductForm extends React.Component {
           <Form.Input width={6} label="Бренд"    value={this.state.brand || ""}  onChange={this.onBrandChange} />
         </Form.Group>
         <Button.Group fluid>
-          {this.state.id < 0 && <Button type="button" disabled={!this.validated()} onClick={this.onCreate}>Создать (Shift + Enter)</Button>}
-          {this.state.id > 0 && <Button type="button" disabled={!this.validated()} onClick={this.onUpdate}>Изменить (Shift + Enter)</Button>}
+          {this.state.id < 0 && <Button type="button" color={this.props.theme.mainColor}
+            disabled={!this.validated()} onClick={this.onCreate}>Создать (Shift + Enter)</Button>}
+          {this.state.id > 0 && <Button type="button" color={this.props.theme.mainColor}
+            disabled={!this.validated()} onClick={this.onUpdate}>Изменить (Shift + Enter)</Button>}
         </Button.Group>
       </Form>
     )
@@ -264,7 +266,7 @@ class ProductForm extends React.Component {
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
-            <Segment>
+            <Segment color={this.props.theme.mainColor}>
               {this.form()}
             </Segment>
           </Grid.Column>
