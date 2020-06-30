@@ -72,10 +72,10 @@ function setupUpdater(win) {
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
     const dialogOpts = {
       type: 'info',
-      buttons: ['Restart', 'Later'],
+      buttons: ['Перезапустить', 'Позже'],
       title: 'Application Update',
       message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+      detail: 'Появились обновления для SocMarket. Перезапустите программу чтобы применить их.'
     }
     sendMsg(win, { msg: "update-downloaded", releaseNotes: releaseNotes, releaseName: releaseName })
     dialog.showMessageBox(dialogOpts).then((returnValue) => {
