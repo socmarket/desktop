@@ -49,7 +49,7 @@ function setupUpdater(win) {
     platform = "osx"
   }
 
-  const url = `${server}/update/${platform}/${app.getVersion()}/stable/`
+  const url = `${server}/update/${platform}/${app.getVersion()}/beta/`
 
   autoUpdater.setFeedURL({ url })
 
