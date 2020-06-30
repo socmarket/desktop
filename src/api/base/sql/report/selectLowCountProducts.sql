@@ -44,12 +44,12 @@ from
           productId
         order by
           salecheck.soldAt desc
-        limit 50
+        limit 200
       ) as t
   ) q
   left join product on product.id = q.productId
   left join category on category.id = product.categoryId
-where (inQuantity - outQuantity - outReservedQuantity) <= 2
+where remainingQuantity <= 1
 order by
-  outQuantity desc,
-  (inQuantity - outQuantity - outReservedQuantity) asc
+  remainingQuantity asc,
+  clientQuantity desc

@@ -213,10 +213,10 @@ class Dashboard extends React.Component {
       id: item.title,
       label: item.title,
       value: item.quantity,
-    }))
+    })).filter(x => x.value > 3)
     return (
       <Segment raised style={{ height: 300 }}>
-        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>Товарный пирог</Label>
+        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>Лучшие продажи</Label>
         <ResponsivePie
             data={data}
             margin={{ top: 20, right: 50, bottom: 20, left: 20 }}
@@ -321,10 +321,10 @@ class Dashboard extends React.Component {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={4}>
-            {this.productPie()}
+            {this.categoryPie()}
           </Grid.Column>
           <Grid.Column width={4}>
-            {this.categoryPie()}
+            {this.productPie()}
           </Grid.Column>
           <Grid.Column width={8}>
             {this.lowCountProducts()}

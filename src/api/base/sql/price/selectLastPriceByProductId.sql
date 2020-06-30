@@ -4,7 +4,7 @@ from (
   select
     price
   from price
-  where productId = $productId and currencyId = $currencyId
+  where productId = $productId and (currencyId = $currencyId or currencyId < 0)
   order by setAt desc
   limit 1
 )

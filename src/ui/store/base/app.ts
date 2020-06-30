@@ -121,7 +121,10 @@ function AppReducer (state = {
     case "APP_CHANGE_USER":
       return Object.assign({}, state, { user: action.user })
     case "APP_AUTH_OK":
-      return Object.assign({}, state, { authenticated: true })
+      return Object.assign({}, state, {
+        authenticated: true,
+        activePage   : "autoPartsSaleCheckEditor",
+      })
     case "APP_AUTH_FAIL":
       return Object.assign({}, state, { authenticated: false })
     case "APP_SIGN_OUT":

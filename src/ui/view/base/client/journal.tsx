@@ -18,7 +18,7 @@ function kindToLocal(kind) {
   switch (kind) {
     case "moneyIn"  : local = "оплата долга"  ; break
     case "moneyOut" : local = "задолженность" ; break
-    case "sale"     : local = "долг за товар" ; break
+    case "sale"     : local = "покупка товара" ; break
     default         : local = "неизвестно"    ; break
   }
   return local
@@ -130,7 +130,7 @@ class ClientJournal extends React.Component {
       kind         : kindToLocal(item.kind),
     }))
     return (
-      <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
+      <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1} style={{ flex: "1 1 auto", overflow: "auto"}}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="exchange" />
           {"Расчёт с " + this.props.client.name}

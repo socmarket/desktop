@@ -5,7 +5,7 @@ select
   round(salecheck.discount / 100.0, 2) as discount,
   round(salecheck.change / 100.0, 2)   as change,
   salecheck.soldAt                     as soldAt,
-  date(salecheck.soldAt)               as soldAtDate,
+  date(salecheck.soldAt, 'localtime')  as soldAtDate,
   (
     select sum ((salecheckitem.quantity - coalesce(ret.quantity, 0)) * price) / 10000.0 as cost
     from salecheckitem

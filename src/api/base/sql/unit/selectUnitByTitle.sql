@@ -7,4 +7,4 @@ from
 where
   unit.titleLower like '%' || $pattern || '%'
 order by
-  unit.title asc
+  unit.id asc

@@ -40,4 +40,6 @@ from (
     group by consignment.id
   ) t
 ) t
+where
+  round(amount) <> 0
 order by registeredAt desc

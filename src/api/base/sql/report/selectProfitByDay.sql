@@ -1,9 +1,9 @@
 select
   day,
-  sum(cost) as cost,
-  sum(revenue) as revenue,
-  sum(credit) as credit,
-  sum(revenue) - sum(cost) as profit
+  round(sum(cost))                as cost,
+  round(sum(revenue))             as revenue,
+  round(sum(credit))              as credit,
+  round(sum(revenue) - sum(cost)) as profit
 from
   (
     select

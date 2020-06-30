@@ -8,4 +8,4 @@ where
   currency.titleLower    like '%' || $pattern || '%' or
   currency.notationLower like '%' || $pattern || '%'
 order by
-  currency.title asc
+  currency.id asc

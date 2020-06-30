@@ -45,4 +45,6 @@ from (
     group by salecheck.id
   ) t
 ) t
+where
+  round(amount) <> 0
 order by registeredAt desc
