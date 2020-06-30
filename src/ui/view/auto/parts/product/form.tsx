@@ -286,7 +286,7 @@ class ProductForm extends React.Component {
         <Grid.Row>
           <Grid.Column width={8}>
             <Segment style={{ height: "100%" }}>
-              <Segment inverted color="grey" style={{ height: "100%" }}>
+              <Segment inverted color={this.props.opt.theme.mainColor} style={{ height: "100%" }}>
                 { this.state.errorMsg.length > 0 &&
                   <Message error>
                     {this.state.errorMsg}
