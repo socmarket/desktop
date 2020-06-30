@@ -5,7 +5,7 @@ import React, { Fragment } from "react";
 import { connect }         from "react-redux";
 import {
   Button, Menu, Segment, Label, Icon,
-  Dropdown,
+  Dropdown, Modal, Grid, Divider,
 }                          from "semantic-ui-react"
 
 const sales = [
@@ -35,12 +35,45 @@ class MainMenu extends React.Component {
   constructor(props) {
     super(props)
     this.onColorDoubleClick = this.onColorDoubleClick.bind(this)
+    this.state = {
+      showAbout: false,
+    }
   }
 
   onColorDoubleClick(ev) {
     if (ev.shiftKey && ev.ctrlKey && this.props.app.user === "admin") {
       this.props.openSettingsEditor()
     }
+  }
+
+  about() {
+    const theme = this.props.opt.theme
+    return (
+      <Modal open size="mini" centered={false} onClose={() => this.setState({ showAbout: false })}>
+        <Modal.Content>
+          <Segment inverted color={theme.mainColor} textAlign="center">
+            <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>SOC</Label>
+            <Label color="green" size="big" style={{ padding: 5, margin: 0 }}>Market</Label>
+            <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>2C</Label>
+          </Segment>
+          <Segment>
+            <Grid columns={2}>
+              <Grid.Column textAlign="right">
+                <p>Версия</p>
+                <p>Сборка</p>
+                <p>Дата сборки</p>
+              </Grid.Column>
+              <Grid.Column>
+                <p>{VERSION.value}</p>
+                <p>{VERSION.hash.substring(0, 8)}</p>
+                <p>{VERSION.date.substring(0, 10)}</p>
+              </Grid.Column>
+            </Grid>
+            <Divider vertical>|</Divider>
+          </Segment>
+        </Modal.Content>
+      </Modal>
+    )
   }
 
   menu() {
@@ -173,6 +206,9 @@ class MainMenu extends React.Component {
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Item>
+          <Menu.Item onClick={() => this.setState({ showAbout: true })}>
+            Версия
+          </Menu.Item>
           <Menu.Item onClick={() => this.props.signOut()}>
             Выйти
           </Menu.Item>
@@ -183,9 +219,12 @@ class MainMenu extends React.Component {
 
   render() {
     return (
-      <Segment inverted basic color={this.props.opt.theme.mainColor} style={{ paddingTop: 0, paddingBottom: 5 }}>
-        {this.menu()}
-      </Segment>
+      <Fragment>
+        <Segment inverted basic color={this.props.opt.theme.mainColor} style={{ paddingTop: 0, paddingBottom: 5 }}>
+          {this.menu()}
+        </Segment>
+        { this.state.showAbout && this.about() }
+      </Fragment>
     );
   }
 }

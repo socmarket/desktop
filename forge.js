@@ -27,7 +27,7 @@ module.exports = {
     {
       name: "@electron-forge/maker-squirrel",
       config: {
-        name: "socmag_electro"
+        name: "socmarket"
       }
     },
     {
