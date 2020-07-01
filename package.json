@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "SocMarket2C",
-  "version": "0.0.1-beta.2",
+  "version": "0.0.1-beta.3",
   "description": "Social Market",
   "main": "./.webpack/main",
   "license": "MIT",
