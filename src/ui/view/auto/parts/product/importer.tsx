@@ -85,6 +85,8 @@ class ProductImporter extends React.Component {
         excludedRows: this.state.excludedRows,
         unitId: this.state.unitId,
         categoryId: this.state.categoryId,
+        currencyId: this.state.currencyId,
+        targetCurrencyId: this.props.opt.defaultCurrencyId,
         onRowDone: (r, row) => {
           this.counterRef.current.innerText = r
         },
@@ -96,7 +98,8 @@ class ProductImporter extends React.Component {
           failure: false,
         })
       })
-      .catch(_ => {
+      .catch(err => {
+        console.log(err)
         this.setState({
           loading: false,
           success: false,

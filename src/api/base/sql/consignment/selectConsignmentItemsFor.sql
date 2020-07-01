@@ -17,7 +17,7 @@ select
   )                                                        as cost,
   consignmentitem.unitId                                   as uniId,
   consignmentitem.currencyId                               as currencyId,
-  product.title                                            as productTitle,
+  coalesce(product.title, "")                              as productTitle,
   unit.notation                                            as unitNotation,
   currency.notation                                        as currencyNotation,
   coalesce(ret.quantity / 100.00, 0)                       as retQuantity

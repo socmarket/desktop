@@ -5,6 +5,9 @@ import insertBarcodeSql                from "./sql/product/insertBarcode.sql"
 import selectProductWithSameBarcodeSql from "./sql/product/selectProductWithSameBarcode.sql"
 import insertProductSql                from "./sql/product/insertProduct.sql"
 import updateProductSql                from "./sql/product/updateProduct.sql"
+import selectIfProductExistsSql        from "./sql/product/selectIfProductExists.sql"
+import importCurrentConsignmentItemSql from "./sql/product/importCurrentConsignmentItem.sql"
+import selectImportedProductSql        from "./sql/product/selectImportedProduct.sql"
 
 import path from "path"
 import xlsx from "xlsx"
@@ -66,16 +69,20 @@ function getC(target) {
     barcodeC  : col.barcode  ? col.barcode  : false,
     priceC    : col.price    ? col.price    : false,
     quantityC : col.quantity ? col.quantity : false,
+    barcodeC  : col.barcode  ? col.barcode  : false,
   }
 }
 
 function getR(sheet, col, r) {
-  const $title       = col.titleC  ? String(getV(sheet, col.titleC , r)) : ""
-  const $model       = col.modelC  ? String(getV(sheet, col.modelC , r)) : ""
-  const $engine      = col.engineC ? String(getV(sheet, col.engineC, r)) : ""
-  const $brand       = col.brandC  ? String(getV(sheet, col.brandC , r)) : ""
-  const $oemNo       = col.oemNoC  ? String(getV(sheet, col.oemNoC , r)) : ""
-  const $serial      = col.serialC ? String(getV(sheet, col.serialC, r)) : ""
+  const $title       = col.titleC    ? String(getV(sheet, col.titleC , r))   : ""
+  const $model       = col.modelC    ? String(getV(sheet, col.modelC , r))   : ""
+  const $engine      = col.engineC   ? String(getV(sheet, col.engineC, r))   : ""
+  const $brand       = col.brandC    ? String(getV(sheet, col.brandC , r))   : ""
+  const $oemNo       = col.oemNoC    ? String(getV(sheet, col.oemNoC , r))   : ""
+  const $serial      = col.serialC   ? String(getV(sheet, col.serialC, r))   : ""
+  const $barcode     = col.barcodeC  ? String(getV(sheet, col.barcodeC, r))  : ""
+  const $price       = col.priceC    ? Number(getV(sheet, col.priceC, r))    : ""
+  const $quantity    = col.quantityC ? Number(getV(sheet, col.quantityC, r)) : ""
 
   const $titleLower  = $title  ? $title.toLowerCase()  : ""
   const $modelLower  = $model  ? $model.toLowerCase()  : ""
@@ -93,20 +100,45 @@ function getR(sheet, col, r) {
     , $brandLower  : $brandLower
     , $oemNo       : $oemNo
     , $serial      : $serial
+    , $barcode     : $barcode
+    , $price       : $price
+    , $quantity    : $quantity
   }
 }
 
 async function productExistsF(db, row) {
   const p = await db.selectOne(
-    "select id from product where title = $title and model = $model and engine = $engine and brand = $brand",
+    selectIfProductExistsSql,
     {
-      $title : row.$title,
-      $model : row.$model,
-      $engine: row.$engine,
-      $brand : row.$brand,
+      $title   : row.$title,
+      $oemNo   : row.$oemNo,
+      $serial  : row.$serial,
+      $barcode : row.$barcode,
     }
   )
   return Boolean(p)
+}
+
+async function importConsignment(db, item) {
+  return db.selectOne(selectImportedProductSql, {
+      $oemNo   : item.$oemNo,
+      $serial  : item.$serial,
+      $barcode : item.$barcode,
+    })
+    .then(product => {
+      if (product) {
+        return db.exec(importCurrentConsignmentItemSql, {
+          $productId  : product.id,
+          $quantity   : item.$quantity,
+          $price      : item.$price,
+          $unitId     : product.unitId,
+          $currencyId : item.$currencyId,
+        })
+      } else {
+        console.log("product not found: ", item)
+        Promise.resolve()
+      }
+    })
 }
 
 export default function initProductApi(db: Database): ProductApi {
@@ -159,29 +191,50 @@ export default function initProductApi(db: Database): ProductApi {
     selectProductWithSameBarcode: (barcode, id) => {
       return db.selectOne(selectProductWithSameBarcodeSql, { $barcode: barcode, $id: id })
     },
-    importProducts: (args) => {
-      const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, currencyId, onRowDone } = args
+    importProducts: async (args) => {
+      const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, currencyId, targetCurrencyId, onRowDone } = args
       const importCols = getC(target)
-      if (importCols.price)
+      var priceRatio = 1
+      if (importCols.quantityC && importCols.priceC) {
+        await db.selectOne(
+          "select rate from exchangerate where fromCurrencyId = ? and toCurrencyId = ? order by updatedAt desc limit 1",
+          [ currencyId, targetCurrencyId ]
+        ).then(row => {
+          if (row)
+            priceRatio = row.rate
+        })
+      }
       return db.exec("begin")
         .then(() => console.log("Import started"))
-        .then(_ => traverseF(rect.rows, (ridx) => {
-          const row = getR(sheet, importCol, ridx)
+        .then(_ => traverseF(rect.rows, async (ridx) => {
+          const row = getR(sheet, importCols, ridx)
           if (!excludedRows.includes(ridx)) {
-            return ifNotF(productExistsF(db, row), _ =>
-              genBarcode(db, barcodePrefix)
-                .then(barcode =>
-                  db.exec(insertProductSql, {
-                    $barcode       : barcode,
-                    $unitId        : unitId,
-                    $categoryId    : categoryId,
-                    $notes         : "",
-                    $notesLower    : "",
-                    ...row
-                  })
-                )
-                .then(_ => onRowDone(ridx, row))
-            )
+            let done = false;
+            const exists = await productExistsF(db, row)
+            const barcode = importCols.barcodeC ? row.$barcode : await genBarcode(db, barcodePrefix);
+            const item = {
+              ...row,
+              $barcode    : barcode,
+              $unitId     : unitId,
+              $categoryId : categoryId,
+              $notes      : "",
+              $notesLower : "",
+            }
+            if (!exists) {
+              const { $price, $quantity, ...product } = item
+              await db.exec(insertProductSql, product)
+              done = true
+            }
+            if (importCols.quantityC && importCols.priceC) {
+              await importConsignment(db, {
+                ...item,
+                $price      : item.$price * priceRatio,
+                $currencyId : targetCurrencyId,
+              })
+              done = true
+            }
+            if (done) onRowDone(ridx, item)
+            return Promise.resolve()
           }
         }))
         .then(_ => db.exec("commit"))

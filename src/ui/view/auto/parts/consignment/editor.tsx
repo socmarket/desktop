@@ -5,7 +5,8 @@ import ProductPicker from "View/auto/parts/product/picker"
 import SupplierPicker  from "View/base/supplier/picker"
 import {
   numberInputWithRef,
-  ifNumberF
+  ifNumberF,
+  spacedNum,
 }                    from "Util"
 
 import React, { Fragment } from "react"
@@ -223,13 +224,13 @@ class ConsignmentEditor extends React.Component {
           <Grid padded>
             <Grid.Row>
               <Grid.Column width={6}><Header as="h2">{t("cost")}</Header></Grid.Column>
-              <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{this.state.cost}</Header></Grid.Column>
+              <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{spacedNum(this.state.cost)}</Header></Grid.Column>
             </Grid.Row>
             <Grid.Row>
               <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
               <Grid.Column width={10}>
                 <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
-                  {this.state.cost}
+                  {spacedNum(this.state.cost)}
                 </Header>
               </Grid.Column>
             </Grid.Row>
