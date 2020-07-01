@@ -103,6 +103,13 @@ export default class UnitPicker extends React.Component {
             minHeight: height,
             height: height,
           }),
+          valueContainer: (base) => ({
+            ...base,
+            paddingTop: 0,
+            paddingBottom: 0,
+            minHeight: height,
+            height: height,
+          }),
           input: (provided) => ({
             ...provided,
             paddingTop: 0,

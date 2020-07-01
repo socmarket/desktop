@@ -1,3 +1,7 @@
+import UnitPicker     from "View/base/unit/picker"
+import CategoryPicker from "View/base/category/picker"
+import CurrencyPicker from "View/base/currency/picker"
+
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import moment from "moment"
@@ -8,9 +12,6 @@ import {
   Dropdown, Dimmer, Loader, Icon
 } from "semantic-ui-react"
 
-import UnitPicker     from "View/base/unit/picker"
-import CategoryPicker from "View/base/category/picker"
-
 class ProductImporter extends React.Component {
 
   constructor(props) {
@@ -19,6 +20,7 @@ class ProductImporter extends React.Component {
     this.onOpenFile       = this.onOpenFile.bind(this)
     this.onUnitPick       = this.onUnitPick.bind(this)
     this.onCategoryPick   = this.onCategoryPick.bind(this)
+    this.onCurrencyPick   = this.onCurrencyPick.bind(this)
     this.onImportProducts = this.onImportProducts.bind(this)
 
     this.counterRef = React.createRef()
@@ -39,10 +41,12 @@ class ProductImporter extends React.Component {
       target: [],
       excludedRows: [],
       importedRows: 0,
-      categoryId: -1,
+      categoryId: 1,
       categoryTitle: "",
-      unitId: -1,
+      unitId: 1,
       unitTitle: "",
+      currencyId: 1,
+      currencyTitle: "",
     }
   }
 
@@ -57,6 +61,13 @@ class ProductImporter extends React.Component {
     this.setState({
       categoryId: category.id,
       categoryTitle: category.title,
+    })
+  }
+
+  onCurrencyPick(currency) {
+    this.setState({
+      currencyId: currency.id,
+      currencyTitle: currency.title,
     })
   }
 
@@ -242,6 +253,9 @@ class ProductImporter extends React.Component {
                       {this.targetTag(c, "brand", "Бренд")}
                       {this.targetTag(c, "oemNo", "OEM")}
                       {this.targetTag(c, "serial", "Серийник")}
+                      {this.targetTag(c, "barcode", "Штрихкод")}
+                      {this.targetTag(c, "quantity", "Кол-во")}
+                      {this.targetTag(c, "price", "Цена")}
                     </Dropdown.Menu>
                   </Dropdown>
                 </Table.HeaderCell>
@@ -273,41 +287,47 @@ class ProductImporter extends React.Component {
             {this.state.fileName}
           </Menu.Item>
         }
-        <Menu.Item>Ед.изм.</Menu.Item>
-        <div style={{ width: 150, paddingTop: 8, marginLeft: 10 }}>
-          <UnitPicker
-            api={this.props.api}
-            value={this.state.unitId}
-            onPick={this.onUnitPick}
-          />
-        </div>
-        <Menu.Item>Категория</Menu.Item>
-        <div style={{ width: 150, paddingTop: 8, marginLeft: 10 }}>
-          <CategoryPicker
-            api={this.props.api}
-            value={this.state.categoryId}
-            onPick={this.onCategoryPick}
-          />
-        </div>
+        { this.state.activeSheetName !== "" && (
+          <Fragment>
+            <Menu.Item>
+              Всего: {this.state.rect.rows.length - this.state.excludedRows.length}
+            </Menu.Item>
+            <Menu.Item>
+              Готово: <p ref={this.counterRef}></p>
+            </Menu.Item>
+          </Fragment>
+        )}
+        { this.state.loading && <Menu.Item><Loader active={this.state.loading} size="small" /></Menu.Item> }
+        { !this.state.loading && this.state.success && <Menu.Item><Icon name="check" color="green" /></Menu.Item> }
+        { !this.state.loading && this.state.failure && <Menu.Item><Icon name="x"     color="red"   /></Menu.Item> }
         <Menu.Menu position="right">
-          { this.state.loading && <Menu.Item><Loader active={this.state.loading} size="small" /></Menu.Item> }
-          { !this.state.loading && this.state.success && <Menu.Item><Icon name="check" color="green" /></Menu.Item> }
-          { !this.state.loading && this.state.failure && <Menu.Item><Icon name="x"     color="red"   /></Menu.Item> }
+          <Menu.Item>Ед</Menu.Item>
+          <div style={{ width: 120, paddingTop: 8, marginRight: 10 }}>
+            <UnitPicker
+              api={this.props.api}
+              value={this.state.unitId}
+              onPick={this.onUnitPick}
+            />
+          </div>
+          <Menu.Item>Кат</Menu.Item>
+          <div style={{ width: 120, paddingTop: 8, marginRight: 10 }}>
+            <CategoryPicker
+              api={this.props.api}
+              value={this.state.categoryId}
+              onPick={this.onCategoryPick}
+            />
+          </div>
+          <Menu.Item>Валюта</Menu.Item>
+          <div style={{ width: 120, paddingTop: 8, marginRight: 10 }}>
+            <CurrencyPicker
+              api={this.props.api}
+              size="small"
+              value={this.state.currencyId}
+              onPick={this.onCurrencyPick}
+            />
+          </div>
           { this.state.activeSheetName !== "" && (
             <Fragment>
-              <Menu.Item>
-                Всего: {this.state.rect.rows.length - this.state.excludedRows.length}
-              </Menu.Item>
-              <Menu.Item>
-                Готово: <p ref={this.counterRef}></p>
-              </Menu.Item>
-              { this.state.unitId > 0 && this.state.target.filter(t => t.key === "title").length > 0 &&
-                <Menu.Item>
-                  <Button onClick={this.onImportProducts}>
-                    Импорт
-                  </Button>
-                </Menu.Item>
-              }
               <Dropdown item text={"Стр: " + this.state.activeSheetName}>
                 <Dropdown.Menu>
                   {wb.SheetNames.map((name, idx) =>
@@ -321,10 +341,13 @@ class ProductImporter extends React.Component {
               </Dropdown>
             </Fragment>
           )}
+          { this.state.activeSheetName !== "" && this.state.unitId > 0 && this.state.target.filter(t => t.key === "title").length > 0 && (
+            <Menu.Item>
+              <Button icon="cloud download" onClick={this.onImportProducts} />
+            </Menu.Item>
+          )}
           <Menu.Item>
-            <Button onClick={this.onOpenFile}>
-              Открыть файл
-            </Button>
+            <Button icon="folder open" onClick={this.onOpenFile} />
           </Menu.Item>
         </Menu.Menu>
       </Menu>

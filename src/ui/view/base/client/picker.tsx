@@ -98,22 +98,19 @@ export default class ClientPicker extends React.Component {
             minHeight: height,
             height: height,
           }),
+          valueContainer: (base) => ({
+            ...base,
+            paddingTop: 0,
+            paddingBottom: 0,
+            minHeight: height,
+            height: height,
+          }),
           input: (provided) => ({
             ...provided,
             paddingTop: 0,
             paddingBottom: 0,
             minHeight: height,
             height: height,
-          }),
-          dropdownIndicator: (base) => ({
-            ...base,
-            paddingTop: 0,
-            paddingBottom: 0,
-          }),
-          clearIndicator: (base) => ({
-            ...base,
-            paddingTop: 0,
-            paddingBottom: 0,
           }),
         }}
       />

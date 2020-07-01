@@ -137,7 +137,7 @@ class MainMenu extends React.Component {
                   icon="file excel"
                   active={this.props.app.activePage === "autoPartsProductImporter"}
                   onClick={() => this.props.openAutoPartsProductImporter()}
-                  text="Загрузка описаний из Excel"
+                  text="Загрузка товаров из Excel"
                 />
                 <Dropdown.Item
                   icon="sitemap"

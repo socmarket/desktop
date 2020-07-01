@@ -91,6 +91,13 @@ export default class CategoryPicker extends React.Component {
           container: (base) => ({
             ...base,
           }),
+          valueContainer: (base) => ({
+            ...base,
+            paddingTop: 0,
+            paddingBottom: 0,
+            minHeight: height,
+            height: height,
+          }),
           control: (base) => ({
             ...base,
             paddingTop: 0,
@@ -104,16 +111,6 @@ export default class CategoryPicker extends React.Component {
             paddingBottom: 0,
             minHeight: height,
             height: height,
-          }),
-          dropdownIndicator: (base) => ({
-            ...base,
-            paddingTop: 0,
-            paddingBottom: 0,
-          }),
-          clearIndicator: (base) => ({
-            ...base,
-            paddingTop: 0,
-            paddingBottom: 0,
           }),
         }}
       />

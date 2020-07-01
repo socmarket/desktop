@@ -57,12 +57,15 @@ function getC(target) {
   var col = {}
   target.forEach(t => { col[t.key] = t.col })
   return {
-    titleC  : col.title  ? col.title  : false,
-    modelC  : col.model  ? col.model  : false,
-    engineC : col.engine ? col.engine : false,
-    brandC  : col.brand  ? col.brand  : false,
-    oemNoC  : col.oemNo  ? col.oemNo  : false,
-    serialC : col.serial ? col.serial : false,
+    titleC    : col.title    ? col.title    : false,
+    modelC    : col.model    ? col.model    : false,
+    engineC   : col.engine   ? col.engine   : false,
+    brandC    : col.brand    ? col.brand    : false,
+    oemNoC    : col.oemNo    ? col.oemNo    : false,
+    serialC   : col.serial   ? col.serial   : false,
+    barcodeC  : col.barcode  ? col.barcode  : false,
+    priceC    : col.price    ? col.price    : false,
+    quantityC : col.quantity ? col.quantity : false,
   }
 }
 
@@ -157,22 +160,23 @@ export default function initProductApi(db: Database): ProductApi {
       return db.selectOne(selectProductWithSameBarcodeSql, { $barcode: barcode, $id: id })
     },
     importProducts: (args) => {
-      const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, onRowDone } = args
-      const cols = getC(target)
+      const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, currencyId, onRowDone } = args
+      const importCols = getC(target)
+      if (importCols.price)
       return db.exec("begin")
         .then(() => console.log("Import started"))
         .then(_ => traverseF(rect.rows, (ridx) => {
-          const row = getR(sheet, cols, ridx)
+          const row = getR(sheet, importCol, ridx)
           if (!excludedRows.includes(ridx)) {
             return ifNotF(productExistsF(db, row), _ =>
               genBarcode(db, barcodePrefix)
                 .then(barcode =>
                   db.exec(insertProductSql, {
-                    $barcode: barcode,
-                    $unitId: unitId,
-                    $categoryId: categoryId,
-                    $notes: "",
-                    $notesLower: "",
+                    $barcode       : barcode,
+                    $unitId        : unitId,
+                    $categoryId    : categoryId,
+                    $notes         : "",
+                    $notesLower    : "",
                     ...row
                   })
                 )
