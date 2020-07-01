@@ -1,10 +1,10 @@
 select
-  category.title                                as categoryTitle,
-  sum(quantity)                                 as inQuantity,
-  sum(coalesce(soldQuantity, 0))                as outQuantity,
-  sum(cost)                                     as inCost,
-  sum(coalesce(soldQuantity, 0) * price)        as outCost,
-  sum(cost - coalesce(soldQuantity, 0) * price) as total
+  category.title                                       as categoryTitle,
+  round(sum(quantity))                                 as inQuantity,
+  round(sum(coalesce(soldQuantity, 0)))                as outQuantity,
+  round(sum(cost))                                     as inCost,
+  round(sum(coalesce(soldQuantity, 0) * price))        as outCost,
+  round(sum(cost - coalesce(soldQuantity, 0) * price)) as total
 from
   (
     select
