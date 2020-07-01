@@ -1,7 +1,8 @@
-import selectProductPieSql from "./sql/report/selectProductPie.sql"
-import selectCategoryPieSql from "./sql/report/selectCategoryPie.sql"
-import selectProfitByDaySql from "./sql/report/selectProfitByDay.sql"
+import selectProductPieSql       from "./sql/report/selectProductPie.sql"
+import selectCategoryPieSql      from "./sql/report/selectCategoryPie.sql"
+import selectProfitByDaySql      from "./sql/report/selectProfitByDay.sql"
 import selectLowCountProductsSql from "./sql/report/selectLowCountProducts.sql"
+import selectTurnoverSql         from "./sql/report/selectTurnover.sql"
 
 export default function initReportApi(db: Database): ReportApi {
   return {
@@ -65,7 +66,19 @@ export default function initReportApi(db: Database): ReportApi {
             return { items: [] }
           }
         })
-      
     },
+    turnover: (start, end) => (
+      db.select(selectTurnoverSql)
+        .then(items => {
+          return {
+            items       : items,
+            inQuantity  : items.map(x => x.inQuantity ).reduce((a, b) => a + b, 0),
+            outQuantity : items.map(x => x.outQuantity).reduce((a, b) => a + b, 0),
+            inCost      : items.map(x => x.inCost     ).reduce((a, b) => a + b, 0),
+            outCost     : items.map(x => x.outCost    ).reduce((a, b) => a + b, 0),
+            total       : items.map(x => x.total      ).reduce((a, b) => a + b, 0),
+          }
+        })
+    ),
   }
 }

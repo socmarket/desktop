@@ -70,6 +70,9 @@ const AppActions = {
   openDashboard: () => ({
     type: "APP_OPEN_BASE_DASHBOARD",
   }),
+  openTurnover: () => ({
+    type: "APP_OPEN_BASE_TURNOVER",
+  }),
   openSettingsEditor: () => ({
     type: "APP_OPEN_BASE_SETTINGS_EDITOR",
   }),
@@ -116,6 +119,8 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "basePriceEditor" })
     case "APP_OPEN_BASE_DASHBOARD":
       return Object.assign({}, state, { activePage: "baseDashboard" })
+    case "APP_OPEN_BASE_TURNOVER":
+      return Object.assign({}, state, { activePage: "baseTurnover" })
     case "APP_OPEN_BASE_SETTINGS_EDITOR":
       return Object.assign({}, state, { activePage: "baseSettingsEditor" })
     case "APP_CHANGE_USER":

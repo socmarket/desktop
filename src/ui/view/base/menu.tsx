@@ -24,6 +24,7 @@ const products = [
 
 const calcs = [
   "baseDashboard",
+  "baseTurnover",
   "basePriceEditor",
   "baseClientEditor",
   "baseSupplierEditor",
@@ -163,6 +164,12 @@ class MainMenu extends React.Component {
               active={this.props.app.activePage === "baseDashboard"}
               onClick={() => this.props.openDashboard()}
               text="Дашборд"
+            />
+            <Dropdown.Item
+              icon="refresh"
+              active={this.props.app.activePage === "baseTurnover"}
+              onClick={() => this.props.openTurnover()}
+              text="Оборот"
             />
             <Dropdown.Item
               icon="chart line"

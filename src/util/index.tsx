@@ -29,4 +29,6 @@ function asDate(value) {
   return moment.utc(value).local().format("DD-MM-YYYY HH:mm")
 }
 
-export { numberInputWithRef, inputWithRef, ifNumberF, asDate }
+const spacedNum = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+
+export { numberInputWithRef, inputWithRef, ifNumberF, asDate, spacedNum }

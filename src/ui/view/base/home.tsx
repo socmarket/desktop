@@ -14,6 +14,7 @@ import BaseUnitEditor     from "View/base/unit/editor"
 import BaseCategoryEditor from "View/base/category/editor"
 import BasePriceEditor    from "View/base/price/editor"
 import BaseDashboard      from "View/base/dashboard"
+import BaseTurnover       from "View/base/turnover"
 import BaseSettingsEditor from "View/base/settings/editor"
 
 import React, { Fragment } from "react"
@@ -34,6 +35,7 @@ const ViewMap = {
   "baseCategoryEditor" : (props) => <BaseCategoryEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "basePriceEditor"    : (props) => <BasePriceEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseDashboard"      : (props) => <BaseDashboard      api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "baseTurnover"       : (props) => <BaseTurnover       api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseSettingsEditor" : (props) => <BaseSettingsEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
 }
 
