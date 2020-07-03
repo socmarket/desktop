@@ -9,6 +9,7 @@ import selectIfProductExistsSql        from "./sql/product/selectIfProductExists
 import importCurrentConsignmentItemSql from "./sql/product/importCurrentConsignmentItem.sql"
 import selectImportedProductSql        from "./sql/product/selectImportedProduct.sql"
 import insertConsignmentPriceSql       from "./sql/product/insertConsignmentPrice.sql"
+import selectProductFlowSql            from "./sql/product/selectProductFlow.sql"
 
 import path from "path"
 import xlsx from "xlsx"
@@ -212,6 +213,7 @@ export default function initProductApi(db: Database): ProductApi {
     selectProductWithSameBarcode: (barcode, id) => {
       return db.selectOne(selectProductWithSameBarcodeSql, { $barcode: barcode, $id: id })
     },
+    selectProductFlow: (productId) => db.select(selectProductFlowSql, { $productId: productId }),
     importProducts: async (args) => {
       const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, currencyId, targetCurrencyId, onRowDone } = args
       const importCols = getC(target)

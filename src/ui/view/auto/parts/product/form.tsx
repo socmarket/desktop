@@ -1,26 +1,34 @@
 import UnitPicker     from "View/base/unit/picker"
 import CategoryPicker from "View/base/category/picker"
+import {
+  asDate,
+  actionInputWithRef,
+}                     from "Util"
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import {
-  Grid, Form, Input, Button,
-  Segment, Message, Modal,
-  Container, Divider,
+  Grid, Form, Input, Button, Segment,
+  Message, Modal, Container, Divider,
+  Menu, Table,
 } from "semantic-ui-react"
 
-const inputWithRef = (ref, icon, onClickF) => (props) => (
-  <div className="ui action input">
-    <input ref={ref} {...props} />
-    { icon && <Button type="button" icon={icon} onClick={onClickF} /> }
-  </div>
-)
+function opToLocal(op) {
+  var local = ""
+  switch (op) {
+    case "sale"        : local = "продажа" ; break
+    case "consignment" : local = "покупка" ; break
+    case "inPriceSet"  : local = "цена покупки" ; break
+    case "outPriceSet" : local = "цена продажи" ; break
+    default            : local = "неизвестно" ; break
+  }
+  return local
+}
 
 class ProductForm extends React.Component {
 
   constructor(props) {
     super(props)
-    this.productApi = props.api.autoParts.product
 
     this.onCreate           = this.onCreate.bind(this)
     this.onUpdate           = this.onUpdate.bind(this)
@@ -39,22 +47,30 @@ class ProductForm extends React.Component {
     this.onLabelCountChange = this.onLabelCountChange.bind(this)
 
     this.printerApi = this.props.api.printer
+    this.productApi = props.api.autoParts.product
+
     this.state = props.product
     this.state.errorMsg = ""
     this.state.barcodeValidated = props.product.barcode.length > 0
     this.state.titleValidated   = props.product.title.length > 0
     this.state.labelCount = 1
+    this.state.activeTab = "history"
+    this.state.history = []
 
     this.barcodeInputRef     = React.createRef()
     this.labelCountInputRef  = React.createRef()
     this.barcodeDupCheckerId = React.createRef(-1)
 
-    this.barcodeInput    = inputWithRef(this.barcodeInputRef, "add", this.onNewBarcode)
-    this.labelCountInput = inputWithRef(this.labelCountInputRef, "barcode", this.onPrintLabel)
+    this.barcodeInput    = actionInputWithRef(this.barcodeInputRef, "add", this.onNewBarcode)
+    this.labelCountInput = actionInputWithRef(this.labelCountInputRef, "barcode", this.onPrintLabel)
   }
 
   componentDidMount() {
     this.focusBarcode()
+    this.productApi.selectProductFlow(this.props.product.id)
+      .then(history => this.setState({
+        history: history,
+      }))
   }
 
   focusBarcode() {
@@ -201,7 +217,7 @@ class ProductForm extends React.Component {
 
   form() {
     return (
-      <Form size="small" width={16} onKeyDown={this.onKeyDown}>
+      <Form size="small" width={16} onKeyDown={this.onKeyDown} error={this.state.errorMsg.length > 0}>
         <Form.Group>
           <Form.Input
             width={7}
@@ -220,6 +236,7 @@ class ProductForm extends React.Component {
             <CategoryPicker api={this.props.api} value={this.state.categoryId} onPick={this.onCategoryChange} />
           </Form.Field>
         </Form.Group>
+        <Message error>{this.state.errorMsg}</Message>
         <Form.Group>
           <Form.Input width={16} label="Наименование" value={this.state.title || ""} onChange={this.onTitleChange} error={!this.state.titleValidated} />
         </Form.Group>
@@ -280,21 +297,52 @@ class ProductForm extends React.Component {
     )
   }
 
+  photos() {
+    return (
+      <Segment inverted color={this.props.opt.theme.mainColor} style={{ height: "100%" }}>
+        <p>Фотографии товара</p>
+        <p>Будет доступно в новых обновлениях программы</p>
+      </Segment>
+    )
+  }
+
+  history() {
+    return (
+      <Table celled>
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell textAlign="center">Дата     </Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">Операция</Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          {this.state.history.map((item, idx) => (
+            <Table.Row key={idx}>
+              <Table.Cell textAlign="center">{asDate(item.opAt) }</Table.Cell>
+              <Table.Cell textAlign="right" >{item.amount       }</Table.Cell>
+              <Table.Cell                   >{item.units        }</Table.Cell>
+              <Table.Cell                   >{opToLocal(item.op)}</Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    )
+  }
+
   content() {
     return (
       <Grid>
         <Grid.Row>
           <Grid.Column width={8}>
-            <Segment style={{ height: "100%" }}>
-              <Segment inverted color={this.props.opt.theme.mainColor} style={{ height: "100%" }}>
-                { this.state.errorMsg.length > 0 &&
-                  <Message error>
-                    {this.state.errorMsg}
-                  </Message>
-                }
-                <p>Фотографии товара</p>
-                <p>Будет доступно в новых обновлениях программы</p>
-              </Segment>
+            <Menu attached="top" inverted color={this.props.theme.mainColor}>
+              <Menu.Item name="История" active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
+              <Menu.Item name="Фото"    active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
+            </Menu>
+            <Segment attached="bottom" style={{ height: "92%" }}>
+              { this.state.activeTab === "history" && this.history() }
+              { this.state.activeTab === "photos"  && this.photos()  }
             </Segment>
           </Grid.Column>
           <Grid.Column width={8}>
