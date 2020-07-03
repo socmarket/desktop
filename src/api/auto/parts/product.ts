@@ -8,6 +8,7 @@ import updateProductSql                from "./sql/product/updateProduct.sql"
 import selectIfProductExistsSql        from "./sql/product/selectIfProductExists.sql"
 import importCurrentConsignmentItemSql from "./sql/product/importCurrentConsignmentItem.sql"
 import selectImportedProductSql        from "./sql/product/selectImportedProduct.sql"
+import insertConsignmentPriceSql       from "./sql/product/insertConsignmentPrice.sql"
 
 import path from "path"
 import xlsx from "xlsx"
@@ -141,6 +142,26 @@ async function importConsignment(db, item) {
     })
 }
 
+async function importConsignmentPrice(db, item) {
+  return db.selectOne(selectImportedProductSql, {
+      $oemNo   : item.$oemNo,
+      $serial  : item.$serial,
+      $barcode : item.$barcode,
+    })
+    .then(product => {
+      if (product) {
+        return db.exec(insertConsignmentPriceSql, {
+          $productId  : product.id,
+          $price      : item.$price,
+          $currencyId : item.$currencyId,
+        })
+      } else {
+        console.log("product not found: ", item)
+        Promise.resolve()
+      }
+    })
+}
+
 export default function initProductApi(db: Database): ProductApi {
   return {
     pick: (id: number) => db.selectOne<Product>(selectProductByIdSql, { $productId: id }),
@@ -195,7 +216,7 @@ export default function initProductApi(db: Database): ProductApi {
       const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, currencyId, targetCurrencyId, onRowDone } = args
       const importCols = getC(target)
       var priceRatio = 1
-      if (importCols.quantityC && importCols.priceC) {
+      if (importCols.priceC) {
         await db.selectOne(
           "select rate from exchangerate where fromCurrencyId = ? and toCurrencyId = ? order by updatedAt desc limit 1",
           [ currencyId, targetCurrencyId ]
@@ -204,6 +225,7 @@ export default function initProductApi(db: Database): ProductApi {
             priceRatio = row.rate
         })
       }
+      console.log(currencyId, targetCurrencyId, priceRatio)
       return db.exec("begin")
         .then(() => console.log("Import started"))
         .then(_ => traverseF(rect.rows, async (ridx) => {
@@ -223,6 +245,14 @@ export default function initProductApi(db: Database): ProductApi {
             if (!exists) {
               const { $price, $quantity, ...product } = item
               await db.exec(insertProductSql, product)
+              done = true
+            }
+            if (importCols.priceC) {
+              await importConsignmentPrice(db, {
+                ...item,
+                $price      : item.$price * priceRatio,
+                $currencyId : targetCurrencyId,
+              })
               done = true
             }
             if (importCols.quantityC && importCols.priceC) {

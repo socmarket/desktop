@@ -69,7 +69,9 @@ class DTable extends React.Component {
   onOpenRow(idx) {
     if (typeof this.props.onOpenRow === "function" &&
       idx >= 0 && idx < this.props.items.length) {
-      this.props.onOpenRow(this.props.items[idx], idx)
+      this.setState({
+        idx: idx,
+      }, () => this.props.onOpenRow(this.props.items[idx], idx))
     }
   }
 

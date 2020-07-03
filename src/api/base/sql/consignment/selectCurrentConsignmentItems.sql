@@ -15,6 +15,8 @@ select
   unit.notation                        as unitTitle,
   currency.notation                    as currencyTitle,
 
+  consignmentprice.price / 100.00      as consignmentPrice,
+
   product.title                        as productTitle,
   product.barcode                      as productBarcode,
   product.model                        as productModel,
@@ -27,3 +29,4 @@ from
   left join unit     on unit.id     = c.unitId
   left join currency on currency.id = c.currencyId
   left join product  on product.id  = c.productId
+  left join consignmentprice on consignmentprice.productId = product.id

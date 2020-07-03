@@ -98,7 +98,19 @@ export default function initConsignmentApi(db) {
             )
           }
         })
-    }
+    },
+    selectLastConsignmentPrice: (productId) => {
+      return db.selectOne("select price / 100.00 as price from consignmentprice where productId = $productId order by updatedAt desc limit 1", {
+          $productId: productId,
+        })
+        .then(item => {
+          if (item) {
+            return item.price
+          } else {
+            return 0
+          }
+        })
+    },
   }
 }
 

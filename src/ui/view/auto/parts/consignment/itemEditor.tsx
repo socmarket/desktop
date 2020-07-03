@@ -44,7 +44,7 @@ class ConsignmentItem extends React.Component {
       errorMsg: "",
       history: [],
       activeTab: "history",
-      salePrice: 0,
+      salePrice: props.item.consignmentPrice * (props.opt.defaultSaleMargin / 100.0) + props.item.consignmentPrice,
       saleCurrencyId: props.item.currencyId,
     }
   }

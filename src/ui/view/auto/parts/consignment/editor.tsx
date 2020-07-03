@@ -81,21 +81,25 @@ class ConsignmentEditor extends React.Component {
   }
 
   onProductPick(product) {
-    this.consignmentApi
-      .insertCurrentConsignmentItem({
-        productId  : product.id,
-        quantity   : 1,
-        price      : 0,
-        currencyId : this.state.lastUsedCurrencyId,
-        unitId     : product.unitId,
-      })
-      .then(_ => this.reloadCurrentConsignment())
-      .then(_ => {
-        const idx = this.state.items.findIndex(x => x.productId === product.id)
-        return this.setState({
-          item: this.state.items[idx],
-          itemEditorVisible : true,
-        })
+    this.consignmentApi.selectLastConsignmentPrice(product.id)
+      .then(price => {
+        console.log(price)
+        return this.consignmentApi
+          .insertCurrentConsignmentItem({
+            productId  : product.id,
+            quantity   : 1,
+            price      : price,
+            currencyId : this.state.lastUsedCurrencyId,
+            unitId     : product.unitId,
+          })
+          .then(_ => this.reloadCurrentConsignment())
+          .then(_ => {
+            const idx = this.state.items.findIndex(x => x.productId === product.id)
+            return this.setState({
+              item: this.state.items[idx],
+              itemEditorVisible : true,
+            })
+          })
       })
   }
 
