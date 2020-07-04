@@ -17,7 +17,7 @@ from (
   select
     price / 100.00 as price,
     currencyId,
-    (
+    coalesce((
       select cast(rate as decimal) as rate
       from exchangerate
       where
@@ -25,7 +25,7 @@ from (
         toCurrencyId = $currencyId
       order by updatedAt desc
       limit 1
-    ) as rate
+    ), 1) as rate
   from consignmentitem
   left join consignment on consignment.id = consignmentitem.consignmentId
   where productId = $productId
