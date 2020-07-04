@@ -17,6 +17,8 @@ select
   )                                                        as cost,
   salecheckitem.unitId                                     as uniId,
   salecheckitem.currencyId                                 as currencyId,
+  product.barcode                                          as barcode,
+  product.oemNo                                            as oemNo,
   product.title                                            as productTitle,
   unit.notation                                            as unitNotation,
   coalesce(ret.quantity / 100.00, 0)                       as retQuantity

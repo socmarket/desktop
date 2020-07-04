@@ -41,7 +41,6 @@ class Turnover extends React.Component {
 
   turnover() {
     const data = this.state.turnover
-    console.log(data)
     return (
       <Table celled structured>
         <Table.Header>

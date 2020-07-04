@@ -49,19 +49,21 @@ class SaleJournal extends React.Component {
               <Table.HeaderCell>Цена</Table.HeaderCell>
               <Table.HeaderCell>Общ ст-сть</Table.HeaderCell>
               <Table.HeaderCell>Стоимость</Table.HeaderCell>
+              <Table.HeaderCell>Штрихкод</Table.HeaderCell>
+              <Table.HeaderCell>OEM</Table.HeaderCell>
               <Table.HeaderCell>Операции</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             { this.state.items.map(day => (
               <Fragment key={day.key}>
-                <Table.Row><Table.Cell colSpan={9} textAlign="center">
+                <Table.Row><Table.Cell colSpan={11} textAlign="center">
                   <Label color={this.props.theme.mainColor} size="large">{moment.utc(day.maxKey).fromNow()}</Label>
                   <Label color={this.props.theme.mainColor} size="large">{moment.utc(day.key).local().format("dddd, MMMM Do YYYY")}</Label>
                 </Table.Cell></Table.Row>
                 { day.items.map(({ saleCheck, items }, idx) => (
                   <Fragment key={saleCheck.id}>
-                    { idx > 0 && <Table.Row warning><Table.Cell colSpan={9}></Table.Cell></Table.Row> }
+                    { idx > 0 && <Table.Row warning><Table.Cell colSpan={11}></Table.Cell></Table.Row> }
                     <Table.Row>
                       <Table.Cell rowSpan={items.length}>
                         {moment.utc(saleCheck.soldAt).local().format("DD-MM-YYYY HH:mm")}
@@ -91,6 +93,8 @@ class SaleJournal extends React.Component {
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                          <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.barcode}</Table.Cell>
+                          <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.oemNo}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
                             { (item.retQuantity > 0)             && <Button style={minib} size="mini" icon="plus"  onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
                             { (item.quantity > item.retQuantity) && <Button style={minib} size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id,  1)} /> }
@@ -107,6 +111,8 @@ class SaleJournal extends React.Component {
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                        <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.barcode}</Table.Cell>
+                        <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.oemNo}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
                           { (item.retQuantity > 0) && <Button style={minib} size="mini" icon="plus" onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
                           { (item.quantity > item.retQuantity) && <Button style={minib} size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id, 1)} /> }
