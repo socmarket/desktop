@@ -1,10 +1,12 @@
 import UnitPicker     from "View/base/unit/picker"
 import CategoryPicker from "View/base/category/picker"
 import CurrencyPicker from "View/base/currency/picker"
+import {
+  asDate
+}                     from "Util"
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
-import moment from "moment"
 import {
   Header, Grid, Table, Form, Input, Select,
   TextArea, Button, Segment, Image,
@@ -12,26 +14,31 @@ import {
   Dropdown, Dimmer, Loader, Icon
 } from "semantic-ui-react"
 
+const extensions = "xls|xlsx|xlsm|xlsb|xml|xlw|xlc|csv|txt|dif|sylk|slk|prn|ods|fods|uos|dbf|wks|123|wq1|qpw|htm|html".split("|")
+
 class ProductImporter extends React.Component {
 
   constructor(props) {
     super(props)
 
-    this.onOpenFile       = this.onOpenFile.bind(this)
+    this.onChooseFile     = this.onChooseFile.bind(this)
+    this.onBrandChange    = this.onBrandChange.bind(this)
     this.onUnitPick       = this.onUnitPick.bind(this)
     this.onCategoryPick   = this.onCategoryPick.bind(this)
     this.onCurrencyPick   = this.onCurrencyPick.bind(this)
     this.onImportProducts = this.onImportProducts.bind(this)
+    this.onSwitchTab      = this.onSwitchTab.bind(this)
 
     this.counterRef = React.createRef()
 
-    this.importerApi = props.api.autoParts.product
+    this.fileApi = props.api.file
+    this.productApi = props.api.autoParts.product
 
     this.state = {
       loading: false,
       success: false,
       failure: false,
-      fileName: "",
+      file   : { name: "", path: "", dir: "" },
       activeSheetName: "",
       wb: {
         SheetNames: [],
@@ -41,13 +48,45 @@ class ProductImporter extends React.Component {
       target: [],
       excludedRows: [],
       importedRows: 0,
+      brand: "",
       categoryId: 1,
       categoryTitle: "",
       unitId: 1,
       unitTitle: "",
       currencyId: 1,
       currencyTitle: "",
+      history: [],
+      activeTab: "history",
     }
+  }
+
+  componentDidMount() {
+    this.reloadHistory()
+  }
+
+  reloadHistory() {
+    return this.productApi.selectImportHistory()
+      .then(history => this.setState({
+        history: history,
+      }))
+  }
+
+  onSwitchTab() {
+    if (this.state.activeTab === "sheet") {
+      this.reloadHistory().then(_ => {
+        this.setState({
+          activeTab: "history"
+        })
+      })
+    } else {
+      this.setState({ activeTab: "sheet" })
+    }
+  }
+
+  onBrandChange(ev) {
+    this.setState({
+      brand: ev.target.value,
+    })
   }
 
   onUnitPick(unit) {
@@ -77,18 +116,21 @@ class ProductImporter extends React.Component {
     this.setState({
       loading: true,
     }, () => {
-      this.importerApi.importProducts({
+      this.productApi.importProducts({
         barcodePrefix: this.props.opt.barcodePrefix,
         sheet: sheet,
         rect: rect,
+        file: this.state.file,
         target: this.state.target,
         excludedRows: this.state.excludedRows,
+        brand: this.state.brand,
         unitId: this.state.unitId,
         categoryId: this.state.categoryId,
         currencyId: this.state.currencyId,
         targetCurrencyId: this.props.opt.defaultCurrencyId,
         onRowDone: (r, row) => {
-          this.counterRef.current.innerText = r
+          const v = this.counterRef.current.innerText
+          this.counterRef.current.innerText = Number(v) + 1
         },
       })
       .then(_ => {
@@ -109,43 +151,62 @@ class ProductImporter extends React.Component {
     })
   }
 
-  onOpenFile() {
+  onChooseFile() {
     this.setState({ loading: true })
-    this.importerApi
-      .chooseFile()
+    this.fileApi
+      .chooseFile(this.state.file.dir, extensions)
       .then(res => {
         if (res) {
-          const { wb, fileName, filePath } = res
-          if (wb.SheetNames.length > 0) {
-            const sheet = wb.Sheets[wb.SheetNames[0]]
-            const rect = this.rect(sheet)
-            this.setState({
-              wb: wb,
-              loading: false,
-              fileName: fileName,
-              activeSheetName: wb.SheetNames[0],
-              target: [],
-              excludedRows: [],
-              rect: rect,
-              sheet: sheet,
-              importedRows: 0,
-            })
-          } else {
-            this.setState({
-              loading: false,
-              success: false,
-              fileName: fileName,
-              target: [],
-              excludedRows: [],
-              importedRows: 0,
-            })
-          }
+          this.openFile(res)
         } else {
           this.setState({
             loading: false,
           })
         }
       })
+  }
+
+  openFile(file) {
+    this.setState({ loading: true })
+    this.productApi.openFile(file.path)
+      .then(wb => {
+        if (wb.SheetNames.length > 0) {
+          const sheet = wb.Sheets[wb.SheetNames[0]]
+          const rect = this.rect(sheet)
+          this.setState({
+            wb: wb,
+            loading: false,
+            file: file,
+            activeSheetName: wb.SheetNames[0],
+            target: [],
+            excludedRows: [],
+            rect: rect,
+            sheet: sheet,
+            importedRows: 0,
+            activeTab: "sheet",
+          }, () => {
+            this.counterRef.current.innerText = "0"
+          })
+        } else {
+          this.setState({
+            loading: false,
+            success: false,
+            file: file,
+            target: [],
+            excludedRows: [],
+            importedRows: 0,
+          }, () => {
+            this.counterRef.current.innerText = "0"
+          })
+        }
+      })
+  }
+
+  canStartImport() {
+    return this.state.activeSheetName !== "" &&
+      this.state.unitId > 0 &&
+      this.state.target.filter(t => t.key === "barcode" || t.key === "oemNo").length > 0 &&
+      this.state.target.filter(t => t.key === "title" || t.key === "price").length > 0
   }
 
   openSheet(name) {
@@ -186,12 +247,17 @@ class ProductImporter extends React.Component {
           if (minRow !== -1) rows.push(r)
         }
       })
+    const offset = "A".charCodeAt(0)
+    const maxC = maxCol.charCodeAt(0)
     return {
-      minCol: minCol,
+      minCol: "A",
       maxCol: maxCol,
       minRow: minRow,
       maxRow: maxRow,
-      cols: cols,
+      cols: [...Array(maxC - offset).keys()]
+        .map(x => x + offset)
+        .map(x => String.fromCharCode(x))
+      ,
       rows: rows,
     }
   }
@@ -243,7 +309,7 @@ class ProductImporter extends React.Component {
       const sheet = this.state.wb.Sheets[name]
       const rect = this.rect(sheet)
       return (
-        <Table compact celled striped>
+        <Table compact celled striped style={{ width: "100%" }}>
           <Table.Header>
             <Table.Row>
               {rect.cols.map(c => (
@@ -255,7 +321,6 @@ class ProductImporter extends React.Component {
                       {this.targetTag(c, "engine", "Мотор")}
                       {this.targetTag(c, "brand", "Бренд")}
                       {this.targetTag(c, "oemNo", "OEM")}
-                      {this.targetTag(c, "serial", "Серийник")}
                       {this.targetTag(c, "barcode", "Штрихкод")}
                       {this.targetTag(c, "quantity", "Кол-во")}
                       {this.targetTag(c, "price", "Цена")}
@@ -281,13 +346,61 @@ class ProductImporter extends React.Component {
     }
   }
 
+  history() {
+    return (
+      <Grid columns={2}>
+        <Grid.Column width={16}>
+          <Table compact celled striped style={{ width: "100%" }}>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell textAlign="center" colSpan={9}>История загрузок</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell textAlign="right">#      </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Файл   </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Дата   </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Поля   </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Строк  </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Успешно</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Ед</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">Кт</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">$</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {this.state.history.map((item, idx) => (
+                <Table.Row key={idx}>
+                  <Table.Cell>{item.id}</Table.Cell>
+                  <Table.Cell>
+                    <a href="#" onClick={() => this.openFile({ dir: item.fileDir, name: item.fileName, path: item.filePath})}>
+                      {item.fileName}
+                    </a>
+                  </Table.Cell>
+                  <Table.Cell>{asDate(item.importedAt)}</Table.Cell>
+                  <Table.Cell>{item.fields            }</Table.Cell>
+                  <Table.Cell textAlign="right">{item.rowCount          }</Table.Cell>
+                  <Table.Cell textAlign="right">{item.importedCount     }</Table.Cell>
+                  <Table.Cell textAlign="right">{item.unitNotation      }</Table.Cell>
+                  <Table.Cell textAlign="right">{item.categoryTitle     }</Table.Cell>
+                  <Table.Cell textAlign="right">{item.currencyNotation  }</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </Grid.Column>
+      </Grid>
+    )
+  }
+
   menu() {
     const wb = this.state.wb
     return (
       <Menu>
-        { this.state.fileName.length > 0 &&
-          <Menu.Item>
-            {this.state.fileName}
+        { this.state.file.name.length > 0 &&
+          <Menu.Item onClick={this.onSwitchTab}>
+            {this.state.file.name}
           </Menu.Item>
         }
         { this.state.activeSheetName !== "" && (
@@ -304,24 +417,27 @@ class ProductImporter extends React.Component {
         { !this.state.loading && this.state.success && <Menu.Item><Icon name="check" color="green" /></Menu.Item> }
         { !this.state.loading && this.state.failure && <Menu.Item><Icon name="x"     color="red"   /></Menu.Item> }
         <Menu.Menu position="right">
-          <Menu.Item>Ед</Menu.Item>
-          <div style={{ width: 120, paddingTop: 8, marginRight: 10 }}>
+          <Menu.Item>
+            <Input style={{width: 100}} onChange={this.onBrandChange} placeholder="Бренд..." />
+          </Menu.Item>
+          <Menu.Item>Е</Menu.Item>
+          <div style={{ width: 40, paddingTop: 8, marginRight: 10 }}>
             <UnitPicker
               api={this.props.api}
               value={this.state.unitId}
               onPick={this.onUnitPick}
             />
           </div>
-          <Menu.Item>Кат</Menu.Item>
-          <div style={{ width: 120, paddingTop: 8, marginRight: 10 }}>
+          <Menu.Item>К</Menu.Item>
+          <div style={{ width: 80, paddingTop: 8, marginRight: 10 }}>
             <CategoryPicker
               api={this.props.api}
               value={this.state.categoryId}
               onPick={this.onCategoryPick}
             />
           </div>
-          <Menu.Item>Валюта</Menu.Item>
-          <div style={{ width: 120, paddingTop: 8, marginRight: 10 }}>
+          <Menu.Item>$</Menu.Item>
+          <div style={{ width: 80, paddingTop: 8, marginRight: 10 }}>
             <CurrencyPicker
               api={this.props.api}
               size="small"
@@ -344,13 +460,9 @@ class ProductImporter extends React.Component {
               </Dropdown>
             </Fragment>
           )}
-          { this.state.activeSheetName !== "" && this.state.unitId > 0 && this.state.target.filter(t => t.key === "title").length > 0 && (
-            <Menu.Item>
-              <Button icon="cloud download" onClick={this.onImportProducts} />
-            </Menu.Item>
-          )}
+          { this.canStartImport() && <Menu.Item><Button icon="cloud download" onClick={this.onImportProducts} /></Menu.Item> }
           <Menu.Item>
-            <Button icon="folder open" onClick={this.onOpenFile} />
+            <Button icon="folder open" onClick={this.onChooseFile} />
           </Menu.Item>
         </Menu.Menu>
       </Menu>
@@ -361,9 +473,10 @@ class ProductImporter extends React.Component {
     return (
       <Dimmer.Dimmable dimmed={this.state.loading}>
         <Grid padded columns={1}>
-          <Grid.Column>
+          <Grid.Column style={{ overflowX: "auto" }}>
             {this.menu()}
-            {this.data()}
+            {this.state.activeTab === "sheet" && this.data()}
+            {this.state.activeTab === "history" && this.history()}
           </Grid.Column>
         </Grid>
       </Dimmer.Dimmable>

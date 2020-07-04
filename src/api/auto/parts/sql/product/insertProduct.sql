@@ -39,5 +39,5 @@ insert into product(
   $engine,
   $engineLower,
   $oemNo,
-  $serial
+  ''
 )

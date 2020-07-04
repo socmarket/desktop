@@ -1,5 +1,6 @@
 select
   unit.id,
+  unit.notation,
   unit.title
 from
   unit

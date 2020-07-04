@@ -12,6 +12,10 @@ export default class UnitPicker extends React.Component {
     }
   }
 
+  mkLabel(unit) {
+    return `${unit.notation}: ${unit.title}`
+  }
+
   updateLabel(value) {
     const self = this
     return this.props.api.unit.pick(value)
@@ -19,7 +23,7 @@ export default class UnitPicker extends React.Component {
         if (unit) {
           self.setState({
             value: unit.id,
-            label: unit.title,
+            label: this.mkLabel(unit),
           })
         } else {
           self.setState({

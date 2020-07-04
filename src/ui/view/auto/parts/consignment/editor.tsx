@@ -174,7 +174,7 @@ class ConsignmentEditor extends React.Component {
       lastUsedCurrencyId : item.currencyId,
     }, () => {
       this.reloadCurrentConsignment()
-        .then(_ => this.tableRef.current.focus())
+        .then(_ => this.productPickerRef.current.focus())
     })
   }
 

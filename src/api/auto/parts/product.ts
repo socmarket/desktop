@@ -10,13 +10,19 @@ import importCurrentConsignmentItemSql from "./sql/product/importCurrentConsignm
 import selectImportedProductSql        from "./sql/product/selectImportedProduct.sql"
 import insertConsignmentPriceSql       from "./sql/product/insertConsignmentPrice.sql"
 import selectProductFlowSql            from "./sql/product/selectProductFlow.sql"
+import insertImportInfoSql             from "./sql/product/insertImportInfo.sql"
+import selectImportHistorySql          from "./sql/product/selectImportHistory.sql"
 
 import path from "path"
 import xlsx from "xlsx"
 
 import { traverseF, ifF, ifNotF } from "../../util"
 
-const { dialog } = require("electron").remote
+
+const nameH = [
+  "наимен"
+]
+
 
 export interface Product {
   id: number
@@ -67,7 +73,6 @@ function getC(target) {
     engineC   : col.engine   ? col.engine   : false,
     brandC    : col.brand    ? col.brand    : false,
     oemNoC    : col.oemNo    ? col.oemNo    : false,
-    serialC   : col.serial   ? col.serial   : false,
     barcodeC  : col.barcode  ? col.barcode  : false,
     priceC    : col.price    ? col.price    : false,
     quantityC : col.quantity ? col.quantity : false,
@@ -75,13 +80,12 @@ function getC(target) {
   }
 }
 
-function getR(sheet, col, r) {
+function getR(sheet, col, r, brand) {
   const $title       = col.titleC    ? String(getV(sheet, col.titleC , r))   : ""
   const $model       = col.modelC    ? String(getV(sheet, col.modelC , r))   : ""
   const $engine      = col.engineC   ? String(getV(sheet, col.engineC, r))   : ""
-  const $brand       = col.brandC    ? String(getV(sheet, col.brandC , r))   : ""
+  const $brand       = col.brandC    ? String(getV(sheet, col.brandC , r))   : brand
   const $oemNo       = col.oemNoC    ? String(getV(sheet, col.oemNoC , r))   : ""
-  const $serial      = col.serialC   ? String(getV(sheet, col.serialC, r))   : ""
   const $barcode     = col.barcodeC  ? String(getV(sheet, col.barcodeC, r))  : ""
   const $price       = col.priceC    ? Number(getV(sheet, col.priceC, r))    : ""
   const $quantity    = col.quantityC ? Number(getV(sheet, col.quantityC, r)) : ""
@@ -101,7 +105,6 @@ function getR(sheet, col, r) {
     , $brand       : $brand
     , $brandLower  : $brandLower
     , $oemNo       : $oemNo
-    , $serial      : $serial
     , $barcode     : $barcode
     , $price       : $price
     , $quantity    : $quantity
@@ -113,8 +116,8 @@ async function productExistsF(db, row) {
     selectIfProductExistsSql,
     {
       $title   : row.$title,
+      $brand   : row.$brand,
       $oemNo   : row.$oemNo,
-      $serial  : row.$serial,
       $barcode : row.$barcode,
     }
   )
@@ -124,7 +127,6 @@ async function productExistsF(db, row) {
 async function importConsignment(db, item) {
   return db.selectOne(selectImportedProductSql, {
       $oemNo   : item.$oemNo,
-      $serial  : item.$serial,
       $barcode : item.$barcode,
     })
     .then(product => {
@@ -146,7 +148,6 @@ async function importConsignment(db, item) {
 async function importConsignmentPrice(db, item) {
   return db.selectOne(selectImportedProductSql, {
       $oemNo   : item.$oemNo,
-      $serial  : item.$serial,
       $barcode : item.$barcode,
     })
     .then(product => {
@@ -201,7 +202,6 @@ export default function initProductApi(db: Database): ProductApi {
         , $engine      : product.engine || ""
         , $engineLower : (product.engine ? product.engine.toLowerCase() : "")
         , $oemNo       : product.oemNo || ""
-        , $serial      : product.serial || ""
       }
       if (product.id < 0) {
         return db.exec(insertProductSql, p)
@@ -214,10 +214,16 @@ export default function initProductApi(db: Database): ProductApi {
       return db.selectOne(selectProductWithSameBarcodeSql, { $barcode: barcode, $id: id })
     },
     selectProductFlow: (productId) => db.select(selectProductFlowSql, { $productId: productId }),
+    openFile: (filePath) => Promise.resolve(xlsx.readFile(filePath)),
     importProducts: async (args) => {
-      const { barcodePrefix, sheet, excludedRows, rect, target, unitId, categoryId, currencyId, targetCurrencyId, onRowDone } = args
+      const {
+        file, barcodePrefix, sheet, excludedRows,
+        rect, target, unitId, categoryId, currencyId,
+        targetCurrencyId, brand, onRowDone
+      } = args
       const importCols = getC(target)
       var priceRatio = 1
+      var importedCount = 0
       if (importCols.priceC) {
         await db.selectOne(
           "select rate from exchangerate where fromCurrencyId = ? and toCurrencyId = ? order by updatedAt desc limit 1",
@@ -227,47 +233,66 @@ export default function initProductApi(db: Database): ProductApi {
             priceRatio = row.rate
         })
       }
-      console.log(currencyId, targetCurrencyId, priceRatio)
       return db.exec("begin")
-        .then(() => console.log("Import started"))
         .then(_ => traverseF(rect.rows, async (ridx) => {
-          const row = getR(sheet, importCols, ridx)
-          if (!excludedRows.includes(ridx)) {
-            let done = false;
-            const exists = await productExistsF(db, row)
-            const barcode = importCols.barcodeC ? row.$barcode : await genBarcode(db, barcodePrefix);
-            const item = {
-              ...row,
-              $barcode    : barcode,
-              $unitId     : unitId,
-              $categoryId : categoryId,
-              $notes      : "",
-              $notesLower : "",
-            }
-            if (!exists) {
-              const { $price, $quantity, ...product } = item
-              await db.exec(insertProductSql, product)
-              done = true
-            }
-            if (importCols.priceC) {
-              await importConsignmentPrice(db, {
-                ...item,
-                $price      : item.$price * priceRatio,
-                $currencyId : targetCurrencyId,
-              })
-              done = true
-            }
-            if (importCols.quantityC && importCols.priceC) {
-              await importConsignment(db, {
-                ...item,
-                $price      : item.$price * priceRatio,
-                $currencyId : targetCurrencyId,
-              })
-              done = true
-            }
-            if (done) onRowDone(ridx, item)
+          if (excludedRows.includes(ridx))
             return Promise.resolve()
+          const row = getR(sheet, importCols, ridx, brand)
+          if (
+            (importCols.barcodeC && row.$barcode.length === 0) ||
+            (importCols.oemNoC && row.$oemNo.length === 0) ||
+            (nameH.filter(x => row.$title.toLowerCase().includes(x)).length > 0) ||
+            (importCols.priceC && !row.$price)
+          )
+            return Promise.resolve()
+          let done = false;
+          const productExists = await productExistsF(db, row)
+          const barcode = importCols.barcodeC ? row.$barcode : await genBarcode(db, barcodePrefix);
+          const item = {
+            ...row,
+            $barcode    : barcode,
+            $unitId     : unitId,
+            $categoryId : categoryId,
+            $notes      : file.name,
+            $notesLower : file.name.toLowerCase(),
           }
+          if (!productExists) {
+            const { $price, $quantity, ...product } = item
+            await db.exec(insertProductSql, product)
+            done = true
+          }
+          if (importCols.priceC) {
+            await importConsignmentPrice(db, {
+              ...item,
+              $price      : item.$price * priceRatio,
+              $currencyId : targetCurrencyId,
+            })
+            done = true
+          }
+          if (importCols.quantityC && importCols.priceC) {
+            await importConsignment(db, {
+              ...item,
+              $price      : item.$price * priceRatio,
+              $currencyId : targetCurrencyId,
+            })
+            done = true
+          }
+          if (done) {
+            importedCount += 1
+            onRowDone(ridx, item)
+          }
+          return Promise.resolve()
+        }))
+        .then(_ => db.exec(insertImportInfoSql, {
+          $fileDir       : file.dir,
+          $filePath      : file.path,
+          $fileName      : file.name,
+          $fields        : target.map(x => `${x.col}:${x.key}:${x.title}`).join(","),
+          $rowCount      : rect.rows.length - excludedRows.length,
+          $importedCount : importedCount,
+          $unitId        : unitId,
+          $categoryId    : categoryId,
+          $currencyId    : currencyId,
         }))
         .then(_ => db.exec("commit"))
         .catch(err =>
@@ -275,26 +300,6 @@ export default function initProductApi(db: Database): ProductApi {
           .then(function(){ throw err; })
         )
     },
-    chooseFile: () => {
-      const filesPromise = dialog.showOpenDialog({
-        title: "Выберите файл",
-        filters: [{
-          name: "Табличные файлы",
-          extensions: "xls|xlsx|xlsm|xlsb|xml|xlw|xlc|csv|txt|dif|sylk|slk|prn|ods|fods|uos|dbf|wks|123|wq1|qpw|htm|html".split("|")
-        }],
-        properties: ['openFile']
-      })
-      return filesPromise.then(result => {
-        if (!result.cancelled && result.filePaths.length > 0) {
-          return Promise.resolve({
-            filePath: result.filePaths[0],
-            fileName: path.basename(result.filePaths[0]),
-            wb: xlsx.readFile(result.filePaths[0]),
-          })
-        } else {
-          return Promise.resolve()
-        }
-      })
-    }
+    selectImportHistory: () => db.select(selectImportHistorySql),
   }
 }

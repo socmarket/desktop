@@ -21,7 +21,7 @@ class ProductList extends React.Component {
             <Table.HeaderCell>Штрихкод</Table.HeaderCell>
             <Table.HeaderCell>Бренд</Table.HeaderCell>
             <Table.HeaderCell>OEM</Table.HeaderCell>
-            <Table.HeaderCell>No</Table.HeaderCell>
+            <Table.HeaderCell>Заметки</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -35,7 +35,7 @@ class ProductList extends React.Component {
               <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell>{product.brand}</Table.Cell>
               <Table.Cell>{product.oemNo}</Table.Cell>
-              <Table.Cell>{product.serial}</Table.Cell>
+              <Table.Cell>{product.notes}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

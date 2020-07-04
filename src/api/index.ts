@@ -46,6 +46,10 @@ import initPrinterApi, {
   PrinterApi,
 } from "./base/printer"
 
+import initFileApi, {
+  FileApi,
+} from "./base/file"
+
 export function initApi(db, usb) {
   return {
     autoParts: {
@@ -62,6 +66,7 @@ export function initApi(db, usb) {
     price: initPriceApi(db),
     report: initReportApi(db),
     printer: initPrinterApi(db, usb),
+    file: initFileApi(db),
     migrateDb: () => db.migrate(),
   }
 }

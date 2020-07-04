@@ -4,6 +4,10 @@ import moment from "moment"
 import { ResponsivePie } from '@nivo/pie'
 import { Container, Grid, Form, Input, Table, Button, Segment, Image, Label } from "semantic-ui-react"
 
+const minib = {
+  padding: "0.5em 0.5em",
+}
+
 class SaleJournal extends React.Component {
 
   constructor(props) {
@@ -34,7 +38,7 @@ class SaleJournal extends React.Component {
   render() {
     return (
       <Segment raised style={{ flex: "1 1 auto", overflow: "auto", margin: 15 }}>
-        <Table basic compact structured style={{ height: "100%" }}>
+        <Table celled compact structured striped style={{ height: "100%" }}>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell>Чек</Table.HeaderCell>
@@ -88,8 +92,8 @@ class SaleJournal extends React.Component {
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
-                            { (item.retQuantity > 0)             && <Button size="mini" icon="plus"  onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
-                            { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id,  1)} /> }
+                            { (item.retQuantity > 0)             && <Button style={minib} size="mini" icon="plus"  onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
+                            { (item.quantity > item.retQuantity) && <Button style={minib} size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id,  1)} /> }
                           </Table.Cell>
                         </Fragment>
                       ))}
@@ -104,8 +108,8 @@ class SaleJournal extends React.Component {
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
-                          { (item.retQuantity > 0) && <Button size="mini" icon="plus" onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
-                          { (item.quantity > item.retQuantity) && <Button size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id, 1)} /> }
+                          { (item.retQuantity > 0) && <Button style={minib} size="mini" icon="plus" onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
+                          { (item.quantity > item.retQuantity) && <Button style={minib} size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id, 1)} /> }
                         </Table.Cell>
                       </Table.Row>
                     ))}

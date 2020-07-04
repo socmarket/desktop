@@ -52,5 +52,7 @@ from
       or (product.titleLower like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
       or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
       or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
-    limit 30
+    limit 50
   ) p
+order by
+  p.id desc

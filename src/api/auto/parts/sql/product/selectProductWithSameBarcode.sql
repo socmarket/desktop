@@ -5,8 +5,7 @@ select
   brand,
   model,
   engine,
-  oemNo,
-  serial
+  oemNo
 from
   product
 where
