@@ -5,6 +5,7 @@ from
   (
     select
       product.*,
+      unit.notation as unitNotation,
       unit.title as unitTitle,
       category.title as categoryTitle,
       (select

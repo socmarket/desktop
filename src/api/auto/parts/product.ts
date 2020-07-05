@@ -256,7 +256,7 @@ export default function initProductApi(db: Database): ProductApi {
             $notes      : file.name,
             $notesLower : file.name.toLowerCase(),
           }
-          if (!productExists) {
+          if (!productExists && importCols.titleC && item.$title.length > 0) {
             const { $price, $quantity, ...product } = item
             await db.exec(insertProductSql, product)
             done = true

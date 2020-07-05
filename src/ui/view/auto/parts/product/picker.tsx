@@ -79,12 +79,12 @@ export default class ProductPicker extends React.Component {
   mkLabelFrom(product) {
     return product.categoryTitle
       + " : " + product.title
-      + " : " + product.quantity
-      + " : " + product.price
+      + " : " + (product.quantity ? product.quantity : 0) + " " + product.unitNotation
+      + (product.price ? " : " + product.price : " (нет цены)")
+      + (product.brand ? " | " + product.brand : "")
+      + (product.model ? " | " + product.model : "")
       + " | " + product.barcode
-      + " | " + product.oemNo
-      + " | " + product.model
-      + " | " + product.engine
+      + (product.oemNo ? " | " + product.oemNo : "")
   }
 
   mkOptsFrom(products) {
