@@ -50,8 +50,13 @@ class ConsignmentItem extends React.Component {
   }
 
   componentDidMount() {
-    this.priceInputRef.current.focus()
-    this.priceInputRef.current.select()
+    if (this.state.price > 0) {
+      this.quantityInputRef.current.focus()
+      this.quantityInputRef.current.select()
+    } else {
+      this.priceInputRef.current.focus()
+      this.priceInputRef.current.select()
+    }
     this.consignmentApi
       .productHistory(this.props.item.productId)
       .then(history => this.setState({
@@ -122,7 +127,7 @@ class ConsignmentItem extends React.Component {
   }
 
   onKeyDown(ev) {
-    if (ev.key === "Enter" && ev.shiftKey) {
+    if (ev.key === "Enter") {
       ev.preventDefault()
       this.onUpdate()
     }
@@ -188,7 +193,7 @@ class ConsignmentItem extends React.Component {
             />
           </Form.Field>
         </Form.Group>
-        <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>Изменить (Shift + Enter)</Button>
+        <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>Изменить (Enter)</Button>
         <Message size="mini" header="Модель" content={this.state.productModel} />
         <Message size="mini" header="Мотор"  content={this.state.productEngine} />
         <Form.Group widths="equal">
