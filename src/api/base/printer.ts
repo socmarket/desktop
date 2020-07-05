@@ -15,27 +15,26 @@ export default function initPrinterApi(db, usb) {
         .then(_ => usb.write(code))
         .then(_ => usb.close())
     },
-    printLabel: ({ barcode, text, count, labelSize, printerId }) => {
-      console.log(printerId)
+    printLabel: ({ barcode, text, count, labelSize, offsetX, printerId }) => {
       const bpid = printerId ? printerId + ":-1" : "-1:-1";
       const vid = parseInt(bpid.split(":")[0], 16);
       const pid = parseInt(bpid.split(":")[1], 16);
       var code = ""
-      const label = text.toUpperCase()
+      const label = tr(text).toUpperCase()
       if (labelSize === "60x40") {
         if (label.length > 18) {
           const lbl = label.match(/.{1,18}/g)
           while (lbl.length < 3) lbl.push("")
           code = labelCompactX2MultilineS60x40
             .replace(/__BARCODE__/g, barcode)
-            .replace(/__LINE1__/g, tr(lbl[0]))
-            .replace(/__LINE2__/g, tr(lbl[1]))
-            .replace(/__LINE3__/g, tr(lbl[2]))
+            .replace(/__LINE1__/g, lbl[0])
+            .replace(/__LINE2__/g, lbl[1])
+            .replace(/__LINE3__/g, lbl[2])
             .replace(/__COUNT__/g, count)
         } else {
           code = labelCompactX3S60x40
             .replace(/__BARCODE__/g, barcode)
-            .replace(/__LABEL__/g, tr(label.substring(0, 25)))
+            .replace(/__LABEL__/g, label.substring(0, 25))
             .replace(/__COUNT__/g, count)
         }
       } else if (labelSize === "30x20") {
@@ -43,10 +42,11 @@ export default function initPrinterApi(db, usb) {
         while (lbl.length < 3) lbl.push("")
         code = labelFullMultilineS30x20
           .replace(/__BARCODE__/g, barcode)
-          .replace(/__LINE1__/g, tr(lbl[0]))
-          .replace(/__LINE2__/g, tr(lbl[1]))
-          .replace(/__LINE3__/g, tr(lbl[2]))
+          .replace(/__LINE1__/g, lbl[0])
+          .replace(/__LINE2__/g, lbl[1])
+          .replace(/__LINE3__/g, lbl[2])
           .replace(/__COUNT__/g, count)
+          .replace(/__OFFSET_X__/g, offsetX)
       }
       console.log(code)
       if (vid > 0 && pid > 0) {

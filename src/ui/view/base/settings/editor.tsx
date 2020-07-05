@@ -45,6 +45,7 @@ class SettingsEditor extends React.Component {
     this.onDefaultUnitChange       = this.onDefaultUnitChange.bind(this)
     this.onDefaultCurrencyChange   = this.onDefaultCurrencyChange.bind(this)
     this.onLabelSizeChange         = this.onLabelSizeChange.bind(this)
+    this.onLabelOffsetXChange      = this.onLabelOffsetXChange.bind(this)
     this.onDefaultSaleMarginChange = this.onDefaultSaleMarginChange.bind(this)
     this.onBarcodePrefixChange     = this.onBarcodePrefixChange.bind(this)
 
@@ -73,6 +74,12 @@ class SettingsEditor extends React.Component {
   onLabelSizeChange(ev, { value }) {
     this.settingsApi
       .changeProductLabelSize(value)
+      .then(_ => this.props.reloadSettings())
+  }
+
+  onLabelOffsetXChange(ev) {
+    this.settingsApi
+      .changeProductLabelOffsetX(ev.target.value)
       .then(_ => this.props.reloadSettings())
   }
 
@@ -225,6 +232,14 @@ class SettingsEditor extends React.Component {
               value={this.props.opt.productLabelSize}
               options={S.labelSize}
               onChange={this.onLabelSizeChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Input
+              label="Отступ слева этикетки"
+              width={8}
+              value={this.props.opt.productLabelOffsetX}
+              onChange={this.onLabelOffsetXChange}
             />
           </Form.Group>
           <Form.Group>

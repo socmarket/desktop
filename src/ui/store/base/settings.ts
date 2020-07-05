@@ -94,11 +94,14 @@ function SettingsReducer (state = {
         defaultSaleMargin                 : action.settings.defaultSaleMargin,
         defaultUnitId                     : action.settings.defaultUnitId,
         barcodePrefix                     : action.settings.barcodePrefix,
-        productLabelSize                  : action.settings.productLabelSize,
         cashierPinHash                    : action.settings.cashierPinHash,
         managerPinHash                    : action.settings.managerPinHash,
         adminPinHash                      : action.settings.adminPinHash,
+
+        productLabelSize                  : action.settings.productLabelSize,
+        productLabelOffsetX               : action.settings.productLabelOffsetX,
         labelPrinterId                    : action.settings.labelPrinterId,
+
         theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
         showConsignmentHistoryInSaleCheck : Boolean(+action.settings.showConsignmentHistoryInSaleCheck),
       })

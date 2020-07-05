@@ -211,6 +211,7 @@ class ProductForm extends React.Component {
       text      : this.state.title + ": " + this.state.oemNo + ": " + this.state.brand,
       count     : this.state.labelCount,
       labelSize : this.props.opt.productLabelSize,
+      offsetX   : this.props.opt.productLabelOffsetX,
       printerId : this.props.opt.labelPrinterId,
     })
   }

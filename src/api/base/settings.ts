@@ -4,7 +4,6 @@ import sha256 from 'crypto-js/sha256';
 
 const defaultSettings = {
   appMode                           : "auto/parts",
-  productLabelSize                  : "30x20",
   defaultClientId                   : 1,
   defaultSupplierId                 : 1,
   defaultCurrencyId                 : 1,
@@ -18,6 +17,8 @@ const defaultSettings = {
   managerPinHash                    : false,
   adminPinHash                      : false,
 
+  productLabelSize                  : "30x20",
+  productLabelOffsetX               : 4,
   labelPrinterId                    : "",
 }
 
@@ -39,16 +40,17 @@ export default function initSettingsApi(db) {
       db.select("select * from settings")
         .then(rows => readSettings(rows ? rows : []))
     ),
-    changeTheme             : (themeName)  => setKey(db, "theme"            , themeName ),
-    changeAppMode           : (appMode)    => setKey(db, "appMode"          , appMode   ),
-    changeDefaultClient     : (clientId)   => setKey(db, "defaultClientId"  , clientId  ),
-    changeDefaultSupplier   : (supplierId) => setKey(db, "defaultSupplierId", supplierId),
-    changeDefaultUnit       : (unitId)     => setKey(db, "defaultUnitId"    , unitId    ),
-    changeDefaultCurrency   : (currencyId) => setKey(db, "defaultCurrencyId", currencyId),
-    changeBarcodePrefix     : (prefix)     => setKey(db, "barcodePrefix"    , prefix    ),
-    changeDefaultSaleMargin : (margin)     => setKey(db, "defaultSaleMargin", margin    ),
-    changeProductLabelSize  : (size)       => setKey(db, "productLabelSize" , size      ),
-    choosePrinter           : (id)         => setKey(db, "labelPrinterId"   , id        ),
+    changeTheme               : (themeName)  => setKey(db, "theme"               , themeName ),
+    changeAppMode             : (appMode)    => setKey(db, "appMode"             , appMode   ),
+    changeDefaultClient       : (clientId)   => setKey(db, "defaultClientId"     , clientId  ),
+    changeDefaultSupplier     : (supplierId) => setKey(db, "defaultSupplierId"   , supplierId),
+    changeDefaultUnit         : (unitId)     => setKey(db, "defaultUnitId"       , unitId    ),
+    changeDefaultCurrency     : (currencyId) => setKey(db, "defaultCurrencyId"   , currencyId),
+    changeBarcodePrefix       : (prefix)     => setKey(db, "barcodePrefix"       , prefix    ),
+    changeDefaultSaleMargin   : (margin)     => setKey(db, "defaultSaleMargin"   , margin    ),
+    changeProductLabelSize    : (size)       => setKey(db, "productLabelSize"    , size      ),
+    changeProductLabelOffsetX : (offsetX)    => setKey(db, "productLabelOffsetX" , offsetX   ),
+    choosePrinter             : (id)         => setKey(db, "labelPrinterId"      , id        ),
     changeShowConsignmentHistoryInSaleCheck : (boolFlag) => setKey(db, "showConsignmentHistoryInSaleCheck", boolFlag),
     setUserPin : (user, pin) => {
       const hash = sha256(pin) + "";
