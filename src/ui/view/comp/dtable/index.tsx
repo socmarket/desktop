@@ -1,10 +1,21 @@
 import React from "react"
 import moment from "moment"
 import {
-  Table, Header, Segment, Icon
+  Table, Header, Segment, Icon,
+  Dropdown,
 } from "semantic-ui-react"
 
 class DTable extends React.Component {
+
+  static defaultProps = {
+    menu: {
+      header: {
+        icon: "",
+        title: "",
+      },
+      items: [],
+    }
+  }
 
   constructor(props) {
     super(props)
@@ -82,6 +93,24 @@ class DTable extends React.Component {
           <Icon name={this.props.titleIcon} />
           {this.props.title}
         </Header>
+        { this.props.menu.items.length > 0 &&
+          <Dropdown color={this.props.color} style={{ position: "absolute", right: 30, top: 15 }} icon="bars" direction="left" >
+            <Dropdown.Menu>
+              { this.props.menu.header.title.length > 0 &&
+                <Dropdown.Header icon={this.props.menu.header.icon} content={this.props.menu.header.title} />
+              }
+              <Dropdown.Divider />
+              { this.props.menu.items.map((item, idx) => (
+                item.divider ? <Dropdown.Divider key={idx} /> : <Dropdown.Item
+                  key={idx}
+                  text={item.title}
+                  color={item.color}
+                  description={item.description}
+                  onClick={item.onClick} />
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+        }
         <table
           className="ui compact celled selectable table"
           ref={this.props.innerRef}

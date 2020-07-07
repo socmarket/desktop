@@ -102,6 +102,10 @@ function SettingsReducer (state = {
         productLabelOffsetX               : action.settings.productLabelOffsetX,
         labelPrinterId                    : action.settings.labelPrinterId,
 
+        logoLine1                         : action.settings.logoLine1,
+        logoLine2                         : action.settings.logoLine2,
+        logoLine3                         : action.settings.logoLine3,
+
         theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
         showConsignmentHistoryInSaleCheck : Boolean(+action.settings.showConsignmentHistoryInSaleCheck),
       })

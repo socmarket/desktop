@@ -18,6 +18,8 @@ import {
   Rail, Dropdown
 } from "semantic-ui-react"
 
+import moment from "moment"
+
 class SaleCheckEditor extends React.Component {
 
   emptyItem = {
@@ -47,6 +49,8 @@ class SaleCheckEditor extends React.Component {
     this.onItemEditorClose      = this.onItemEditorClose.bind(this)
     this.onGlobalKeyDown        = this.onGlobalKeyDown.bind(this)
     this.onActivate             = this.onActivate.bind(this)
+    this.onExportCheck          = this.onExportCheck.bind(this)
+    this.onPrintCheck           = this.onPrintCheck.bind(this)
 
     this.productPickerRef      = React.createRef()
     this.clientPickerRef       = React.createRef()
@@ -58,7 +62,9 @@ class SaleCheckEditor extends React.Component {
 
     this.activateLock = React.createRef(false)
 
+    this.fileApi      = props.api.file
     this.priceApi     = props.api.price
+    this.printerApi   = props.api.printer
     this.saleCheckApi = props.api.saleCheck
 
     this.state = {
@@ -194,6 +200,35 @@ class SaleCheckEditor extends React.Component {
     })
   }
 
+  onExportCheck() {
+    this.fileApi.saveFile("", [ "xls" ])
+      .then(res => {
+        console.log(res)
+      })
+  }
+
+  onPrintCheck() {
+    this.printerApi
+      .printCheck({
+        check: {
+          dateTime : moment().format("DD-MM-YYYY HH:mm"),
+          items : this.state.items.map(x => ({
+            barcode  : x.productBarcode,
+            title    : x.productTitle,
+            price    : x.price,
+            quantity : x.quantity,
+          })),
+        },
+        logo : [
+          this.props.opt.logoLine1,
+          this.props.opt.logoLine2,
+          this.props.opt.logoLine3,
+        ],
+        offsetX   : this.props.opt.productLabelOffsetX,
+        printerId : this.props.opt.labelPrinterId,
+      })
+  }
+
   itemEditor() {
     return (
       <SaleCheckItem
@@ -226,6 +261,14 @@ class SaleCheckEditor extends React.Component {
           { key: "total"         , title: "Со скид" , align: "right", positive: 1 },
           { key: "productBarcode", title: "Штрихкод",                             },
         ]}
+        menu={{
+          header: {
+            title: "Текущий чек",
+          },
+          items: [
+            { title: "Печатать чек"     , description: "", onClick: this.onPrintCheck },
+          ]
+        }}
         onOpenRow={this.onOpenItem}
         onDeleteRow={this.onDeleteItem}
         onActivate={this.onActivate}

@@ -3,7 +3,19 @@ import labelCompactX3S60x40          from "./tspl/labelCompactX3S60x40.tspl"
 import labelCompactX2MultilineS60x40 from "./tspl/labelCompactX2MultilineS60x40.tspl"
 import labelFullMultilineS30x20      from "./tspl/labelFullMultilineS30x20.tspl"
 
+import receiptTspl         from "./tspl/receipt.tspl"
+import receiptBarlineTspl  from "./tspl/receiptBarline.tspl"
+import receiptTextlineTspl from "./tspl/receiptTextline.tspl"
+
+import diagFontsTspl from "./tspl/diagFonts.tspl"
+
 import { transliterate as tr } from 'transliteration'
+
+
+function wrap(txt) {
+  const t = txt.match(/.{1,30}/g)
+  return t
+}
 
 export default function initPrinterApi(db, usb) {
   return {
@@ -15,10 +27,56 @@ export default function initPrinterApi(db, usb) {
         .then(_ => usb.write(code))
         .then(_ => usb.close())
     },
+    printCheck: ({ check, logo, offsetX, printerId }) => {
+      const bpid = printerId ? printerId + ":-1" : "-1:-1"
+      const vid = parseInt(bpid.split(":")[0], 16)
+      const pid = parseInt(bpid.split(":")[1], 16)
+      let y = 160
+      const lines = check.items
+        .map(x => ({ ...x, title: tr(x.title) }))
+        .map((x, idx) => ({
+          barcode : x.barcode,
+          text    : wrap(idx + ": " + x.title),
+          price   : x.quantity + " X " + x.price + " = " + x.quantity * x.price
+        }))
+        .map(x => [
+          receiptBarlineTspl.replace(/__BARCODE__/, x.barcode),
+          x.text.map(t => receiptTextlineTspl.replace(/__TEXT__/, t)),
+          receiptTextlineTspl.replace(/__TEXT__/, x.price),
+        ].flat())
+        .flat()
+        .map(l => {
+          const ll = l
+            .replace(/__OFFSET_X__/, 5)
+            .replace(/__OFFSET_Y__/, l.includes("BARCODE") ? y + 20 : y)
+          if (l.includes("BARCODE")) {
+            y += 70
+          } else {
+            y += 30
+          }
+          return ll
+        })
+
+      let code = receiptTspl
+        .replace(/__LOGO1__/, logo[0])
+        .replace(/__LOGO2__/, logo[1])
+        .replace(/__LOGO3__/, logo[2])
+        .replace(/__DT__/, check.dateTime)
+        .replace(/__CONTENT__/, lines.join(""))
+        .replace(/__HEIGHTMM__/, (y + 100) / 8)
+        .replace(/__HEIGHT__/, y + 20)
+        .replace(/__TOTAL__/, Math.round(check.items.map(x => x.quantity * x.price).reduce((a, b) => a + b)))
+
+      console.log(code)
+
+      return usb.open(vid, pid)
+        .then(_ => usb.write(code))
+        .then(_ => usb.close())
+    },
     printLabel: ({ barcode, text, count, labelSize, offsetX, printerId }) => {
-      const bpid = printerId ? printerId + ":-1" : "-1:-1";
-      const vid = parseInt(bpid.split(":")[0], 16);
-      const pid = parseInt(bpid.split(":")[1], 16);
+      const bpid = printerId ? printerId + ":-1" : "-1:-1"
+      const vid = parseInt(bpid.split(":")[0], 16)
+      const pid = parseInt(bpid.split(":")[1], 16)
       var code = ""
       const label = tr(text).toUpperCase()
       if (labelSize === "60x40") {

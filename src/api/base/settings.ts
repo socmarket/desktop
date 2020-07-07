@@ -20,6 +20,10 @@ const defaultSettings = {
   productLabelSize                  : "30x20",
   productLabelOffsetX               : 4,
   labelPrinterId                    : "",
+
+  logoLine1                         : "--=< SOCMARKET >=--",
+  logoLine2                         : "TEL: 000 000 000",
+  logoLine3                         : "SPASIBO ZA POKUPKU!",
 }
 
 function readSettings(rows) {
@@ -51,6 +55,7 @@ export default function initSettingsApi(db) {
     changeProductLabelSize    : (size)       => setKey(db, "productLabelSize"    , size      ),
     changeProductLabelOffsetX : (offsetX)    => setKey(db, "productLabelOffsetX" , offsetX   ),
     choosePrinter             : (id)         => setKey(db, "labelPrinterId"      , id        ),
+    changeLogoLine            : (no, value)  => setKey(db, "logoLine" + no       , value     ),
     changeShowConsignmentHistoryInSaleCheck : (boolFlag) => setKey(db, "showConsignmentHistoryInSaleCheck", boolFlag),
     setUserPin : (user, pin) => {
       const hash = sha256(pin) + "";

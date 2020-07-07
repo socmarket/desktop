@@ -4,6 +4,28 @@ const { dialog } = require("electron").remote
 
 export default function initFileApi(db) {
   return {
+    saveFile: (defaultPath, extensions) => {
+      const filesPromise = dialog.showSaveDialog({
+        title: "Сохранить в файл",
+        filters: [{
+          name: "Табличные файлы",
+          extensions: extensions,
+        }],
+        defaultPath: defaultPath ? defaultPath : "",
+      })
+      return filesPromise.then(result => {
+        console.log(result)
+        if (!result.cancelled) {
+          return Promise.resolve({
+            dir : path.dirname(result.filePath),
+            path: result.filePath,
+            name: path.basename(result.filePath),
+          })
+        } else {
+          return Promise.resolve()
+        }
+      })
+    },
     chooseFile: (defaultPath, extensions) => {
       const filesPromise = dialog.showOpenDialog({
         title: "Выберите файл",
