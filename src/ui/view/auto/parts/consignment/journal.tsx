@@ -51,6 +51,7 @@ class ConsignmentJournal extends React.Component {
               <Table.HeaderCell>Цена</Table.HeaderCell>
               <Table.HeaderCell>Общ ст-сть</Table.HeaderCell>
               <Table.HeaderCell>Стоимость</Table.HeaderCell>
+              <Table.HeaderCell>Бренд</Table.HeaderCell>
               <Table.HeaderCell>Штрихкод</Table.HeaderCell>
               <Table.HeaderCell>OEM</Table.HeaderCell>
               <Table.HeaderCell>Операции</Table.HeaderCell>
@@ -59,13 +60,13 @@ class ConsignmentJournal extends React.Component {
           <Table.Body>
             { this.state.items.map(day => (
               <Fragment key={day.key}>
-                <Table.Row><Table.Cell colSpan={11} textAlign="center">
+                <Table.Row><Table.Cell colSpan={12} textAlign="center">
                   <Label color={this.props.theme.mainColor} size="large">{moment.utc(day.maxKey).fromNow()}</Label>
                   <Label color={this.props.theme.mainColor} size="large">{moment.utc(day.key).local().format("dddd, MMMM Do YYYY")}</Label>
                 </Table.Cell></Table.Row>
                 { day.items.map(({ consignment, items }) => (
                   <Fragment key={consignment.id}>
-                    <Table.Row warning><Table.Cell colSpan={11}></Table.Cell></Table.Row>
+                    <Table.Row warning><Table.Cell colSpan={12}></Table.Cell></Table.Row>
                     <Table.Row>
                       <Table.Cell rowSpan={items.length}>
                         {moment.utc(consignment.soldAt).local().format("DD-MM-YYYY HH:mm")}
@@ -93,6 +94,7 @@ class ConsignmentJournal extends React.Component {
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                          <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.brand}</Table.Cell>
                           <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.barcode}</Table.Cell>
                           <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.oemNo}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
@@ -111,6 +113,7 @@ class ConsignmentJournal extends React.Component {
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.price}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
+                        <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.brand}</Table.Cell>
                         <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.barcode}</Table.Cell>
                         <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.oemNo}</Table.Cell>
                         <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >

@@ -17,6 +17,7 @@ select
   )                                                        as cost,
   consignmentitem.unitId                                   as uniId,
   consignmentitem.currencyId                               as currencyId,
+  product.brand                                            as brand,
   product.barcode                                          as barcode,
   product.oemNo                                            as oemNo,
   coalesce(product.title, "")                              as productTitle,

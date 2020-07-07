@@ -149,6 +149,7 @@ async function importConsignmentPrice(db, item) {
   return db.selectOne(selectImportedProductSql, {
       $oemNo   : item.$oemNo,
       $barcode : item.$barcode,
+      $brand   : item.$brand,
     })
     .then(product => {
       if (product) {
