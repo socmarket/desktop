@@ -206,7 +206,7 @@ class ProductImporter extends React.Component {
     return this.state.activeSheetName !== "" &&
       this.state.unitId > 0 &&
       this.state.target.filter(t => t.key === "barcode" || t.key === "oemNo").length > 0 &&
-      this.state.target.filter(t => t.key === "title" || t.key === "price").length > 0
+      this.state.target.filter(t => t.key === "price" || t.key === "title").length > 0
   }
 
   openSheet(name) {
