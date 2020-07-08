@@ -13,7 +13,7 @@ import { transliterate as tr } from 'transliteration'
 
 
 function wrap(txt) {
-  const t = txt.match(/.{1,30}/g)
+  const t = txt.match(/.{1,40}/g)
   return t
 }
 
@@ -31,7 +31,7 @@ export default function initPrinterApi(db, usb) {
       const bpid = printerId ? printerId + ":-1" : "-1:-1"
       const vid = parseInt(bpid.split(":")[0], 16)
       const pid = parseInt(bpid.split(":")[1], 16)
-      let y = 160
+      let y = 200
       const lines = check.items
         .map(x => ({ ...x, title: tr(x.title) }))
         .map((x, idx) => ({
@@ -48,11 +48,11 @@ export default function initPrinterApi(db, usb) {
         .map(l => {
           const ll = l
             .replace(/__OFFSET_X__/, 5)
-            .replace(/__OFFSET_Y__/, l.includes("BARCODE") ? y + 20 : y)
+            .replace(/__OFFSET_Y__/, l.includes("BARCODE") ? y + 6 : y)
           if (l.includes("BARCODE")) {
-            y += 70
+            y += 60
           } else {
-            y += 30
+            y += 19
           }
           return ll
         })

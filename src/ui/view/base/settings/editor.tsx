@@ -46,6 +46,9 @@ class SettingsEditor extends React.Component {
     this.onDefaultCurrencyChange   = this.onDefaultCurrencyChange.bind(this)
     this.onLabelSizeChange         = this.onLabelSizeChange.bind(this)
     this.onLabelOffsetXChange      = this.onLabelOffsetXChange.bind(this)
+    this.onLogoLine1Change         = this.onLogoLine1Change.bind(this)
+    this.onLogoLine2Change         = this.onLogoLine2Change.bind(this)
+    this.onLogoLine3Change         = this.onLogoLine3Change.bind(this)
     this.onDefaultSaleMarginChange = this.onDefaultSaleMarginChange.bind(this)
     this.onBarcodePrefixChange     = this.onBarcodePrefixChange.bind(this)
 
@@ -130,6 +133,10 @@ class SettingsEditor extends React.Component {
       .choosePrinter(printer.id)
       .then(_ => this.props.reloadSettings())
   }
+
+  onLogoLine1Change(ev) { this.settingsApi.changeLogoLine(1, ev.target.value).then(_ => this.props.reloadSettings()) }
+  onLogoLine2Change(ev) { this.settingsApi.changeLogoLine(2, ev.target.value).then(_ => this.props.reloadSettings()) }
+  onLogoLine3Change(ev) { this.settingsApi.changeLogoLine(3, ev.target.value).then(_ => this.props.reloadSettings()) }
 
   printers() {
     return (
@@ -236,10 +243,32 @@ class SettingsEditor extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Input
+              label="Заголовок чека #1"
+              width={8}
+              value={this.props.opt.logoLine1}
+              onChange={this.onLogoLine1Change}
+            />
+            <Form.Input
               label="Отступ слева этикетки"
               width={8}
               value={this.props.opt.productLabelOffsetX}
               onChange={this.onLabelOffsetXChange}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Input
+              label="Заголовок чека #2"
+              width={8}
+              value={this.props.opt.logoLine2}
+              onChange={this.onLogoLine2Change}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Input
+              label="Заголовок чека #3"
+              width={8}
+              value={this.props.opt.logoLine3}
+              onChange={this.onLogoLine3Change}
             />
           </Form.Group>
           <Form.Group>
