@@ -40,10 +40,12 @@ class ProductForm extends React.Component {
     this.onEngineChange     = this.onEngineChange.bind(this)
     this.onOemNoChange      = this.onOemNoChange.bind(this)
     this.onSerialChange     = this.onSerialChange.bind(this)
+    this.onCoordChange      = this.onCoordChange.bind(this)
     this.onUnitChange       = this.onUnitChange.bind(this)
     this.onCategoryChange   = this.onCategoryChange.bind(this)
     this.onKeyDown          = this.onKeyDown.bind(this)
     this.onPrintLabel       = this.onPrintLabel.bind(this)
+    this.onPrintCoord       = this.onPrintCoord.bind(this)
     this.onLabelCountChange = this.onLabelCountChange.bind(this)
 
     this.printerApi = this.props.api.printer
@@ -59,10 +61,12 @@ class ProductForm extends React.Component {
 
     this.barcodeInputRef     = React.createRef()
     this.labelCountInputRef  = React.createRef()
+    this.coordInputRef       = React.createRef()
     this.barcodeDupCheckerId = React.createRef(-1)
 
-    this.barcodeInput    = actionInputWithRef(this.barcodeInputRef, "add", this.onNewBarcode)
+    this.barcodeInput    = actionInputWithRef(this.barcodeInputRef   , "add", this.onNewBarcode)
     this.labelCountInput = actionInputWithRef(this.labelCountInputRef, "barcode", this.onPrintLabel)
+    this.coordInput      = actionInputWithRef(this.coordInputRef     , "map marker alternate", this.onPrintCoord)
   }
 
   componentDidMount() {
@@ -157,6 +161,12 @@ class ProductForm extends React.Component {
     })
   }
 
+  onCoordChange(ev) {
+    this.setState({
+      coord: ev.target.value,
+    })
+  }
+
   onBrandChange(ev) {
     this.setState({
       brand: ev.target.value,
@@ -216,6 +226,15 @@ class ProductForm extends React.Component {
     })
   }
 
+  onPrintCoord() {
+    this.printerApi.printCoord({
+      coord     : this.state.coord,
+      labelSize : this.props.opt.productLabelSize,
+      offsetX   : this.props.opt.productLabelOffsetX,
+      printerId : this.props.opt.labelPrinterId,
+    })
+  }
+
   form() {
     return (
       <Form size="small" width={16} onKeyDown={this.onKeyDown} error={this.state.errorMsg.length > 0}>
@@ -251,6 +270,15 @@ class ProductForm extends React.Component {
           <Form.Input width={5} label="OEM"      value={this.state.oemNo || ""}  onChange={this.onOemNoChange} />
           <Form.Input width={5} label="Серийник" value={this.state.serial || ""} onChange={this.onSerialChange} />
           <Form.Input width={6} label="Бренд"    value={this.state.brand || ""}  onChange={this.onBrandChange} />
+        </Form.Group>
+        <Form.Group>
+          <Form.Input
+            width={16}
+            label="Расположение"
+            onChange={this.onCoordChange}
+            value={this.state.coord || ""}
+            control={this.coordInput}
+          />
         </Form.Group>
         <Button.Group fluid>
           {this.state.id < 0 && <Button type="button" color={this.props.theme.mainColor}

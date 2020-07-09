@@ -1,0 +1,5 @@
+CLS
+SIZE 30 mm,20 mm
+GAP 3 mm,1 mm
+TEXT 30,50,"0",0,5,5,"__COORD__"
+PRINT 1

@@ -203,6 +203,8 @@ export default function initProductApi(db: Database): ProductApi {
         , $engine      : product.engine || ""
         , $engineLower : (product.engine ? product.engine.toLowerCase() : "")
         , $oemNo       : product.oemNo || ""
+        , $serial      : product.serial || ""
+        , $coord       : product.coord || ""
       }
       if (product.id < 0) {
         return db.exec(insertProductSql, p)

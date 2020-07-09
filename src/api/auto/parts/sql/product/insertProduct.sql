@@ -18,7 +18,8 @@ insert into product(
   engine,
   engineLower,
   oemNo,
-  serial
+  serial,
+  coord
 ) values(
   $barcode,
 
@@ -39,5 +40,6 @@ insert into product(
   $engine,
   $engineLower,
   $oemNo,
-  ''
+  $serial,
+  $coord
 )

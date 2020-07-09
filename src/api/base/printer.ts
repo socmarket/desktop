@@ -2,6 +2,7 @@ import labelProg                     from "./tspl/label.tspl"
 import labelCompactX3S60x40          from "./tspl/labelCompactX3S60x40.tspl"
 import labelCompactX2MultilineS60x40 from "./tspl/labelCompactX2MultilineS60x40.tspl"
 import labelFullMultilineS30x20      from "./tspl/labelFullMultilineS30x20.tspl"
+import coord30x20                    from "./tspl/coord30x20.tspl"
 
 import receiptTspl         from "./tspl/receipt.tspl"
 import receiptBarlineTspl  from "./tspl/receiptBarline.tspl"
@@ -115,6 +116,29 @@ export default function initPrinterApi(db, usb) {
         } else {
           return Promise.reject("Товар не выбран или не зарегистрирован.")
         }
+      } else {
+        return Promise.reject("Принтер не выбран. Выберите принтер в настройках.")
+      }
+    },
+    printCoord: ({ coord, labelSize, offsetX, printerId }) => {
+      const bpid = printerId ? printerId + ":-1" : "-1:-1"
+      const vid = parseInt(bpid.split(":")[0], 16)
+      const pid = parseInt(bpid.split(":")[1], 16)
+      var code = ""
+      const label = tr(coord).toUpperCase()
+      if (labelSize === "30x20") {
+        const lbl = label.match(/.{1,20}/g)
+        while (lbl.length < 3) lbl.push("")
+        code = coord30x20
+          .replace(/__COORD__/g, coord)
+          .replace(/__OFFSET_X__/g, offsetX)
+      } else {
+        return Promise.resolve()
+      }
+      if (vid > 0 && pid > 0) {
+        return usb.open(vid, pid)
+          .then(_ => usb.write(code))
+          .then(_ => usb.close())
       } else {
         return Promise.reject("Принтер не выбран. Выберите принтер в настройках.")
       }

@@ -16,5 +16,6 @@ set
   , engineLower = $engineLower
   , oemNo       = $oemNo
   , serial      = $serial
+  , coord       = $coord
 where
   id = $id

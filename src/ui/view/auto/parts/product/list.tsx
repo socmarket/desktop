@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "semantic-ui-react"
+import { Table, Icon } from "semantic-ui-react"
 
 class ProductList extends React.Component {
 
@@ -21,6 +21,7 @@ class ProductList extends React.Component {
             <Table.HeaderCell>Штрихкод</Table.HeaderCell>
             <Table.HeaderCell>Бренд</Table.HeaderCell>
             <Table.HeaderCell>OEM</Table.HeaderCell>
+            <Table.HeaderCell><Icon name="map marker alternate" /></Table.HeaderCell>
             <Table.HeaderCell>Заметки</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -35,6 +36,7 @@ class ProductList extends React.Component {
               <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell>{product.brand}</Table.Cell>
               <Table.Cell>{product.oemNo}</Table.Cell>
+              <Table.Cell>{product.coord}</Table.Cell>
               <Table.Cell>{product.notes}</Table.Cell>
             </Table.Row>
           ))}
