@@ -9,8 +9,7 @@ class ProductList extends React.Component {
 
   table(height) {
     return (
-      <div style={{ overflowY: "auto", maxHeight: height }}>
-      <Table compact celled selectable>
+      <Table compact celled selectable style={{ height: "100%" }}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Кат</Table.HeaderCell>
@@ -42,12 +41,11 @@ class ProductList extends React.Component {
           ))}
         </Table.Body>
       </Table>
-      </div>
     )
   }
 
   render() {
-    return this.table(600)
+    return this.table()
   }
 
 }

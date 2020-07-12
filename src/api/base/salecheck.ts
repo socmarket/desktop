@@ -56,6 +56,9 @@ export default function initSaleCheckApi(db) {
         $currencyId : item.currencyId,
       })
     ),
+    clearCurrentSaleCheck: () => {
+      return db.exec("delete from currentsalecheck")
+    },
     closeCurrentSaleCheck: ({ total, extraDiscount, cash, clientId }) => {
       const change = +cash - (total - extraDiscount)
       return Promise.resolve()

@@ -97,7 +97,7 @@ class MainMenu extends React.Component {
             <Dropdown tabIndex={-1} text="Продажи" pointing className={"link item " + salesActive}>
               <Dropdown.Menu>
                 <Dropdown.Item
-                  icon="cart"
+                  icon="calculator"
                   active={this.props.app.activePage === "autoPartsSaleCheckEditor"}
                   onClick={() => this.props.openAutoPartsSaleCheckEditor()}
                   text="Касса"

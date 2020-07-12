@@ -53,7 +53,7 @@ from
       or (product.titleLower like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
       or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
       or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
-    limit 50
+    order by product.id desc
+    limit $limit
+    offset $offset
   ) p
-order by
-  p.id desc

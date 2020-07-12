@@ -4,9 +4,9 @@ const productListFiltered = (pattern, items) => ({
   pattern: pattern,
 })
 
-function filterProductList(pattern) {
+function filterProductList(pattern, limit, offset) {
   return (dispatch, getState, { api }) => {
-    return api.autoParts.product.find(pattern)
+    return api.autoParts.product.find(pattern, limit, offset)
       .then(items => dispatch(productListFiltered(pattern, items)))
   }
 }
@@ -19,6 +19,8 @@ function AutoPartsProductReducer (state = {
   productList: {
     items: [],
     pattern: "",
+    limit: 50,
+    offset: 0,
   }
 }, action) {
   switch (action.type) {
@@ -27,6 +29,8 @@ function AutoPartsProductReducer (state = {
         productList: {
           items: action.items,
           pattern: action.pattern,
+          offset: action.offset,
+          limit: action.limit,
         }
       })
     default:

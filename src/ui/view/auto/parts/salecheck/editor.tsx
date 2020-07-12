@@ -13,9 +13,7 @@ import { connect } from "react-redux"
 import { Translation } from 'react-i18next'
 import {
   Header, Grid, Table, Form, Input, Select,
-  TextArea, Button, Segment, Image, Icon,
-  Label, Container, Menu, Message, Divider,
-  Rail, Dropdown
+  Button, Segment, Icon, Modal,
 } from "semantic-ui-react"
 
 import moment from "moment"
@@ -39,18 +37,20 @@ class SaleCheckEditor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onProductPick          = this.onProductPick.bind(this)
-    this.onClientChange         = this.onClientChange.bind(this)
-    this.onExtraDiscountChange  = this.onExtraDiscountChange.bind(this)
-    this.onCashChange           = this.onCashChange.bind(this)
-    this.onOpenItem             = this.onOpenItem.bind(this)
-    this.onDeleteItem           = this.onDeleteItem.bind(this)
-    this.onItemUpdate           = this.onItemUpdate.bind(this)
-    this.onItemEditorClose      = this.onItemEditorClose.bind(this)
-    this.onGlobalKeyDown        = this.onGlobalKeyDown.bind(this)
-    this.onActivate             = this.onActivate.bind(this)
-    this.onExportCheck          = this.onExportCheck.bind(this)
-    this.onPrintCheck           = this.onPrintCheck.bind(this)
+    this.onProductPick         = this.onProductPick.bind(this)
+    this.onClientChange        = this.onClientChange.bind(this)
+    this.onExtraDiscountChange = this.onExtraDiscountChange.bind(this)
+    this.onCashChange          = this.onCashChange.bind(this)
+    this.onOpenItem            = this.onOpenItem.bind(this)
+    this.onDeleteItem          = this.onDeleteItem.bind(this)
+    this.onItemUpdate          = this.onItemUpdate.bind(this)
+    this.onItemEditorClose     = this.onItemEditorClose.bind(this)
+    this.onGlobalKeyDown       = this.onGlobalKeyDown.bind(this)
+    this.onActivate            = this.onActivate.bind(this)
+    this.onExportCheck         = this.onExportCheck.bind(this)
+    this.onPrintCheck          = this.onPrintCheck.bind(this)
+    this.onWantClearCheck      = this.onWantClearCheck.bind(this)
+    this.onConfirmClearCheck   = this.onConfirmClearCheck.bind(this)
 
     this.productPickerRef      = React.createRef()
     this.clientPickerRef       = React.createRef()
@@ -68,16 +68,17 @@ class SaleCheckEditor extends React.Component {
     this.saleCheckApi = props.api.saleCheck
 
     this.state = {
-      items             : [],
-      cost              : 0,
-      discount          : 0,
-      total             : 0,
-      change            : 0,
-      extraDiscount     : 0,
-      cash              : "",
-      itemEditorVisible : false,
-      clientId          : props.opt.defaultClientId || 1,
-      item              : this.emptyItem,
+      items               : [],
+      cost                : 0,
+      discount            : 0,
+      total               : 0,
+      change              : 0,
+      extraDiscount       : 0,
+      cash                : "",
+      itemEditorVisible   : false,
+      clientId            : props.opt.defaultClientId || 1,
+      item                : this.emptyItem,
+      clearConfirmVisible : false,
     }
   }
 
@@ -91,9 +92,10 @@ class SaleCheckEditor extends React.Component {
       .then(saleCheck => {
         this.setState({
           ...saleCheck,
-          cash          : "",
-          extraDiscount : 0,
-          clientId      : this.props.opt.defaultClientId || 1,
+          cash                : "",
+          extraDiscount       : 0,
+          clientId            : this.props.opt.defaultClientId || 1,
+          clearConfirmVisible : false,
         })
       })
   }
@@ -229,6 +231,36 @@ class SaleCheckEditor extends React.Component {
       })
   }
 
+  onWantClearCheck() {
+    this.setState({
+      clearConfirmVisible: true,
+    })
+  }
+
+  onConfirmClearCheck() {
+    this.saleCheckApi.clearCurrentSaleCheck()
+      .then(_ => this.reloadCurrentSaleCheck())
+  }
+
+  clearConfirmDialog() {
+    return (
+      <Modal color="red" size="mini" dimmer="inverted" open onClose={() => this.setState({ clearConfirmVisible: false })}>
+        <Modal.Header>Очистить чек?</Modal.Header>
+        <Modal.Content>
+          <p>Все добавленные товары будут убраны из корзины</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={() => this.setState({ clearConfirmVisible: false })}>Нет</Button>
+          <Button
+            color={this.props.opt.theme.mainColor}
+            content="Да"
+            onClick={this.onConfirmClearCheck}
+          />
+        </Modal.Actions>
+      </Modal>
+    )
+  }
+
   itemEditor() {
     return (
       <SaleCheckItem
@@ -247,8 +279,8 @@ class SaleCheckEditor extends React.Component {
     return (
       <DTable
         ref={this.tableRef}
-        titleIcon="settings"
-        title="Комплектующие"
+        titleIcon="cart"
+        title="Корзина покупателя"
         color={this.props.theme.mainColor}
         items={this.state.items}
         columns={[
@@ -267,6 +299,8 @@ class SaleCheckEditor extends React.Component {
           },
           items: [
             { title: "Печатать чек"     , description: "", onClick: this.onPrintCheck },
+            { divider: true },
+            { title: "Очистить чек"     , description: "Удалить все", onClick: this.onWantClearCheck },
           ]
         }}
         onOpenRow={this.onOpenItem}
@@ -379,6 +413,7 @@ class SaleCheckEditor extends React.Component {
           </Grid.Row>
         </Grid>
         {this.state.itemEditorVisible && this.itemEditor()}
+        {this.state.clearConfirmVisible && this.clearConfirmDialog()}
       </Fragment>
     )
   }

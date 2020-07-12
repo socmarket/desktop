@@ -66,7 +66,7 @@ export default function initPrinterApi(db, usb) {
         .replace(/__CONTENT__/, lines.join(""))
         .replace(/__HEIGHTMM__/, (y + 100) / 8)
         .replace(/__HEIGHT__/, y + 20)
-        .replace(/__TOTAL__/, Math.round(check.items.map(x => x.quantity * x.price).reduce((a, b) => a + b)))
+        .replace(/__TOTAL__/, Math.round(check.items.map(x => x.quantity * x.price).reduce((a, b) => a + b, 0)))
 
       console.log(code)
 

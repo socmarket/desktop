@@ -160,7 +160,7 @@ class SupplierEditor extends React.Component {
     return (
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
-          <Icon name="users" />
+          <Icon name="shipping fast" />
           Поставщики
         </Header>
         <Form width={16}>

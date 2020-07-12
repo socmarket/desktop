@@ -157,7 +157,7 @@ class CategoryListEditor extends React.Component {
     return (
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
-          <Icon name="law" />
+          <Icon name="sitemap" />
           Группы товаров
         </Header>
         <Form width={16}>

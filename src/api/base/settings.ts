@@ -8,6 +8,7 @@ const defaultSettings = {
   defaultSupplierId                 : 1,
   defaultCurrencyId                 : 1,
   defaultUnitId                     : 1,
+  defaultCategoryId                 : 1,
   barcodePrefix                     : "Z",
   theme                             : "violet",
   defaultSaleMargin                 : 20,

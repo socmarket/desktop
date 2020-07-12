@@ -35,14 +35,6 @@ export interface Product {
   quantity: number
 }
 
-export interface ProductApi {
-  pick(id: number): Promise<Product>
-  find(pattern: string): Promise<Product[]>
-  find(id: number, barcode: string): Promise<Product>
-  genBarcode(prefix: string): Promise<string>
-  selectProductWithSameBarcode(barcode: string, id: string): Promise<Product[]>
-}
-
 function genBarcode(db, prefix) {
   return db.selectOne(selectUnusedBarcodeSql, { $prefix: prefix })
     .then(row => {
@@ -165,17 +157,19 @@ async function importConsignmentPrice(db, item) {
     })
 }
 
-export default function initProductApi(db: Database): ProductApi {
+export default function initProductApi(db) {
   return {
     pick: (id: number) => db.selectOne<Product>(selectProductByIdSql, { $productId: id }),
-    find: (patternRaw: string) => {
+    find: (patternRaw, limit = 50, offset = 0) => {
       const pattern = patternRaw.toLowerCase().trim()
       const key = pattern.split(" ").concat([ "", "", "" ])
-      return db.select<Product>(selectProductBySearchSql, {
+      return db.select(selectProductBySearchSql, {
         $barcode: patternRaw,
-        $key0: key[0],
-        $key1: key[1],
-        $key2: key[2],
+        $key0   : key[0],
+        $key1   : key[1],
+        $key2   : key[2],
+        $limit  : limit,
+        $offset : offset,
       })
     },
     select: ({ id, barcode }) => {
