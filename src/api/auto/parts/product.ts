@@ -20,7 +20,8 @@ import { traverseF, ifF, ifNotF } from "../../util"
 
 
 const nameH = [
-  "наимен"
+  "наимен",
+  "азвани",
 ]
 
 
@@ -69,6 +70,8 @@ function getC(target) {
     priceC    : col.price    ? col.price    : false,
     quantityC : col.quantity ? col.quantity : false,
     barcodeC  : col.barcode  ? col.barcode  : false,
+    serialC   : col.serial   ? col.serial   : false,
+    coordC    : col.coord    ? col.coord    : false,
   }
 }
 
@@ -79,6 +82,8 @@ function getR(sheet, col, r, brand) {
   const $brand       = col.brandC    ? String(getV(sheet, col.brandC , r))   : brand
   const $oemNo       = col.oemNoC    ? String(getV(sheet, col.oemNoC , r))   : ""
   const $barcode     = col.barcodeC  ? String(getV(sheet, col.barcodeC, r))  : ""
+  const $serial      = col.serialC   ? String(getV(sheet, col.serialC, r))   : ""
+  const $coord       = col.coordC    ? String(getV(sheet, col.coordC, r))    : ""
   const $price       = col.priceC    ? Number(getV(sheet, col.priceC, r))    : ""
   const $quantity    = col.quantityC ? Number(getV(sheet, col.quantityC, r)) : ""
 
@@ -98,6 +103,8 @@ function getR(sheet, col, r, brand) {
     , $brandLower  : $brandLower
     , $oemNo       : $oemNo
     , $barcode     : $barcode
+    , $serial      : $serial
+    , $coord       : $coord
     , $price       : $price
     , $quantity    : $quantity
   }
@@ -237,7 +244,7 @@ export default function initProductApi(db) {
           const row = getR(sheet, importCols, ridx, brand)
           if (
             (importCols.barcodeC && row.$barcode.length === 0) ||
-            (importCols.oemNoC && row.$oemNo.length === 0) ||
+            (importCols.oemNoC && !importCols.barcodeC && row.$oemNo.length === 0) ||
             (nameH.filter(x => row.$title.toLowerCase().includes(x)).length > 0) ||
             (importCols.priceC && !row.$price)
           )
@@ -257,6 +264,8 @@ export default function initProductApi(db) {
             const { $price, $quantity, ...product } = item
             await db.exec(insertProductSql, product)
             done = true
+          } else {
+            console.log("miss: ", item)
           }
           if (importCols.priceC) {
             await importConsignmentPrice(db, {

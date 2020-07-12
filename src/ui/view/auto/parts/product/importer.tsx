@@ -324,6 +324,8 @@ class ProductImporter extends React.Component {
                       {this.targetTag(c, "barcode", "Штрихкод")}
                       {this.targetTag(c, "quantity", "Кол-во")}
                       {this.targetTag(c, "price", "Цена")}
+                      {this.targetTag(c, "serial", "Серийник")}
+                      {this.targetTag(c, "coord", "Полка")}
                     </Dropdown.Menu>
                   </Dropdown>
                 </Table.HeaderCell>
