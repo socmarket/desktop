@@ -101,8 +101,8 @@ function getR(sheet, col, r, brand) {
     , $engineLower : $engineLower
     , $brand       : $brand
     , $brandLower  : $brandLower
-    , $oemNo       : $oemNo
-    , $barcode     : $barcode
+    , $oemNo       : $oemNo.trim()
+    , $barcode     : $barcode.trim()
     , $serial      : $serial
     , $coord       : $coord
     , $price       : $price

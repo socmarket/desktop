@@ -2,7 +2,7 @@ CLS
 SIZE 30 mm,20 mm
 GAP 3 mm,1 mm
 
-BARCODE __OFFSET_X__,8,"128",60,1,0,2,2,"__BARCODE__"
+BARCODE __OFFSET_X__,8,"128",60,1,0,__SIZE__,__SIZE__,"__BARCODE__"
 TEXT __OFFSET_X__,100,"1",0,1,1,"__LINE1__"
 TEXT __OFFSET_X__,115,"1",0,1,1,"__LINE2__"
 TEXT __OFFSET_X__,130,"1",0,1,1,"__LINE3__"

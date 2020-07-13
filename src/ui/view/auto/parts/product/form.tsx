@@ -215,14 +215,22 @@ class ProductForm extends React.Component {
     })
   }
 
-  onPrintLabel() {
+  onPrintLabel(ev, tg, size) {
+    const text = this.state.title +
+      (this.state.oemNo.length  > 0 ? ":" + this.state.oemNo  : "") +
+      (this.state.model.length  > 0 ? ":" + this.state.model  : "") +
+      (this.state.brand.length  > 0 ? ":" + this.state.brand  : "") +
+      (this.state.serial.length > 0 ? ":" + this.state.serial : "")
+    console.log(ev, size)
+    const barcodeSize = size || 2
     this.printerApi.printLabel({
-      barcode   : this.state.barcode,
-      text      : this.state.title + ": " + this.state.oemNo + ": " + this.state.brand,
-      count     : this.state.labelCount,
-      labelSize : this.props.opt.productLabelSize,
-      offsetX   : this.props.opt.productLabelOffsetX,
-      printerId : this.props.opt.labelPrinterId,
+      barcode     : this.state.barcode,
+      text        : text,
+      count       : this.state.labelCount,
+      labelSize   : this.props.opt.productLabelSize,
+      barcodeSize : barcodeSize,
+      offsetX     : this.props.opt.productLabelOffsetX,
+      printerId   : this.props.opt.labelPrinterId,
     })
   }
 
@@ -294,6 +302,13 @@ class ProductForm extends React.Component {
             onChange={this.onLabelCountChange}
             value={this.state.labelCount || 0}
             control={this.labelCountInput}
+          />
+          <Button
+            icon="bars"
+            size="mini"
+            tabIndex={-1}
+            style={{ marginTop: 23, height: "50%" }}
+            onClick={() => this.onPrintLabel(undefined, undefined, 1)}
           />
         </Form.Group>
       </Form>

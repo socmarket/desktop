@@ -74,7 +74,7 @@ export default function initPrinterApi(db, usb) {
         .then(_ => usb.write(code))
         .then(_ => usb.close())
     },
-    printLabel: ({ barcode, text, count, labelSize, offsetX, printerId }) => {
+    printLabel: ({ barcode, text, count, labelSize, barcodeSize, offsetX, printerId }) => {
       const bpid = printerId ? printerId + ":-1" : "-1:-1"
       const vid = parseInt(bpid.split(":")[0], 16)
       const pid = parseInt(bpid.split(":")[1], 16)
@@ -102,6 +102,7 @@ export default function initPrinterApi(db, usb) {
         code = labelFullMultilineS30x20
           .replace(/__BARCODE__/g, barcode)
           .replace(/__LINE1__/g, lbl[0])
+          .replace(/__SIZE__/g, barcodeSize)
           .replace(/__LINE2__/g, lbl[1])
           .replace(/__LINE3__/g, lbl[2])
           .replace(/__COUNT__/g, count)
