@@ -14,7 +14,6 @@ export default function initFileApi(db) {
         defaultPath: defaultPath ? defaultPath : "",
       })
       return filesPromise.then(result => {
-        console.log(result)
         if (!result.cancelled) {
           return Promise.resolve({
             dir : path.dirname(result.filePath),

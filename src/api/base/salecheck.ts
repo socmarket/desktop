@@ -8,6 +8,8 @@ import selectSaleCheckItemsForSql     from "./sql/salecheck/selectSaleCheckItems
 
 import { groupBy } from "../util"
 
+import X from "xlsx"
+
 export default function initSaleCheckApi(db) {
   return {
     selectCurrentSaleCheck: () => (
@@ -108,6 +110,35 @@ export default function initSaleCheckApi(db) {
             )
           }
         })
-    }
+    },
+    exportToExcel: (file, items, header) => {
+      const hdr = header.map(x => [[ x ]])
+      const data = hdr
+        .concat(
+          [[ "Товар", "Кол-во", "Ед.изм.", "Цена", "Сумма", "Валюта", "Штрихкод", ]],
+        ).concat(
+          items.map(item => [
+            item.productTitle,
+            item.quantity,
+            item.unitTitle,
+            item.price,
+            item.total,
+            item.currencyTitle,
+            item.productBarcode,
+          ])
+        )
+      const wb = X.utils.book_new()
+      const ws = {
+        ...(X.utils.aoa_to_sheet(data)),
+        [`E${data.length+1}`]: { f: `=SUM(E2:E${data.length})` },
+        "!ref": `A1:G${data.length+1}`,
+        "!merges": hdr.map((h, idx) => ({
+          s: {c: 0, r: idx},
+          e: {c: 6, r: idx},
+        }))
+      }
+      X.utils.book_append_sheet(wb, ws, "check1")
+      X.writeFile(wb, file.path);
+    },
   }
 }

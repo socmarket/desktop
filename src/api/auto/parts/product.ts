@@ -12,9 +12,10 @@ import insertConsignmentPriceSql       from "./sql/product/insertConsignmentPric
 import selectProductFlowSql            from "./sql/product/selectProductFlow.sql"
 import insertImportInfoSql             from "./sql/product/insertImportInfo.sql"
 import selectImportHistorySql          from "./sql/product/selectImportHistory.sql"
+import selectProductsForExportSql      from "./sql/product/selectProductsForExport.sql"
 
 import path from "path"
-import xlsx from "xlsx"
+import X from "xlsx"
 
 import { traverseF, ifF, ifNotF } from "../../util"
 
@@ -218,7 +219,7 @@ export default function initProductApi(db) {
       return db.selectOne(selectProductWithSameBarcodeSql, { $barcode: barcode, $id: id })
     },
     selectProductFlow: (productId) => db.select(selectProductFlowSql, { $productId: productId }),
-    openFile: (filePath) => Promise.resolve(xlsx.readFile(filePath)),
+    openFile: (filePath) => Promise.resolve(X.readFile(filePath)),
     importProducts: async (args) => {
       const {
         file, barcodePrefix, sheet, excludedRows,
@@ -305,6 +306,39 @@ export default function initProductApi(db) {
           db.exec("rollback")
           .then(function(){ throw err; })
         )
+    },
+    exportAllToExcel: (file, header) => {
+      return db.select(selectProductsForExportSql)
+        .then(items => {
+          const hdr = header.map(x => [[ x ]])
+          const data = hdr
+            .concat(
+              [[ "Товар", "Бренд", "Штрихкод", "OEM", "Серийник", "Модель", "Движок", "Категория", "Полка" ]]
+            ).concat(
+              items.map(item => [
+                item.title,
+                item.brand,
+                item.barcode,
+                item.oemNo,
+                item.serial,
+                item.model,
+                item.engine,
+                item.categoryTitle,
+                item.coord,
+              ])
+            )
+          const wb = X.utils.book_new()
+          const ws = {
+            ...(X.utils.aoa_to_sheet(data)),
+            "!ref": `A1:I${data.length+1}`,
+            "!merges": hdr.map((h, idx) => ({
+              s: {c: 0, r: idx},
+              e: {c: 8, r: idx},
+            }))
+          }
+          X.utils.book_append_sheet(wb, ws, "Описания товаров")
+          X.writeFile(wb, file.path);
+        })
     },
     selectImportHistory: () => db.select(selectImportHistorySql),
   }

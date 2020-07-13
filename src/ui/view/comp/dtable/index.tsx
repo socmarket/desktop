@@ -103,6 +103,7 @@ class DTable extends React.Component {
               { this.props.menu.items.map((item, idx) => (
                 item.divider ? <Dropdown.Divider key={idx} /> : <Dropdown.Item
                   key={idx}
+                  icon={item.icon}
                   text={item.title}
                   color={item.color}
                   description={item.description}

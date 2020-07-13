@@ -14,8 +14,9 @@ import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import {
   Grid, Container, Input, Label, Button,
-  Menu, Icon,
+  Menu, Icon, Popup,
 } from "semantic-ui-react"
+import moment from "moment"
 
 class ProductEditor extends React.Component {
 
@@ -42,6 +43,7 @@ class ProductEditor extends React.Component {
     this.onFilterChange   = this.onFilterChange.bind(this)
     this.onPrevPage       = this.onPrevPage.bind(this)
     this.onNextPage       = this.onNextPage.bind(this)
+    this.onExportToExcel  = this.onExportToExcel.bind(this)
 
     this.newProduct       = this.newProduct.bind(this)
     this.openProductForm  = this.openProductForm.bind(this)
@@ -49,6 +51,9 @@ class ProductEditor extends React.Component {
 
     this.filterRef = React.createRef()
     this.filterInput = inputWithRef(this.filterRef)
+
+    this.fileApi    = props.api.file
+    this.productApi = props.api.autoParts.product
 
     this.state = {
       product: {
@@ -98,6 +103,26 @@ class ProductEditor extends React.Component {
     const rem = this.props.productList.items.length
     const inc = ofs < lim ? ofs : lim
     this.setFilter(this.state.search.pattern, lim, ofs - inc)
+  }
+
+  onExportToExcel() {
+    const dt = moment().format("YYYY-MM-DD-HH-ss")
+    return this.fileApi.saveFile("товары-" + dt + ".xlsx", [ "xls", "xlsx" ])
+      .then(file => {
+        if (file) {
+          return this.productApi
+            .exportAllToExcel(
+              file,
+              [
+                this.props.opt.logoLine1,
+                this.props.opt.logoLine2,
+                this.props.opt.logoLine3,
+                "Сформировано в СоцМаркет 2С",
+                dt,
+              ]
+            )
+        }
+      })
   }
 
   updateList() {
@@ -192,9 +217,12 @@ class ProductEditor extends React.Component {
                 onChange : this.onFilterChange,
               })}
             </Menu.Item>
-            <Menu.Item onClick={this.onPrevPage}><Icon name="angle left"  /></Menu.Item>
-            <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item>
-            <Menu.Item onClick={this.newProduct} position="right"><Icon name="plus" /></Menu.Item>
+            <Popup content="Предыдущая страница" trigger= { <Menu.Item onClick={this.onPrevPage}><Icon name="angle left"  /></Menu.Item> } />
+            <Popup content="Следующая страница"  trigger= { <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item> } />
+            <Menu.Menu position="right">
+              <Popup content="Сохранить в Excel" trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
+              <Popup content="Новый товар"       trigger= { <Menu.Item onClick={this.newProduct}>     <Icon name="plus" />      </Menu.Item> } />
+            </Menu.Menu>
           </Menu>
         </Container>
         {this.state.formVisible && this.form()}

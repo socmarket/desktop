@@ -47,9 +47,9 @@ class SaleCheckEditor extends React.Component {
     this.onItemEditorClose     = this.onItemEditorClose.bind(this)
     this.onGlobalKeyDown       = this.onGlobalKeyDown.bind(this)
     this.onActivate            = this.onActivate.bind(this)
-    this.onExportCheck         = this.onExportCheck.bind(this)
     this.onPrintCheck          = this.onPrintCheck.bind(this)
     this.onWantClearCheck      = this.onWantClearCheck.bind(this)
+    this.onExportToExcel       = this.onExportToExcel.bind(this)
     this.onConfirmClearCheck   = this.onConfirmClearCheck.bind(this)
 
     this.productPickerRef      = React.createRef()
@@ -202,13 +202,6 @@ class SaleCheckEditor extends React.Component {
     })
   }
 
-  onExportCheck() {
-    this.fileApi.saveFile("", [ "xls" ])
-      .then(res => {
-        console.log(res)
-      })
-  }
-
   onPrintCheck() {
     this.printerApi
       .printCheck({
@@ -235,6 +228,26 @@ class SaleCheckEditor extends React.Component {
     this.setState({
       clearConfirmVisible: true,
     })
+  }
+
+  onExportToExcel() {
+    const dt = moment().format("YYYY-MM-DD-HH-ss")
+    return this.fileApi.saveFile("чек-" + dt + ".xlsx", [ "xls", "xlsx" ])
+      .then(file => {
+        if (file) {
+          return this.saleCheckApi
+            .exportToExcel(
+              file,
+              this.state.items,
+              [
+                this.props.opt.logoLine1,
+                this.props.opt.logoLine2,
+                this.props.opt.logoLine3,
+                dt,
+              ]
+            )
+        }
+      })
   }
 
   onConfirmClearCheck() {
@@ -298,9 +311,10 @@ class SaleCheckEditor extends React.Component {
             title: "Текущий чек",
           },
           items: [
-            { title: "Печатать чек"     , description: "", onClick: this.onPrintCheck },
+            { title: "Печатать чек"      , description: "",        icon: "print"     , onClick: this.onPrintCheck },
+            { title: "Сохранить в Excel" , description: "Экспорт", icon: "file excel", onClick: this.onExportToExcel },
             { divider: true },
-            { title: "Очистить чек"     , description: "Удалить все", onClick: this.onWantClearCheck },
+            { title: "Очистить чек"      , description: "Удалить все", onClick: this.onWantClearCheck },
           ]
         }}
         onOpenRow={this.onOpenItem}
