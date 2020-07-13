@@ -305,6 +305,7 @@ class ProductForm extends React.Component {
           />
           <Button
             icon="bars"
+            type="button"
             size="mini"
             tabIndex={-1}
             style={{ marginTop: 23, height: "50%" }}
