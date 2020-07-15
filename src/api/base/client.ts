@@ -1,8 +1,10 @@
-import insertClientSql       from "./sql/client/insertClient.sql"
-import updateClientSql       from "./sql/client/updateClient.sql"
-import selectClientByIdSql   from "./sql/client/selectClientById.sql"
-import selectClientByNameSql from "./sql/client/selectClientByName.sql"
-import selectJournalByIdSql  from "./sql/client/selectJournalById.sql"
+import insertClientSql            from "./sql/client/insertClient.sql"
+import updateClientSql            from "./sql/client/updateClient.sql"
+import selectClientByIdSql        from "./sql/client/selectClientById.sql"
+import selectClientByNameSql      from "./sql/client/selectClientByName.sql"
+import selectJournalByIdSql       from "./sql/client/selectJournalById.sql"
+import selectSaleCheckByIdSql     from "./sql/client/selectSaleCheckById.sql"
+import selectSaleCheckItemsForSql from "./sql/client/selectSaleCheckItemsFor.sql"
 
 export interface Client {
   id: number
@@ -49,6 +51,16 @@ export default function initClientApi(db) {
         -amount * 100,
         currencyId,
       ])
-    )
+    ),
+    selectSaleCheckById: (saleCheckId) => {
+      return db.selectOne(selectSaleCheckByIdSql, { $saleCheckId: saleCheckId })
+        .then(saleCheck =>
+          db.select(selectSaleCheckItemsForSql,  { $saleCheckId: saleCheckId })
+            .then(items => ({
+              ...saleCheck,
+              items : items,
+            }))
+        )
+    }
   }
 }

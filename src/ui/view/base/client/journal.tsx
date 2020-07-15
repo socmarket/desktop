@@ -57,11 +57,6 @@ class ClientJournal extends React.Component {
     if (prevProps.client.id !== this.props.client.id) {
       this.reloadJournal()
     }
-    if (this.state.journal.length <= this.state.idx) {
-      this.setState({
-        idx: this.state.items.length - 1
-      })
-    }
   }
 
   reloadJournal() {
@@ -73,7 +68,7 @@ class ClientJournal extends React.Component {
   }
 
   onAmountChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ amount: value }))
+    ifNumberF(ev, (value) => this.setState({ amount: +value }))
   }
 
   onCurrencyChange(currency) {
@@ -123,8 +118,19 @@ class ClientJournal extends React.Component {
     }
   }
 
+  onRowOpen(id, idx) {
+    if (typeof this.props.onRowOpen === "function") {
+      this.setState({
+        idx: idx,
+      }, () => {
+        this.props.onRowOpen(id)
+      })
+    }
+  }
+
   table() {
     const items = this.state.journal.map(item => ({
+      id           : item.id,
       registeredAt : moment.utc(item.registeredAt).local().format("DD-MM-YYYY HH:mm"),
       amount       : item.amount,
       kind         : kindToLocal(item.kind),
@@ -170,7 +176,7 @@ class ClientJournal extends React.Component {
           </Table.Header>
           <Table.Body>
             { items.map((item, ridx) => (
-              <Table.Row key={ridx} active={ridx === this.state.idx}>
+              <Table.Row key={ridx} active={ridx === this.state.idx} onClick={() => this.onRowOpen(item.id, ridx)}>
                 <Table.Cell textAlign="right">{ridx+1}</Table.Cell>
                 <Table.Cell textAlign="left" >{item.registeredAt}</Table.Cell>
                 <Table.Cell textAlign="right">{item.amount}</Table.Cell>

@@ -87,9 +87,9 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage    : "autoPartsSaleCheckEditor",
+  activePage    : "baseSaleCheckEditor",
   user          : "admin",
-  authenticated : true,
+  authenticated : false,
   lastError     : "",
 }, action) {
   switch (action.type) {

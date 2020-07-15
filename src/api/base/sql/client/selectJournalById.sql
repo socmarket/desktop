@@ -1,12 +1,14 @@
 select
+  id,
   registeredAt,
   round(amount) as amount,
   kind
 from (
   select
-    registeredAt    as registeredAt,
+    -1             as id,
+    registeredAt   as registeredAt,
     amount / 100.0 as amount,
-    'moneyOut'      as kind
+    'moneyOut'     as kind
   from
     clientbalance
   where
@@ -15,6 +17,7 @@ from (
   union all
 
   select
+    -1             as id,
     registeredAt   as registeredAt,
     amount / 100.0 as amount,
     'moneyIn'      as kind
@@ -26,6 +29,7 @@ from (
   union all
 
   select
+    id           as id,
     soldAt       as registeredAt,
     - (case
       when (cost - discount) > cash then cost - discount - cash
@@ -34,6 +38,7 @@ from (
     'sale'       as kind
   from (
     select
+      salecheck.id as id,
       soldAt       as soldAt,
       cash / 100.0 as cash,
       salecheck.discount / 100.0 as discount,
@@ -45,6 +50,4 @@ from (
     group by salecheck.id
   ) t
 ) t
-where
-  round(amount) <> 0
 order by registeredAt desc

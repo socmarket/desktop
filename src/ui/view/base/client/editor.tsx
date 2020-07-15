@@ -3,12 +3,13 @@ import ClientJournal    from "./journal"
 import {
   inputWithRef
 }                    from "Util"
+import DTable           from "View/comp/dtable"
 
 import React, { Fragment } from "react"
 import moment from "moment"
 import { Translation } from 'react-i18next'
 import {
-  Header, Grid, Table, Form, Input, Select,
+  Header, Grid, Form, Input, Select,
   TextArea, Button, Segment, Image, Icon,
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown
@@ -21,6 +22,10 @@ class ClientEditor extends React.Component {
     name     : "",
     contacts : "",
     notes    : "",
+  }
+
+  emptySaleCheck = {
+    id  : -1,
   }
 
   constructor(props) {
@@ -41,6 +46,7 @@ class ClientEditor extends React.Component {
     this.clientApi = props.api.client
     this.state = {
       client            : this.emptyClient,
+      saleCheck         : this.emptySaleCheck,
       items             : [],
       journal           : [],
       pattern           : "",
@@ -54,9 +60,26 @@ class ClientEditor extends React.Component {
     return this.clientApi
       .find(this.state.pattern)
       .then(items => this.setState({
-        items: items,
-        idx  : idx >= items.length ? items.length - 1: idx
+        items     : items,
+        idx       : idx >= items.length ? items.length - 1: idx,
+        saleCheck : this.emptySaleCheck,
       }))
+  }
+
+  reloadSaleCheck(id) {
+    if (id > 0) {
+      return this.clientApi
+        .selectSaleCheckById(id)
+        .then(saleCheck => {
+          this.setState({
+            saleCheck : saleCheck,
+          })
+        })
+    } else {
+      this.setState({
+        saleCheck : this.emptySaleCheck,
+      })
+    }
   }
 
   componentDidMount() {
@@ -66,6 +89,7 @@ class ClientEditor extends React.Component {
   openClient(client, idx) {
     this.setState({
       client            : client,
+      saleCheck         : this.emptySaleCheck,
       infoEditorVisible : true,
     })
   }
@@ -209,6 +233,30 @@ class ClientEditor extends React.Component {
         opt={this.props.opt}
         theme={this.props.theme}
         onUpdate={() => this.reloadClientList()}
+        onRowOpen={(id) => this.reloadSaleCheck(id)}
+      />
+    )
+  }
+
+  saleCheck() {
+    return (
+      <DTable
+        titleIcon="cart"
+        title={`Чек: ${this.state.saleCheck.cost} - ${this.state.saleCheck.cash} - ${this.state.saleCheck.discount}`}
+        color={this.props.theme.mainColor}
+        items={this.state.saleCheck.items}
+        columns={[
+          { key: "productTitle"  , title: "Товар"   ,                             },
+          { key: "model       "  , title: "Модель"  ,                             },
+          { key: "price"         , title: "Цена"    , align: "right", positive: 1 },
+          { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
+          { key: "unitNotation"  , title: "Ед."     ,                             },
+          { key: "cost"          , title: "Сумма"   , align: "right", positive: 1 },
+          { key: "barcode"       , title: "Штрихкод",                             },
+        ]}
+        onOpenRow={() => {}}
+        onDeleteRow={() => {}}
+        onActivate={() => {}}
       />
     )
   }
@@ -220,8 +268,11 @@ class ClientEditor extends React.Component {
           <Grid.Column width={4}>
             {this.list()}
           </Grid.Column>
-          <Grid.Column width={6}>
+          <Grid.Column width={4}>
             {this.state.client.id > 0 && this.journal()}
+          </Grid.Column>
+          <Grid.Column width={8}>
+            {this.state.saleCheck.id > 0 && this.saleCheck()}
           </Grid.Column>
         </Grid>
         {this.state.infoEditorVisible && this.infoEditor()}
