@@ -8,10 +8,10 @@ from
   (
     select
       date(soldAt) as day,
-      sum(quantity * netprice) as cost,
-      sum(quantity * price) - discount as revenue,
+      sum(quantity * coalesce(netprice, 0)) as cost,
+      sum(quantity * price) - (case when quantity > 0 then discount else 0 end) as revenue,
       case
-        when cash < sum(quantity * price) then sum(quantity * price) - cash - discount
+        when cash < sum(quantity * price) then sum(quantity * price) - cash - (case when quantity > 0 then discount else 0 end)
         else 0
       end credit
     from

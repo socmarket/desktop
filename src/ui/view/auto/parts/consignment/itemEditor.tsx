@@ -76,17 +76,17 @@ class ConsignmentItem extends React.Component {
 
   onPriceChange(ev) {
     ifNumberF(ev, (value) => this.setState({
-      price: value,
+      price: +value,
       salePrice: (this.props.opt.defaultSaleMargin / 100.0) * Number(value) + Number(value),
     }))
   }
 
   onSalePriceChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ salePrice: value }))
+    ifNumberF(ev, (value) => this.setState({ salePrice: +value }))
   }
 
   onQuantityChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ quantity: value }))
+    ifNumberF(ev, (value) => this.setState({ quantity: +value }))
   }
 
   onUnitChange(unit) {

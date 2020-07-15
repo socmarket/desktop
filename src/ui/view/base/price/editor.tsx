@@ -44,7 +44,7 @@ class PriceEditor extends React.Component {
   }
 
   priceIsValid() {
-    return Number(this.state.price) > 0 && this.state.productId > 0
+    return this.state.price > 0 && this.state.productId > 0
   }
 
   reloadPrices(productId) {
@@ -57,9 +57,11 @@ class PriceEditor extends React.Component {
   }
 
   onPriceChange(ev) {
-    ifNumberF(ev, (value) => this.setState({
-      price: value
-    }))
+    ifNumberF(ev, (value) => {
+      if (value >= 0) {
+        this.setState({ price: +value })
+      }
+    })
   }
 
   onProductPick(product) {
