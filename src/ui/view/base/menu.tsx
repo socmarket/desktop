@@ -35,14 +35,16 @@ class MainMenu extends React.Component {
 
   constructor(props) {
     super(props)
-    this.onColorDoubleClick = this.onColorDoubleClick.bind(this)
+    this.onSettingsClick = this.onSettingsClick.bind(this)
     this.state = {
       showAbout: false,
     }
   }
 
-  onColorDoubleClick(ev) {
+  onSettingsClick(ev) {
     if (ev.shiftKey && ev.ctrlKey && this.props.app.user === "admin") {
+      this.props.openAdminService()
+    } else {
       this.props.openSettingsEditor()
     }
   }
@@ -200,7 +202,8 @@ class MainMenu extends React.Component {
         }
         <Menu.Menu position="right">
           <Menu.Item>
-            <Dropdown tabIndex={-1} text="Цвет" pointing onDoubleClick={this.onColorDoubleClick}>
+            <Icon name="paint brush" />
+            <Dropdown text="Цвет">
               <Dropdown.Menu>
                 { Object.keys(this.props.opt.themes).map(name => (
                   <Dropdown.Item
@@ -213,10 +216,25 @@ class MainMenu extends React.Component {
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Item>
-          <Menu.Item onClick={() => this.setState({ showAbout: true })}>
-            Версия
+          <Menu.Item>
+            <Icon name="options" />
+            <Dropdown tabIndex={-1} text="Настройки" pointing onDoubleClick={this.onColorDoubleClick}>
+              <Dropdown.Menu>
+                { (this.props.app.user === "admin") &&
+                  <Dropdown.Item onClick={this.onSettingsClick}>
+                    <Icon name="options" />
+                    Изменить настройки
+                  </Dropdown.Item>
+                }
+                <Dropdown.Item onClick={() => this.setState({ showAbout: true })}>
+                  <Icon name="code branch" />
+                  Версия
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </Menu.Item>
           <Menu.Item onClick={() => this.props.signOut()}>
+            <Icon name="sign out" />
             Выйти
           </Menu.Item>
         </Menu.Menu>

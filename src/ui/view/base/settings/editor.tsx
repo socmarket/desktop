@@ -43,14 +43,12 @@ class SettingsEditor extends React.Component {
     this.onDefaultClientChange     = this.onDefaultClientChange.bind(this)
     this.onDefaultSupplierChange   = this.onDefaultSupplierChange.bind(this)
     this.onDefaultUnitChange       = this.onDefaultUnitChange.bind(this)
-    this.onDefaultCurrencyChange   = this.onDefaultCurrencyChange.bind(this)
     this.onLabelSizeChange         = this.onLabelSizeChange.bind(this)
     this.onLabelOffsetXChange      = this.onLabelOffsetXChange.bind(this)
     this.onLogoLine1Change         = this.onLogoLine1Change.bind(this)
     this.onLogoLine2Change         = this.onLogoLine2Change.bind(this)
     this.onLogoLine3Change         = this.onLogoLine3Change.bind(this)
     this.onDefaultSaleMarginChange = this.onDefaultSaleMarginChange.bind(this)
-    this.onBarcodePrefixChange     = this.onBarcodePrefixChange.bind(this)
 
     this.onShowConsignmentHistoryInSaleCheckChanged = this.onShowConsignmentHistoryInSaleCheckChanged.bind(this)
 
@@ -101,18 +99,6 @@ class SettingsEditor extends React.Component {
   onDefaultUnitChange(unit) {
     this.settingsApi
       .changeDefaultUnit(unit.id)
-      .then(_ => this.props.reloadSettings())
-  }
-
-  onDefaultCurrencyChange(currency) {
-    this.settingsApi
-      .changeDefaultCurrency(currency.id)
-      .then(_ => this.props.reloadSettings())
-  }
-
-  onBarcodePrefixChange(ev) {
-    this.settingsApi
-      .changeBarcodePrefix(ev.target.value)
       .then(_ => this.props.reloadSettings())
   }
 
@@ -176,21 +162,6 @@ class SettingsEditor extends React.Component {
         </Header>
         <Form width={16}>
           <Form.Group>
-            <Form.Select
-              label="Специализация"
-              width={8}
-              value={this.props.opt.appMode}
-              options={S.appMode}
-              onChange={this.onAppModeChange}
-            />
-            <Form.Input
-              label="Наценка по умолчанию %"
-              width={8}
-              value={this.props.opt.defaultSaleMargin}
-              onChange={this.onDefaultSaleMarginChange}
-            />
-          </Form.Group>
-          <Form.Group>
             <Form.Field width={8}>
               <label>Клиент по умолчанию</label>
               <ClientPicker
@@ -217,28 +188,26 @@ class SettingsEditor extends React.Component {
                 onPick={this.onDefaultUnitChange}
               />
             </Form.Field>
-            <Form.Field width={8}>
-              <label>Валюта по умолчанию</label>
-              <CurrencyPicker
-                api={this.props.api}
-                value={this.props.opt.defaultCurrencyId}
-                onPick={this.onDefaultCurrencyChange}
-              />
-            </Form.Field>
+            <Form.Input
+              label="Наценка по умолчанию %"
+              width={8}
+              value={this.props.opt.defaultSaleMargin}
+              onChange={this.onDefaultSaleMarginChange}
+            />
           </Form.Group>
           <Form.Group>
-            <Form.Input
-              label="Префикс штрихкода"
-              width={8}
-              value={this.props.opt.barcodePrefix}
-              onChange={this.onBarcodePrefixChange}
-            />
             <Form.Select
               label="Размер ленты этикеток"
               width={8}
               value={this.props.opt.productLabelSize}
               options={S.labelSize}
               onChange={this.onLabelSizeChange}
+            />
+            <Form.Input
+              label="Отступ слева этикетки"
+              width={8}
+              value={this.props.opt.productLabelOffsetX}
+              onChange={this.onLabelOffsetXChange}
             />
           </Form.Group>
           <Form.Group>
@@ -247,12 +216,6 @@ class SettingsEditor extends React.Component {
               width={8}
               value={this.props.opt.logoLine1}
               onChange={this.onLogoLine1Change}
-            />
-            <Form.Input
-              label="Отступ слева этикетки"
-              width={8}
-              value={this.props.opt.productLabelOffsetX}
-              onChange={this.onLabelOffsetXChange}
             />
           </Form.Group>
           <Form.Group>

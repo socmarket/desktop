@@ -48,12 +48,12 @@ function initDb(fileName: string): Database {
     },
     select: async function <A> (sql: string, params: object) {
       return new Promise<A[]>((resolve, reject) => {
-        db.all(sql, params, function (err: Error, rows: A[]) {
+        db.all(sql, params, function (err: Error, rows: A[], meta) {
           if (err) {
             console.error(err, sql, params)
             reject(err)
           } else {
-            resolve(rows)
+            resolve(rows, meta)
           }
         })
       })

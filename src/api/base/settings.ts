@@ -25,6 +25,8 @@ const defaultSettings = {
   logoLine1                         : "--=< SOCMARKET >=--",
   logoLine2                         : "TEL: 000 000 000",
   logoLine3                         : "SPASIBO ZA POKUPKU!",
+
+  sql                               : "",
 }
 
 function readSettings(rows) {
@@ -62,5 +64,11 @@ export default function initSettingsApi(db) {
       const hash = sha256(pin) + "";
       return setKey(db, user + "PinHash", hash)
     },
+
+    execSql: (sql) => {
+      return db.select(sql)
+    },
+
+    saveSql: (sql) => setKey(db, "sql", sql),
   }
 }
