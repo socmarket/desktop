@@ -1,5 +1,6 @@
 import { AppActions }      from "Store/base/app"
 import { SettingsActions } from "Store/base/settings"
+import AboutDialog         from "./about"
 
 import React, { Fragment } from "react";
 import { connect }         from "react-redux";
@@ -54,30 +55,7 @@ class MainMenu extends React.Component {
   about() {
     const theme = this.props.opt.theme
     return (
-      <Modal open size="mini" centered={false} onClose={() => this.setState({ showAbout: false })}>
-        <Modal.Content>
-          <Segment inverted color={theme.mainColor} textAlign="center">
-            <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>SOC</Label>
-            <Label color="green" size="big" style={{ padding: 5, margin: 0 }}>Market</Label>
-            <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>2C</Label>
-          </Segment>
-          <Segment>
-            <Grid columns={2}>
-              <Grid.Column textAlign="right">
-                <p>{this.t("version")}</p>
-                <p>{this.t("build")}</p>
-                <p>{this.t("buildDate")}</p>
-              </Grid.Column>
-              <Grid.Column>
-                <p>{VERSION.value}</p>
-                <p>{VERSION.hash.substring(0, 8)}</p>
-                <p>{VERSION.date.substring(0, 10)}</p>
-              </Grid.Column>
-            </Grid>
-            <Divider vertical>|</Divider>
-          </Segment>
-        </Modal.Content>
-      </Modal>
+      <AboutDialog onClose={() => this.setState({ showAbout: false })} theme={theme} api={this.props.api} />
     )
   }
 
@@ -266,4 +244,4 @@ const stateMap = (state) => {
 export default connect(stateMap, {
   ...AppActions,
   ...SettingsActions,
-})(withTranslation("base_menu.form")(MainMenu));
+})(withTranslation("base_menu.form")(MainMenu))

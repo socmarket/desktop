@@ -47,7 +47,7 @@ class Home extends React.Component {
   render() {
     return (
       <Fragment>
-        <MainMenu />
+        <MainMenu api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />
         {view(this.props.app.activePage, this.props)}
       </Fragment>
     )

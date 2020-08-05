@@ -39,6 +39,7 @@
     version: "Версия",
     build: "Сборка",
     buildDate: "Дата сборки",
+    apiVersion: "Версия API",
   },
   "base_unit_listEditor.form": {
     units: "Ед. измерения",

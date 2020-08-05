@@ -21,10 +21,10 @@ function createMainWindow() {
   })
 
   if (isDev) {
-    const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
+    const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
     installExtension(REACT_DEVELOPER_TOOLS)
         .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
+        .catch((err) => console.log('An error occurred: ', err))
     win.webContents.openDevTools()
   }
 
@@ -41,15 +41,13 @@ function sendMsg(win, msg) {
 }
 
 function setupUpdater(win) {
-  const server = "http://127.0.0.1"
-
   let platform = process.arch === "x64" ? "win64" : "win32"
 
   if (process.platform === "darwin") {
     platform = "osx"
   }
 
-  const url = `${server}/update/${platform}/${app.getVersion()}/beta/`
+  const url = `${UPDATES_HOST}/update/${platform}/${app.getVersion()}/beta/`
 
   autoUpdater.setFeedURL({ url })
 
@@ -98,7 +96,9 @@ if (!isDev) {
 
 app.on("ready", () => {
   mainWindow = createMainWindow()
-  setupUpdater(mainWindow)
+  if (!isDev) {
+    setupUpdater(mainWindow)
+  }
 })
 
 app.on("activate", () => {

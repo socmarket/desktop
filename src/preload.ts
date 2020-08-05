@@ -5,7 +5,11 @@ import { initUsb } from "./lib/usb/api"
 const os = require("os")
 const path = require("path")
 const { app } = require("electron").remote
-const { contextBridge } = require("electron")
+const { contextBridge, ipcRenderer } = require("electron")
+
+ipcRenderer.on("async-msg", (event, arg) => {
+  console.log(arg)
+})
 
 function initApp(isDev) {
   const dbFilePath = isDev ? "socmag.db" : path.join(app.getPath("userData"), "socmag.db")

@@ -13,6 +13,7 @@
     "@nivo/bar": "^0.62.0",
     "@nivo/line": "^0.62.0",
     "@nivo/pie": "^0.62.0",
+    "axios": "^0.19.2",
     "crypto-js": "^4.0.0",
     "electron-squirrel-startup": "^1.0.0",
     "i18next": "^19.4.5",

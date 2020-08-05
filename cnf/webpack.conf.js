@@ -10,6 +10,8 @@ module.exports = {
   plugins: [
     git,
     new webpack.DefinePlugin({
+      "API_BASE_URL": JSON.stringify("http://127.0.0.1:3001"),
+      "UPDATES_HOST": JSON.stringify("http://127.0.0.1"),
       "VERSION": JSON.stringify({
         hash: git.commithash(),
         date: (new Date()).toISOString(),

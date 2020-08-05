@@ -50,6 +50,10 @@ import initFileApi, {
   FileApi,
 } from "./base/file"
 
+import initServerApi, {
+  ServerApi,
+} from "./base/server"
+
 export function initApi(db, usb) {
   return {
     autoParts: {
@@ -67,6 +71,7 @@ export function initApi(db, usb) {
     report: initReportApi(db),
     printer: initPrinterApi(db, usb),
     file: initFileApi(db),
+    server: initServerApi(db),
     migrateDb: () => db.migrate(),
   }
 }
