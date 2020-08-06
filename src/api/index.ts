@@ -50,9 +50,7 @@ import initFileApi, {
   FileApi,
 } from "./base/file"
 
-import initServerApi, {
-  ServerApi,
-} from "./base/server"
+import initServerApi from "./server"
 
 export function initApi(db, usb) {
   return {

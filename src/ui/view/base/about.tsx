@@ -26,7 +26,7 @@ class AboutDialog extends React.Component {
       loading: true,
       error: false,
     }, () => {
-      this.serverApi.checkHealth()
+      this.serverApi.health.check()
         .then(res => {
           this.setState({
             apiVersion: res.data.apiVersion,

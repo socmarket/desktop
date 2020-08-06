@@ -16,6 +16,7 @@
     "axios": "^0.19.2",
     "crypto-js": "^4.0.0",
     "electron-squirrel-startup": "^1.0.0",
+    "google-libphonenumber": "^3.2.10",
     "i18next": "^19.4.5",
     "moment": "^2.24.0",
     "nivo": "^0.31.0",

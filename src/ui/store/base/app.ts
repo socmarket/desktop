@@ -92,8 +92,9 @@ const AppActions = {
 function AppReducer (state = {
   activePage    : "autoPartsSaleCheckEditor",
   user          : "admin",
-  authenticated : true,
+  unlocked      : true,
   lastError     : "",
+  online        : false,
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
@@ -132,13 +133,29 @@ function AppReducer (state = {
       return Object.assign({}, state, { user: action.user })
     case "APP_AUTH_OK":
       return Object.assign({}, state, {
-        authenticated: true,
+        unlocked: true,
         activePage   : "autoPartsSaleCheckEditor",
       })
     case "APP_AUTH_FAIL":
-      return Object.assign({}, state, { authenticated: false })
+      return Object.assign({}, state, { unlocked: false })
     case "APP_SIGN_OUT":
-      return Object.assign({}, state, { authenticated: false })
+      return Object.assign({}, state, { unlocked: false })
+
+    case "SERVER_HEALTH_OK": {
+      if (state.online) {
+        return state
+      } else {
+        return Object.assign({}, state, { online: true })
+      }
+    }
+    case "SERVER_HEALTH_NOT_OK": {
+      if (state.online) {
+        return Object.assign({}, state, { online: false })
+      } else {
+        return state
+      }
+    }
+
     default:
       return state
   }
