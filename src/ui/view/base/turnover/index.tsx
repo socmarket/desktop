@@ -7,6 +7,7 @@ import {
   Table, Button, Segment, Image, Label,
   Statistic, Header, Icon,
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class Turnover extends React.Component {
 
@@ -25,6 +26,7 @@ class Turnover extends React.Component {
         total       : 0,
       },
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -45,21 +47,21 @@ class Turnover extends React.Component {
       <Table celled structured>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell rowSpan={2} textAlign="center">Группа</Table.HeaderCell>
-            <Table.HeaderCell colSpan={2} textAlign="center">Куплено</Table.HeaderCell>
-            <Table.HeaderCell colSpan={2} textAlign="center">Продано</Table.HeaderCell>
-            <Table.HeaderCell rowSpan={2} textAlign="center">Всего</Table.HeaderCell>
+            <Table.HeaderCell rowSpan={2} textAlign="center">{this.t("group")}</Table.HeaderCell>
+            <Table.HeaderCell colSpan={2} textAlign="center">{this.t("purchased")}</Table.HeaderCell>
+            <Table.HeaderCell colSpan={2} textAlign="center">{this.t("sold")}</Table.HeaderCell>
+            <Table.HeaderCell rowSpan={2} textAlign="center">{this.t("total")}</Table.HeaderCell>
           </Table.Row>
           <Table.Row>
-            <Table.HeaderCell textAlign="center">Кол-во</Table.HeaderCell>
-            <Table.HeaderCell textAlign="center">Сумма</Table.HeaderCell>
-            <Table.HeaderCell textAlign="center">Кол-во</Table.HeaderCell>
-            <Table.HeaderCell textAlign="center">Сумма</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("quantity")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("amount")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("quantity")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("amount")}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Всего                                          </Table.HeaderCell>
+            <Table.HeaderCell>{this.t("total")}                              </Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.inQuantity )}</Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.inCost     )}</Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.outQuantity)}</Table.HeaderCell>
@@ -89,7 +91,7 @@ class Turnover extends React.Component {
         <Segment raised style={{ height: "100%" }}>
           <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
             <Icon name="refresh" />
-            Оборот
+            {this.t("turnover")}
           </Header>
           {this.turnover()}
         </Segment>
@@ -99,4 +101,4 @@ class Turnover extends React.Component {
 
 }
 
-export default Turnover
+export default withTranslation("base_tornover_index.form")(Turnover)

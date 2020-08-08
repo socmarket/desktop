@@ -77,4 +77,19 @@
     opening_error: "Ошибка открытия=",
     unit: "Единица измерения=",
   },
+  "base_tornover_index.form": {
+    group: "Группа=",
+    purchased: "Куплено=",
+    sold: "Продано=",
+    total: "Всего=",
+    quantity: "Кол-во=",
+    amount: "Сумма=",
+    turnover: "Оборот=",
+  },
+
+
+
+
+
+
 }
