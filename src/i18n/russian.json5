@@ -52,11 +52,11 @@
     currencyRates: "Курсы валют=",
     clients: "Клиенты=",
     suppliers: "Поставщики=",
-    options: "Настройки=",
+    paintBrush: "Цвет=",
+    settings: "Настройки=",
     changeSettings:"Изменить настройки=",
     codeBranch: "Версия=",
     signOut: "Выйти=",
-    paintBrush: "Цвет=",
     calculations: "Расчёты=",
   },
   "base_about.form": {

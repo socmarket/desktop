@@ -7,6 +7,7 @@ import {
   Button, Menu, Segment, Label, Icon,
   Dropdown, Modal, Grid, Divider,
 }                          from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 const sales = [
   "autoPartsSaleCheckEditor",
@@ -39,6 +40,7 @@ class MainMenu extends React.Component {
     this.state = {
       showAbout: false,
     }
+    this.t = this.props.t
   }
 
   onSettingsClick(ev) {
@@ -62,9 +64,9 @@ class MainMenu extends React.Component {
           <Segment>
             <Grid columns={2}>
               <Grid.Column textAlign="right">
-                <p>Версия</p>
-                <p>Сборка</p>
-                <p>Дата сборки</p>
+                <p>{this.t("version")}</p>
+                <p>{this.t("build")}</p>
+                <p>{this.t("buildDate")}</p>
               </Grid.Column>
               <Grid.Column>
                 <p>{VERSION.value}</p>
@@ -96,62 +98,62 @@ class MainMenu extends React.Component {
         { (this.props.opt.appMode === "auto/parts") &&
           <Fragment>
             { (user === "cashier" || user === "manager" || user === "admin") &&
-            <Dropdown tabIndex={-1} text="Продажи" pointing className={"link item " + salesActive}>
+            <Dropdown tabIndex={-1} text={this.t("sales")} pointing className={"link item " + salesActive}>
               <Dropdown.Menu>
                 <Dropdown.Item
                   icon="calculator"
                   active={this.props.app.activePage === "autoPartsSaleCheckEditor"}
                   onClick={() => this.props.openAutoPartsSaleCheckEditor()}
-                  text="Касса"
+                  text={this.t("cashier")}
                 />
                 <Dropdown.Item
                   icon="list layout"
                   active={this.props.app.activePage === "autoPartsSaleJournal"}
                   onClick={() => this.props.openAutoPartsSaleJournal()}
-                  text="Журнал продаж"
+                  text={this.t("salesList")}
                 />
               </Dropdown.Menu>
             </Dropdown>
             }
 
             { (user === "manager" || user === "admin") &&
-            <Dropdown tabIndex={-1} text="Товары" pointing className={"link item " + productsActive}>
+            <Dropdown tabIndex={-1} text={this.t("products")} pointing className={"link item " + productsActive}>
               <Dropdown.Menu>
                 <Dropdown.Item
                   icon="zip"
                   active={this.props.app.activePage === "autoPartsConsignmentEditor"}
                   onClick={() => this.props.openAutoPartsConsignmentEditor()}
-                  text="Приёмка на склад"
+                  text={this.t("consignmentAcceptance")}
                 />
                 <Dropdown.Item
                   icon="list layout"
                   active={this.props.app.activePage === "autoPartsConsignmentJournal"}
                   onClick={() => this.props.openAutoPartsConsignmentJournal()}
-                  text="Журнал поступлений"
+                  text={this.t("consignmentList")}
                 />
                 <Dropdown.Item
                   icon="book"
                   active={this.props.app.activePage === "autoPartsProductEditor"}
                   onClick={() => this.props.openAutoPartsProductEditor()}
-                  text="Описание товаров"
+                  text={this.t("productsDescription")}
                 />
                 <Dropdown.Item
                   icon="file excel"
                   active={this.props.app.activePage === "autoPartsProductImporter"}
                   onClick={() => this.props.openAutoPartsProductImporter()}
-                  text="Загрузка товаров из Excel"
+                  text={this.t("productImporter")}
                 />
                 <Dropdown.Item
                   icon="sitemap"
                   active={this.props.app.activePage === "baseCategoryEditor"}
                   onClick={() => this.props.openCategoryEditor()}
-                  text="Группы товаров"
+                  text={this.t("productsCategories")}
                 />
                 <Dropdown.Item
                   icon="law"
                   active={this.props.app.activePage === "baseUnitEditor"}
                   onClick={() => this.props.openUnitEditor()}
-                  text="Единицы измерения"
+                  text={this.t("units")}
                 />
               </Dropdown.Menu>
             </Dropdown>
@@ -159,43 +161,43 @@ class MainMenu extends React.Component {
           </Fragment>
         }
         { (user === "admin") &&
-        <Dropdown tabIndex={-1} text="Расчёты" pointing className={"link item " + calcsActive}>
+        <Dropdown tabIndex={-1} text={this.t("calculations")} pointing className={"link item " + calcsActive}>
           <Dropdown.Menu>
             <Dropdown.Item
               icon="dashboard"
               active={this.props.app.activePage === "baseDashboard"}
               onClick={() => this.props.openDashboard()}
-              text="Дашборд"
+              text={this.t("dashboard")}
             />
             <Dropdown.Item
               icon="refresh"
               active={this.props.app.activePage === "baseTurnover"}
               onClick={() => this.props.openTurnover()}
-              text="Оборот"
+              text={this.t("turnover")}
             />
             <Dropdown.Item
               icon="chart line"
               active={this.props.app.activePage === "basePriceEditor"}
               onClick={() => this.props.openPriceEditor()}
-              text="Цены"
+              text={this.t("prices")}
             />
             <Dropdown.Item
               icon="dollar sign"
               active={this.props.app.activePage === "baseCurrencyEditor"}
               onClick={() => this.props.openCurrencyEditor()}
-              text="Курсы валют"
+              text={this.t("currencyRates")}
             />
             <Dropdown.Item
               icon="users"
               active={this.props.app.activePage === "baseClientEditor"}
               onClick={() => this.props.openClientEditor()}
-              text="Клиенты"
+              text={this.t("clients")}
             />
             <Dropdown.Item
               icon="truck"
               active={this.props.app.activePage === "baseSupplierEditor"}
               onClick={() => this.props.openSupplierEditor()}
-              text="Поставщики"
+              text={this.t("suppliers")}
             />
           </Dropdown.Menu>
         </Dropdown>
@@ -203,7 +205,7 @@ class MainMenu extends React.Component {
         <Menu.Menu position="right">
           <Menu.Item>
             <Icon name="paint brush" />
-            <Dropdown text="Цвет">
+            <Dropdown text={this.t("paintBrush")}>
               <Dropdown.Menu>
                 { Object.keys(this.props.opt.themes).map(name => (
                   <Dropdown.Item
@@ -218,24 +220,24 @@ class MainMenu extends React.Component {
           </Menu.Item>
           <Menu.Item>
             <Icon name="options" />
-            <Dropdown tabIndex={-1} text="Настройки" pointing onDoubleClick={this.onColorDoubleClick}>
+            <Dropdown tabIndex={-1} text={this.t("settings")} pointing onDoubleClick={this.onColorDoubleClick}>
               <Dropdown.Menu>
                 { (this.props.app.user === "admin") &&
                   <Dropdown.Item onClick={this.onSettingsClick}>
                     <Icon name="options" />
-                    Изменить настройки
+                    {this.t("changeSettings")}
                   </Dropdown.Item>
                 }
                 <Dropdown.Item onClick={() => this.setState({ showAbout: true })}>
                   <Icon name="code branch" />
-                  Версия
+                  {this.t("codeBranch")}
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Item>
           <Menu.Item onClick={() => this.props.signOut()}>
             <Icon name="sign out" />
-            Выйти
+            {this.t("signOut")}
           </Menu.Item>
         </Menu.Menu>
       </Menu>
@@ -264,4 +266,4 @@ const stateMap = (state) => {
 export default connect(stateMap, {
   ...AppActions,
   ...SettingsActions,
-})(MainMenu);
+})(withTranslation("base_menu.form")(MainMenu));
