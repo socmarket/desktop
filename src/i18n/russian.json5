@@ -64,9 +64,9 @@
     build: "Сборка=",
     buildDate: "Дата сборки=",
   },
-  "base_about.form": {
-    version: "Версия=",
-    build: "Сборка=",
+  "base_unit_listEditor.form": {
+    units: "Ед. измерения=",
+    unitSearch: "Поиск ед. измерения=",
     buildDate: "Дата сборки=",
   },
 }

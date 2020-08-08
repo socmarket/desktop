@@ -12,6 +12,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class UnitListEditor extends React.Component {
 
@@ -44,6 +45,7 @@ class UnitListEditor extends React.Component {
       infoEditorVisible : false,
       idx               : -1,
     }
+    this.t = this.props.t
   }
 
   reloadUnitList() {
@@ -158,14 +160,14 @@ class UnitListEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="law" />
-          Ед. измерения
+          {this.t("units")}
         </Header>
         <Form width={16}>
           <Form.Group>
             <Form.Input
               floated="left"
               icon="search"
-              placeholder="Поиск единицы измерения"
+              placeholder={this.t("unitSearch")}
               value={this.state.pattern}
               control={this.patternInput}
               onChange={this.onPatternChange}
@@ -202,4 +204,4 @@ class UnitListEditor extends React.Component {
   }
 }
 
-export default UnitListEditor
+export default withTranslation("base_unit_listEditor.form")(UnitListEditor)
