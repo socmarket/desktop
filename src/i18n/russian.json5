@@ -86,6 +86,16 @@
     amount: "Сумма=",
     turnover: "Оборот=",
   },
+  "base_supplier_journal.form":{
+    moneyIn:         "оплата долга=",
+    moneyOut:        "задолженность=",
+    consignment:     "долг за товар=",
+    settlementWith:  "Расчёт с= ",
+    number:          "#=",
+    dateTime:        "Дата/Время=",
+    amount:          "Сумма=",
+    whoToWhom:       "Кто кому=",
+  },
 
 
 

@@ -12,17 +12,7 @@ import {
   Table, Header, Segment, Icon,
   Container, Input, Button, Form,
 } from "semantic-ui-react"
-
-function kindToLocal(kind) {
-  var local = ""
-  switch (kind) {
-    case "moneyIn"     : local = "оплата долга"  ; break
-    case "moneyOut"    : local = "задолженность" ; break
-    case "consignment" : local = "долг за товар" ; break
-    default            : local = "неизвестно"    ; break
-  }
-  return local
-}
+import { withTranslation } from 'react-i18next';
 
 class SupplierJournal extends React.Component {
 
@@ -47,6 +37,7 @@ class SupplierJournal extends React.Component {
       currencyId : props.opt.defaultCurrencyId,
       journal    : [],
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -127,13 +118,13 @@ class SupplierJournal extends React.Component {
     const items = this.state.journal.map(item => ({
       registeredAt : moment.utc(item.registeredAt).local().format("DD-MM-YYYY HH:mm"),
       amount       : item.amount,
-      kind         : kindToLocal(item.kind),
+      kind         : this.t(item.kind),
     }))
     return (
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="exchange" />
-          {"Расчёт с " + this.props.supplier.name}
+          {this.t("settlementWith") + this.props.supplier.name}
         </Header>
         <Form width={16}>
           <Form.Group>
@@ -162,10 +153,10 @@ class SupplierJournal extends React.Component {
         >
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell textAlign="center" >#         </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >Дата/Время</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >Сумма     </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >Кто кому  </Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("number")}</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("dateTime")}</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("amount")}</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("whoToWhom")}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -188,4 +179,4 @@ class SupplierJournal extends React.Component {
   }
 }
 
-export default React.forwardRef((props, ref) => <SupplierJournal innerRef={ref} {...props} />)
+export default withTranslation("base_supplier_journal.form")(React.forwardRef((props, ref) => <SupplierJournal innerRef={ref} {...props} />))
