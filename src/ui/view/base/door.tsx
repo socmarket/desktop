@@ -4,12 +4,7 @@ import { SettingsActions } from "Store/base/settings"
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { Button, Form, Grid, Header, Image, Message, Segment, Label } from "semantic-ui-react"
-
-const users = [
-  { key: "cashier", value: "cashier", text: "Кассир"   },
-  { key: "manager", value: "manager", text: "Менеджер" },
-  { key: "admin"  , value: "admin"  , text: "Владелец" },
-]
+import { withTranslation } from "react-i18next";
 
 class Door extends React.Component {
 
@@ -22,6 +17,12 @@ class Door extends React.Component {
       pin: "",
       pin2: "",
     }
+    this.t = this.props.t
+    this.users = [
+      { key: "cashier", value: "cashier", text: this.t("cashier") },
+      { key: "manager", value: "manager", text: this.t("manager") },
+      { key: "admin"  , value: "admin"  , text: this.t("admin")   },
+    ]
   }
 
   needR() {
@@ -70,22 +71,22 @@ class Door extends React.Component {
             <Label color="green" size="big" style={{ padding: 5, margin: 0 }}>Market</Label>
             <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>2C</Label>
             <Header as="h2" color="teal" textAlign="center">
-              { !needReg && "Войдите чтобы продолжить работу" }
-              { needReg && "Установите пароль чтобы продолжить работу" }
+              { !needReg && this.t("greeting1") }
+              { needReg && this.t("greeting2") }
             </Header>
             <Form size="large" error={this.props.app.lastError.length > 0}>
               <Form.Select
                 autoFocus
                 fluid
                 value={this.props.app.user}
-                options={users}
+                options={this.users}
                 onChange={(ev, { value }) => this.props.changeUser(value)}
               />
               <Form.Input
                 fluid
                 icon="lock"
                 iconPosition="left"
-                placeholder="Пин"
+                placeholder={this.t("placeholder1")}
                 type="password"
                 value={this.state.pin}
                 onChange={this.onPinChange}
@@ -94,7 +95,7 @@ class Door extends React.Component {
                 fluid
                 icon="lock"
                 iconPosition="left"
-                placeholder="Повторите пароль"
+                placeholder={this.t("placeholder2")}
                 type="password"
                 value={this.state.pin2}
                 onChange={this.onPin2Change}
@@ -115,4 +116,5 @@ const stateMap = (state) => {
   }
 }
 
-export default connect(stateMap, { ...AppActions, ...SettingsActions })(Door);
+export default connect(stateMap,
+  { ...AppActions, ...SettingsActions })(withTranslation("base_door.form")(Door));
