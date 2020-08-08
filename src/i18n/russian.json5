@@ -67,6 +67,14 @@
   "base_unit_listEditor.form": {
     units: "Ед. измерения=",
     unitSearch: "Поиск ед. измерения=",
-    buildDate: "Дата сборки=",
+  },
+  "base_unit_infoEditor.form": {
+    name: "Наименование=",
+    reduction: "Сокращение=",
+    create: "Создать=",
+    update: "Изменить=",
+    new_unit_registration: "Регистрация новой единицы измерения=",
+    opening_error: "Ошибка открытия=",
+    unit: "Единица измерения=",
   },
 }
