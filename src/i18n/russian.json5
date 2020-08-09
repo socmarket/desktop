@@ -96,6 +96,16 @@
     amount:          "Сумма=",
     whoToWhom:       "Кто кому=",
   },
+  "base_supplier_infoEditor.form":{
+    fullName: "ФИО=",
+    contacts: "Контакты=",
+    notes: "Заметки=",
+    create: "Создать=",
+    update: "Изменить=",
+    supplierRegistration: "Регистрация нового поставщика=",
+    openingError: "Ошибка открытия=",
+    supplier: "Поставщик=",
+  },
 
 
 

@@ -9,6 +9,7 @@ import {
   Segment, Message, Modal,
   Container, Header, Divider
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class SupplierInfoEditor extends React.Component {
 
@@ -30,6 +31,7 @@ class SupplierInfoEditor extends React.Component {
       ...props.supplier,
       errorMsg: "",
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -84,7 +86,7 @@ class SupplierInfoEditor extends React.Component {
       <Form>
         <Form.Field>
           <Form.Input
-            label="ФИО"
+            label={this.t("fullName")}
             value={this.state.name || ""}
             control={this.nameInput}
             onChange={this.onNameChange}
@@ -92,14 +94,14 @@ class SupplierInfoEditor extends React.Component {
         </Form.Field>
         <Form.Field>
           <Form.TextArea
-            label="Контакты"
+            label={this.t("contacts")}
             value={this.state.contacts || ""}
             onChange={this.onContactsChange}
           />
         </Form.Field>
         <Form.Field>
           <Form.TextArea
-            label="Заметки"
+            label={this.t("notes")}
             value={this.state.notes || ""}
             onChange={this.onNotesChange}
           />
@@ -108,13 +110,13 @@ class SupplierInfoEditor extends React.Component {
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onCreate}>Создать (Shift + Enter)
+            onClick={this.onCreate}>this.t("create") (Shift + Enter)
         </Button>}
         {this.props.supplier.id > 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onUpdate}>Изменить (Shift + Enter)
+            onClick={this.onUpdate}>this.t("update") (Shift + Enter)
         </Button>}
       </Form>
     )
@@ -129,14 +131,14 @@ class SupplierInfoEditor extends React.Component {
   }
 
   supplierDesc() {
-    return `#${this.props.supplier.id}: ${this.props.supplier.name}` 
+    return `#${this.props.supplier.id}: ${this.props.supplier.name}`
   }
 
   render() {
     const header =
       this.state.id ?
-        (this.state.id > 0 ? this.supplierDesc() : "Регистрация нового поставщик") :
-        "Ошибка открытия"
+          (this.state.id > 0 ? this.supplierDesc() : this.t("supplierRegistration")) :
+        this.t("openingError")
     return (
       <Modal
         open={this.props.open}
@@ -145,7 +147,7 @@ class SupplierInfoEditor extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Поставщик: {header}
+          {this.t("supplier")}: {header}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -155,4 +157,4 @@ class SupplierInfoEditor extends React.Component {
   }
 }
 
-export default SupplierInfoEditor
+export default withTranslation("base_supplier_infoEditor.form")(SupplierInfoEditor)
