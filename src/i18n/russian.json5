@@ -106,6 +106,9 @@
     openingError: "Ошибка открытия=",
     supplier: "Поставщик=",
   },
+  "base_supplier_editor.form":{
+    suppliers: "Поставщики=",
+  },
 
 
 

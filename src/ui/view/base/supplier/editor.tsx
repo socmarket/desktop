@@ -13,6 +13,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class SupplierEditor extends React.Component {
 
@@ -47,6 +48,7 @@ class SupplierEditor extends React.Component {
       infoEditorVisible : false,
       idx               : -1,
     }
+    this.t = this.props.t
   }
 
   reloadSupplierList() {
@@ -161,7 +163,7 @@ class SupplierEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="shipping fast" />
-          Поставщики
+          {this.t("suppliers")}
         </Header>
         <Form width={16}>
           <Form.Group>
@@ -226,4 +228,4 @@ class SupplierEditor extends React.Component {
   }
 }
 
-export default SupplierEditor
+export default withTranslation("base_supplier_editor.form")(SupplierEditor)
