@@ -110,13 +110,13 @@ class SupplierInfoEditor extends React.Component {
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onCreate}>this.t("create") (Shift + Enter)
+            onClick={this.onCreate}>{this.t("create")} (Shift + Enter)
         </Button>}
         {this.props.supplier.id > 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onUpdate}>this.t("update") (Shift + Enter)
+            onClick={this.onUpdate}>{this.t("update")} (Shift + Enter)
         </Button>}
       </Form>
     )
