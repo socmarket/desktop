@@ -20,19 +20,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown, Radio
 } from "semantic-ui-react"
-
-const S = {
-  appMode: [
-    { key: "auto/parts"      , value: "auto/parts"      , text: "Авто/Запчасти"   },
-    { key: "auto/accessories", value: "auto/accessories", text: "Авто/Аксессуары" },
-    { key: "miniMarket"      , value: "miniMarket"      , text: "Мини маркет"     },
-  ],
-  labelSize: [
-    { key: "30x20", value: "30x20", text: "30mm x 20mm" },
-    { key: "60x30", value: "60x30", text: "60mm x 30mm" },
-    { key: "60x40", value: "60x40", text: "60mm x 40mm" },
-  ],
-}
+import { withTranslation } from 'react-i18next';
 
 class SettingsEditor extends React.Component {
 
@@ -56,6 +44,19 @@ class SettingsEditor extends React.Component {
     this.settingsApi = props.api.settings
     this.state = {
       printers: []
+    }
+    this.t = this.props.t
+    this.S = {
+      appMode: [
+        { key: "auto/parts"      , value: "auto/parts"      , text: this.t("autoParts")       },
+        { key: "auto/accessories", value: "auto/accessories", text: this.t("autoAccessories") },
+        { key: "miniMarket"      , value: "miniMarket"      , text: this.t("miniMarket")      },
+      ],
+      labelSize: [
+        { key: "30x20", value: "30x20", text: "30mm x 20mm" },
+        { key: "60x30", value: "60x30", text: "60mm x 30mm" },
+        { key: "60x40", value: "60x40", text: "60mm x 40mm" },
+      ],
     }
   }
 
@@ -129,14 +130,14 @@ class SettingsEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="print" />
-          Принтеры
+          {this.t("printers")}
         </Header>
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Модель</Table.HeaderCell>
-              <Table.HeaderCell>Производитель</Table.HeaderCell>
-              <Table.HeaderCell>ID</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("model")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("manufacturer")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("id")}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -158,12 +159,12 @@ class SettingsEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="settings" />
-          Настройки
+          {this.t("settings")}
         </Header>
         <Form width={16}>
           <Form.Group>
             <Form.Field width={8}>
-              <label>Клиент по умолчанию</label>
+              <label>{this.t("defaultClient")}</label>
               <ClientPicker
                 api={this.props.api}
                 value={this.props.opt.defaultClientId}
@@ -171,7 +172,7 @@ class SettingsEditor extends React.Component {
               />
             </Form.Field>
             <Form.Field width={8}>
-              <label>Поставщик по умолчанию</label>
+              <label>{this.t("defaultSupplier")}</label>
               <SupplierPicker
                 api={this.props.api}
                 value={this.props.opt.defaultSupplierId}
@@ -181,7 +182,7 @@ class SettingsEditor extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Field width={8}>
-              <label>Ед по умолчанию</label>
+              <label>{this.t("defaultUnit")}</label>
               <UnitPicker
                 api={this.props.api}
                 value={this.props.opt.defaultUnitId}
@@ -189,7 +190,7 @@ class SettingsEditor extends React.Component {
               />
             </Form.Field>
             <Form.Input
-              label="Наценка по умолчанию %"
+              label={this.t("defaultMarkup")}
               width={8}
               value={this.props.opt.defaultSaleMargin}
               onChange={this.onDefaultSaleMarginChange}
@@ -197,14 +198,14 @@ class SettingsEditor extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Select
-              label="Размер ленты этикеток"
+              label={this.t("labelTapeSize")}
               width={8}
               value={this.props.opt.productLabelSize}
-              options={S.labelSize}
+              options={this.S.labelSize}
               onChange={this.onLabelSizeChange}
             />
             <Form.Input
-              label="Отступ слева этикетки"
+              label={this.t("leftIndent")}
               width={8}
               value={this.props.opt.productLabelOffsetX}
               onChange={this.onLabelOffsetXChange}
@@ -212,7 +213,7 @@ class SettingsEditor extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Input
-              label="Заголовок чека #1"
+              label={this.t("checkTitle1")}
               width={8}
               value={this.props.opt.logoLine1}
               onChange={this.onLogoLine1Change}
@@ -220,7 +221,7 @@ class SettingsEditor extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Input
-              label="Заголовок чека #2"
+              label={this.t("checkTitle2")}
               width={8}
               value={this.props.opt.logoLine2}
               onChange={this.onLogoLine2Change}
@@ -228,7 +229,7 @@ class SettingsEditor extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Input
-              label="Заголовок чека #3"
+              label={this.t("checkTitle3")}
               width={8}
               value={this.props.opt.logoLine3}
               onChange={this.onLogoLine3Change}
@@ -237,7 +238,7 @@ class SettingsEditor extends React.Component {
           <Form.Group>
             <Form.Field width={16}>
               <Radio
-                label="Показывать закупочные цены в кассе"
+                label={this.t("showPurchasePrices")}
                 toggle
                 checked={this.props.opt.showConsignmentHistoryInSaleCheck}
                 onChange={this.onShowConsignmentHistoryInSaleCheckChanged}
@@ -272,4 +273,5 @@ const stateMap = (state) => {
   }
 }
 
-export default connect(stateMap, { ...SettingsActions })(SettingsEditor)
+export default connect(stateMap,
+  { ...SettingsActions })(withTranslation("base_settings_editor.form")(SettingsEditor))

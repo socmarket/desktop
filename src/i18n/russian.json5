@@ -86,7 +86,7 @@
     amount: "Сумма=",
     turnover: "Оборот=",
   },
-  "base_supplier_journal.form":{
+  "base_supplier_journal.form": {
     moneyIn:         "оплата долга=",
     moneyOut:        "задолженность=",
     consignment:     "долг за товар=",
@@ -96,7 +96,7 @@
     amount:          "Сумма=",
     whoToWhom:       "Кто кому=",
   },
-  "base_supplier_infoEditor.form":{
+  "base_supplier_infoEditor.form": {
     fullName: "ФИО=",
     contacts: "Контакты=",
     notes: "Заметки=",
@@ -106,8 +106,38 @@
     openingError: "Ошибка открытия=",
     supplier: "Поставщик=",
   },
-  "base_supplier_editor.form":{
+  "base_supplier_editor.form": {
     suppliers: "Поставщики=",
+    supplierSearch: "Поиск поставщика=",
+  },
+  "base_settings_service.form": {
+    autoParts: "Авто/Запчасти=",
+    autoAccessories: "Авто/Аксессуары=",
+    miniMarket: "Мини маркет=",
+    specialization: "Специализация=",
+    barcodePrefix: " Префикс штрихкода=",
+    defaultCurrency: " Валюта по умолчанию=",
+    sqlEditor: " SQL Editor=",
+  },
+  "base_settings_editor.form": {
+    autoParts: "Авто/Запчасти=",
+    autoAccessories: "Авто/Аксессуары=",
+    miniMarket: "Мини маркет=",
+    printers: "Принтеры=",
+    model: "Модель=",
+    manufacturer: "Производитель=",
+    id: "ID=",
+    settings: "Настройки=",
+    defaultClient: "Клиент по умолчанию=",
+    defaultSupplier: "Поставщик по умолчанию=",
+    defaultUnit: "Ед по умолчанию=",
+    defaultMarkup: "Наценка по умолчанию %=",
+    labelTapeSize: "Размер ленты этикеток=",
+    leftIndent: "Отступ слева этикетки=",
+    checkTitle1: "Заголовок чека #1=",
+    checkTitle2: "Заголовок чека #2=",
+    checkTitle3: "Заголовок чека #3=",
+    showPurchasePrices: "Показывать закупочные цены в кассеs=",
   },
 
 

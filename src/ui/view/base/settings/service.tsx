@@ -20,19 +20,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown, Radio
 } from "semantic-ui-react"
-
-const S = {
-  appMode: [
-    { key: "auto/parts"      , value: "auto/parts"      , text: "Авто/Запчасти"   },
-    { key: "auto/accessories", value: "auto/accessories", text: "Авто/Аксессуары" },
-    { key: "miniMarket"      , value: "miniMarket"      , text: "Мини маркет"     },
-  ],
-  labelSize: [
-    { key: "30x20", value: "30x20", text: "30mm x 20mm" },
-    { key: "60x30", value: "60x30", text: "60mm x 30mm" },
-    { key: "60x40", value: "60x40", text: "60mm x 40mm" },
-  ],
-}
+import { withTranslation } from 'react-i18next';
 
 class SettingsEditor extends React.Component {
 
@@ -48,6 +36,19 @@ class SettingsEditor extends React.Component {
     this.settingsApi = props.api.settings
     this.state = {
       items: [],
+    }
+    this.t = this.props.t
+    this.S = {
+      appMode: [
+        { key: "auto/parts"      , value: "auto/parts"      , text: this.t("autoParts")       },
+        { key: "auto/accessories", value: "auto/accessories", text: this.t("autoAccessories") },
+        { key: "miniMarket"      , value: "miniMarket"      , text: this.t("miniMarket")      },
+      ],
+      labelSize: [
+        { key: "30x20", value: "30x20", text: "30mm x 20mm" },
+        { key: "60x30", value: "60x30", text: "60mm x 30mm" },
+        { key: "60x40", value: "60x40", text: "60mm x 40mm" },
+      ],
     }
   }
 
@@ -92,16 +93,16 @@ class SettingsEditor extends React.Component {
         <Form width={16}>
           <Form.Group>
             <Form.Select
-              label="Специализация"
+              label={this.t("specialization")}
               width={16}
               value={this.props.opt.appMode}
-              options={S.appMode}
+              options={this.S.appMode}
               onChange={this.onAppModeChange}
             />
           </Form.Group>
           <Form.Group>
             <Form.Input
-              label="Префикс штрихкода"
+              label={this.t("barcodePrefix")}
               width={16}
               value={this.props.opt.barcodePrefix}
               onChange={this.onBarcodePrefixChange}
@@ -109,7 +110,7 @@ class SettingsEditor extends React.Component {
           </Form.Group>
           <Form.Group>
             <Form.Field width={16}>
-              <label>Валюта по умолчанию</label>
+              <label>{this.t("defaultCurrency")}</label>
               <CurrencyPicker
                 api={this.props.api}
                 value={this.props.opt.defaultCurrencyId}
@@ -127,7 +128,7 @@ class SettingsEditor extends React.Component {
       <Segment>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="database" />
-          SQL Editor
+          {this.t("sqlEditor")}
         </Header>
         <TextArea style={{width: "100%", height: "200px" }} onKeyPress={this.onSqlEditorKeyPress} />
       </Segment>
@@ -148,7 +149,7 @@ class SettingsEditor extends React.Component {
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width={16}>
-              { this.state.items.length > 0 && 
+              { this.state.items.length > 0 &&
                 <Table compact celled>
                   <Table.Header>
                     <Table.Row>
@@ -181,4 +182,4 @@ const stateMap = (state) => {
   }
 }
 
-export default connect(stateMap, { ...SettingsActions })(SettingsEditor)
+export default connect(stateMap, { ...SettingsActions })(withTranslation("base_settings_service.form")(SettingsEditor))
