@@ -189,6 +189,16 @@
     amount:          "Сумма=",
     whoToWhom:       "Кто кому=",
   },
+  "base_currency_exchangeRateEditor.form":{
+    fullName: "ФИО=",
+    contacts: "Контакты=",
+    notes: "Заметки=",
+    create: "Создать=",
+    update: "Изменить=",
+    clientRegistration: "Регистрация нового клиента=",
+    openingError: "Ошибка открытия=",
+    client: "Клиент=",
+  },
 
 
 

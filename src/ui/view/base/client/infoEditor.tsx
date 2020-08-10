@@ -9,6 +9,7 @@ import {
   Segment, Message, Modal,
   Container, Header, Divider
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class ClientInfoEditor extends React.Component {
 
@@ -30,6 +31,7 @@ class ClientInfoEditor extends React.Component {
       ...props.client,
       errorMsg: "",
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -84,7 +86,7 @@ class ClientInfoEditor extends React.Component {
       <Form>
         <Form.Field>
           <Form.Input
-            label="ФИО"
+            label={this.t("fullName")}
             value={this.state.name || ""}
             control={this.nameInput}
             onChange={this.onNameChange}
@@ -92,14 +94,14 @@ class ClientInfoEditor extends React.Component {
         </Form.Field>
         <Form.Field>
           <Form.TextArea
-            label="Контакты"
+            label={this.t("contacts")}
             value={this.state.contacts || ""}
             onChange={this.onContactsChange}
           />
         </Form.Field>
         <Form.Field>
           <Form.TextArea
-            label="Заметки"
+            label={this.t("notes")}
             value={this.state.notes || ""}
             onChange={this.onNotesChange}
           />
@@ -108,13 +110,13 @@ class ClientInfoEditor extends React.Component {
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onCreate}>Создать (Shift + Enter)
+            onClick={this.onCreate}>{this.t("create")} (Shift + Enter)
         </Button>}
         {this.state.id > 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onUpdate}>Изменить (Shift + Enter)
+            onClick={this.onUpdate}>{this.t("update")} (Shift + Enter)
         </Button>}
       </Form>
     )
@@ -129,14 +131,14 @@ class ClientInfoEditor extends React.Component {
   }
 
   clientDesc() {
-    return `#${this.props.client.id}: ${this.props.client.name}` 
+    return `#${this.props.client.id}: ${this.props.client.name}`
   }
 
   render() {
     const header =
       this.state.id ?
-        (this.state.id > 0 ? this.clientDesc() : "Регистрация нового клиента") :
-        "Ошибка открытия"
+        (this.state.id > 0 ? this.clientDesc() : this.t("clientRegistration")) :
+        this.t("openingError")
     return (
       <Modal
         open={this.props.open}
@@ -145,7 +147,7 @@ class ClientInfoEditor extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Клиент: {header}
+          {this.t("client")}: {header}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -155,4 +157,4 @@ class ClientInfoEditor extends React.Component {
   }
 }
 
-export default ClientInfoEditor
+export default withTranslation("base_currency_exchangeRateEditor.form")(ClientInfoEditor)
