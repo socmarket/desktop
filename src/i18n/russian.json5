@@ -90,7 +90,7 @@
     moneyIn:         "оплата долга=",
     moneyOut:        "задолженность=",
     consignment:     "долг за товар=",
-    settlementWith:  "Расчёт с= ",
+    settlementWith:  "Расчёт с =",
     number:          "#=",
     dateTime:        "Дата/Время=",
     amount:          "Сумма=",
@@ -180,8 +180,15 @@
     currency: "Валюта=",
   },
   "base_currency_exchangeRateEditor.form":{
-    exchangeRates: "Курсы валют="
-  }
+    exchangeRates: "Курсы валют=",
+  },
+  "base_client_jornal.form": {
+    settlementWith: "Расчёт с =",
+    number:          "#=",
+    dateTime:        "Дата/Время=",
+    amount:          "Сумма=",
+    whoToWhom:       "Кто кому=",
+  },
 
 
 

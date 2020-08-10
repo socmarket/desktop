@@ -12,6 +12,7 @@ import {
   Table, Header, Segment, Icon,
   Container, Input, Button, Form,
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 function kindToLocal(kind) {
   var local = ""
@@ -47,6 +48,7 @@ class ClientJournal extends React.Component {
       currencyId : props.opt.defaultCurrencyId,
       journal    : [],
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -139,7 +141,7 @@ class ClientJournal extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1} style={{ flex: "1 1 auto", overflow: "auto"}}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="exchange" />
-          {"Расчёт с " + this.props.client.name}
+          {this.t("settlementWith") + this.props.client.name}
         </Header>
         <Form width={16}>
           <Form.Group>
@@ -168,10 +170,10 @@ class ClientJournal extends React.Component {
         >
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell textAlign="center" >#         </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >Дата/Время</Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >Сумма     </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >Кто кому  </Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("number")}    </Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("dateTime")}  </Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("amount")}    </Table.HeaderCell>
+              <Table.HeaderCell textAlign="center" >{this.t("whoToWhom")} </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -194,4 +196,4 @@ class ClientJournal extends React.Component {
   }
 }
 
-export default React.forwardRef((props, ref) => <ClientJournal innerRef={ref} {...props} />)
+export default withTranslation("base_client_jornal.form"  , { withRef: true })(React.forwardRef((props, ref) => <ClientJournal innerRef={ref} {...props} />))
