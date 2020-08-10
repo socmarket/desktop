@@ -12,10 +12,26 @@ class Auth extends React.Component {
     super(props)
     this.onMsisdnChange = this.onMsisdnChange.bind(this)
     this.onSendCode     = this.onSendCode.bind(this)
+    this.onTick         = this.onTick.bind(this)
     this.serverApi   = props.api.server
     this.settingsApi = props.api.settings
     this.state = {
       msisdn: "",
+      code: "",
+      codeSent: false,
+      waiting: false,
+    }
+  }
+
+  onTick() {
+    if (this.state.timeout > 0) {
+      this.setState({
+        timeout: this.state.timeout - 1
+      }, setTimeout(this.onTick, 1000))
+    } else {
+      this.setState({
+        waiting: false,
+      })
     }
   }
 
@@ -25,9 +41,30 @@ class Auth extends React.Component {
     })
   }
 
+  onCodeChange(ev) {
+    this.setState({
+      code: ev.target.value,
+    })
+  }
+
   onSendCode() {
     this.serverApi.auth
       .sendCode(this.state.msisdn, "")
+      .then(_ => this.setState({
+        codeSent: true,
+        waiting: true,
+        timeout: 60,
+      }, setTimeout(this.onTick, 0)))
+      .catch(e => {
+        console.log(e)
+        this.setState({
+          waiting: true,
+          timeout: 60,
+        }, setTimeout(this.onTick, 0))
+      })
+  }
+
+  onVerify() {
   }
 
   render() {
@@ -44,18 +81,38 @@ class Auth extends React.Component {
               Зарегистрируйтесь чтобы продолжить работу
             </Header>
             <Form size="large" error={this.props.app.lastError.length > 0}>
-              <Form.Input
-                fluid
-                icon="phone"
-                iconPosition="left"
-                placeholder="Телефон"
-                type="input"
-                value={this.state.msisdn}
-                onChange={this.onMsisdnChange}
-              />
-              { online && <Button disabled={this.state.msisdn === ""} onClick={this.onSendCode} >Отправить код</Button> }
-              { !online && <Button disabled>Ожидание сети...</Button> }
-              <Message error>{}</Message>
+              { !this.state.codeSent &&
+                <Fragment>
+                  <Form.Input
+                    fluid
+                    icon="phone"
+                    iconPosition="left"
+                    placeholder="Телефон"
+                    type="input"
+                    value={this.state.msisdn}
+                    onChange={this.onMsisdnChange}
+                  />
+                  { online && <Button disabled={this.state.msisdn === "" || this.state.waiting} onClick={this.onSendCode} >Отправить код</Button> }
+                  { !online && <Button disabled>Ожидание сети...</Button> }
+                </Fragment>
+              }
+              { this.state.codeSent &&
+                <Fragment>
+                  <Form.Input
+                    fluid
+                    icon="code"
+                    iconPosition="left"
+                    placeholder="Код из СМС"
+                    type="input"
+                    value={this.state.code}
+                    onChange={this.onCodeChange}
+                  />
+                  { online && <Button disabled={this.state.code === ""} onClick={this.onVerify} >Далее</Button> }
+                  { online && <Button disabled={this.state.msisdn === "" || this.state.waiting} onClick={this.onSendCode} >Отправить код еще раз</Button> }
+                  { !online && <Button disabled>Ожидание сети...</Button> }
+                </Fragment>
+              }
+              { this.state.waiting && <Message>Запросить код повторно можно через {this.state.timeout} секунд.</Message> }
             </Form>
           </Grid.Column>
         </Grid>

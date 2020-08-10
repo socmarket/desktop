@@ -93,6 +93,7 @@ function AppReducer (state = {
   activePage    : "autoPartsSaleCheckEditor",
   user          : "admin",
   unlocked      : true,
+  authenticated : false,
   lastError     : "",
   online        : false,
 }, action) {

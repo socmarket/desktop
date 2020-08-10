@@ -6,7 +6,7 @@ import initHealthApi from "./health"
 
 export default function initServerApi(db) {
   return {
-    auth: initAuthApi(axios),
-    health: initHealthApi(axios),
+    auth: initAuthApi(axios, db),
+    health: initHealthApi(axios, db),
   }
 }
