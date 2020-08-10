@@ -1,6 +1,7 @@
 create table auth(
   msisdn varchar,
+  token varchar,
   machineId varchar,
-  extra varchar,
-  updatedAt datetime default current_timestamp
+  updatedAt datetime default current_timestamp,
+  unique (msisdn)
 );

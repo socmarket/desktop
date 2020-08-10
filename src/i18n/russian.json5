@@ -31,6 +31,7 @@
     paintBrush: "Цвет",
     settings: "Настройки",
     changeSettings:"Изменить настройки",
+    changeAuthSettings: "Доступ к облаку",
     codeBranch: "Версия",
     signOut: "Выйти",
     calculations: "Расчёты",

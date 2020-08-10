@@ -3,7 +3,6 @@ import { connect } from "react-redux"
 
 import Home from "Ui/view/base/home"
 import Door from "Ui/view/base/door"
-import Auth from "Ui/view/base/auth"
 
 const ViewSelector = {
   true  : (api) => <Home api={api} />,
@@ -17,11 +16,7 @@ class StartPage extends React.Component {
   }
 
   render() {
-    if (this.props.app.authenticated) {
-      return ViewSelector[this.props.app.unlocked](api)
-    } else {
-      return <Auth api={api} />
-    }
+    return ViewSelector[this.props.app.unlocked](api)
   }
 }
 

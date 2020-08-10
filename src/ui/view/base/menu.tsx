@@ -38,6 +38,7 @@ class MainMenu extends React.Component {
   constructor(props) {
     super(props)
     this.onSettingsClick = this.onSettingsClick.bind(this)
+    this.onAuthSettingsClick = this.onAuthSettingsClick.bind(this)
     this.state = {
       showAbout: false,
     }
@@ -49,6 +50,12 @@ class MainMenu extends React.Component {
       this.props.openAdminService()
     } else {
       this.props.openSettingsEditor()
+    }
+  }
+
+  onAuthSettingsClick(ev) {
+    if (this.props.app.user === "admin") {
+      this.props.openAuthSettings()
     }
   }
 
@@ -201,10 +208,16 @@ class MainMenu extends React.Component {
             <Dropdown tabIndex={-1} text={this.t("settings")} pointing onDoubleClick={this.onColorDoubleClick}>
               <Dropdown.Menu>
                 { (this.props.app.user === "admin") &&
-                  <Dropdown.Item onClick={this.onSettingsClick}>
-                    <Icon name="options" />
-                    {this.t("changeSettings")}
-                  </Dropdown.Item>
+                  <Fragment>
+                    <Dropdown.Item onClick={this.onSettingsClick}>
+                      <Icon name="options" />
+                      {this.t("changeSettings")}
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={this.onAuthSettingsClick}>
+                      <Icon name="cloud" />
+                      {this.t("changeAuthSettings")}
+                    </Dropdown.Item>
+                  </Fragment>
                 }
                 <Dropdown.Item onClick={() => this.setState({ showAbout: true })}>
                   <Icon name="code branch" />

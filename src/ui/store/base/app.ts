@@ -76,6 +76,9 @@ const AppActions = {
   openSettingsEditor: () => ({
     type: "APP_OPEN_BASE_SETTINGS_EDITOR",
   }),
+  openAuthSettings: () => ({
+    type: "APP_OPEN_BASE_AUTH_SETTINGS",
+  }),
   openAdminService: () => ({
     type: "APP_OPEN_BASE_ADMIN_SERVICE",
   }),
@@ -90,10 +93,11 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage    : "autoPartsSaleCheckEditor",
+  //activePage    : "autoPartsSaleCheckEditor",
+  activePage    : "baseAuthSettings",
   user          : "admin",
   unlocked      : true,
-  authenticated : false,
+  authenticated : true,
   lastError     : "",
   online        : false,
 }, action) {
@@ -128,6 +132,8 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "baseTurnover" })
     case "APP_OPEN_BASE_SETTINGS_EDITOR":
       return Object.assign({}, state, { activePage: "baseSettingsEditor" })
+    case "APP_OPEN_BASE_AUTH_SETTINGS":
+      return Object.assign({}, state, { activePage: "baseAuthSettings" })
     case "APP_OPEN_BASE_ADMIN_SERVICE":
       return Object.assign({}, state, { activePage: "baseAdminService" })
     case "APP_CHANGE_USER":

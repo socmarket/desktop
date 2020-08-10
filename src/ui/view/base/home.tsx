@@ -16,6 +16,7 @@ import BasePriceEditor    from "View/base/price/editor"
 import BaseDashboard      from "View/base/dashboard"
 import BaseTurnover       from "View/base/turnover"
 import BaseSettingsEditor from "View/base/settings/editor"
+import BaseAuthSettings   from "View/base/settings/auth"
 import BaseAdminService   from "View/base/settings/service"
 
 import React, { Fragment } from "react"
@@ -38,6 +39,7 @@ const ViewMap = {
   "baseDashboard"      : (props) => <BaseDashboard      api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseTurnover"       : (props) => <BaseTurnover       api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseSettingsEditor" : (props) => <BaseSettingsEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "baseAuthSettings"   : (props) => <BaseAuthSettings   api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseAdminService"   : (props) => <BaseAdminService   api={props.api} theme={props.opt.theme} opt={props.opt} />,
 }
 
