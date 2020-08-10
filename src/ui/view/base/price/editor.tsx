@@ -17,6 +17,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class PriceEditor extends React.Component {
 
@@ -41,6 +42,7 @@ class PriceEditor extends React.Component {
       currencyId : props.opt.defaultCurrencyId,
       history    : [],
     }
+    this.t = this.props.t
   }
 
   priceIsValid() {
@@ -92,7 +94,7 @@ class PriceEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="chart line" />
-          История цен
+          {this.t("priceHistory")}
         </Header>
         <Form width={16}>
           <Form.Group>
@@ -137,7 +139,7 @@ class PriceEditor extends React.Component {
         y: item.price
       }))
     const data = [
-      { id: "Цена", data: graph1 }
+      { id: this.t("price"), data: graph1 }
     ]
     return (
       <ResponsiveLine
@@ -150,7 +152,7 @@ class PriceEditor extends React.Component {
         axisRight={null}
         axisBottom={{
           orient: "bottom",
-          legend: "Дата",
+          legend: {this.t("date")},
           legendPosition: "middle"
         }}
         axisLeft={{
@@ -169,7 +171,7 @@ class PriceEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="chart area" />
-          Пульс цены
+          {this.t("chartArea")}
         </Header>
         <div style={{ height: 400 }}>
           {this.graphContent()}
@@ -208,4 +210,4 @@ class PriceEditor extends React.Component {
   }
 }
 
-export default PriceEditor
+export default (withTranslation("base_price_editor.form")(PriceEditor))

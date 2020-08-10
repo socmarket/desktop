@@ -139,6 +139,12 @@
     checkTitle3: "Заголовок чека #3=",
     showPurchasePrices: "Показывать закупочные цены в кассеs=",
   },
+  "base_price_editor.form":{
+    priceHistory: "История цен="
+    price: "Цена="
+    date: "Дата="
+    chartArea: "Пульс цены="
+  }
 
 
 
