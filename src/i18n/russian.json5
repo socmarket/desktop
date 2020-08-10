@@ -199,6 +199,18 @@
     openingError: "Ошибка открытия=",
     client: "Клиент=",
   },
+  "base_client_editor.form":{
+    clients: "Клиенты=",
+    clientSearch: "Поиск клиента=",
+    chek: "Чек=",
+    productTitle: "Товар=",
+    model: "Модель=",
+    price: "Цена=",
+    quantity: "Кол-во=",
+    unitNotation: "Ед.=",
+    cost: "Сумма=",
+    barcode: "Штрихкод=",
+  },
 
 
 

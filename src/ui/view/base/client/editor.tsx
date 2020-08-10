@@ -14,6 +14,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class ClientEditor extends React.Component {
 
@@ -53,6 +54,7 @@ class ClientEditor extends React.Component {
       infoEditorVisible : false,
       idx               : -1,
     }
+    this.t = this.props.t
   }
 
   reloadClientList() {
@@ -189,14 +191,14 @@ class ClientEditor extends React.Component {
       >
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="users" />
-          Клиенты
+          {this.t("clients")}
         </Header>
         <Form width={16}>
           <Form.Group>
             <Form.Input
               floated="left"
               icon="search"
-              placeholder="Поиск клиента"
+              placeholder={this.t("clientSearch")}
               value={this.state.pattern}
               control={this.patternInput}
               onChange={this.onPatternChange}
@@ -242,17 +244,17 @@ class ClientEditor extends React.Component {
     return (
       <DTable
         titleIcon="cart"
-        title={`Чек: ${this.state.saleCheck.cost} - ${this.state.saleCheck.cash} - ${this.state.saleCheck.discount}`}
+        title={this.t("chek")`: ${this.state.saleCheck.cost} - ${this.state.saleCheck.cash} - ${this.state.saleCheck.discount}`}
         color={this.props.theme.mainColor}
         items={this.state.saleCheck.items}
         columns={[
-          { key: "productTitle"  , title: "Товар"   ,                             },
-          { key: "model       "  , title: "Модель"  ,                             },
-          { key: "price"         , title: "Цена"    , align: "right", positive: 1 },
-          { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
-          { key: "unitNotation"  , title: "Ед."     ,                             },
-          { key: "cost"          , title: "Сумма"   , align: "right", positive: 1 },
-          { key: "barcode"       , title: "Штрихкод",                             },
+          { key: "productTitle"  , title: this.t("productTitle")  ,                             },
+          { key: "model       "  , title: this.t("model")         ,                             },
+          { key: "price"         , title: this.t("price")         , align: "right", positive: 1 },
+          { key: "quantity"      , title: this.t("quantity")      , align: "right", positive: 1 },
+          { key: "unitNotation"  , title: this.t("unitNotation")  ,                             },
+          { key: "cost"          , title: this.t("cost")          , align: "right", positive: 1 },
+          { key: "barcode"       , title: this.t("barcode")       ,                             },
         ]}
         onOpenRow={() => {}}
         onDeleteRow={() => {}}
@@ -281,4 +283,4 @@ class ClientEditor extends React.Component {
   }
 }
 
-export default ClientEditor
+export default (withTranslation("base_client_editor.form")(ClientEditor))
