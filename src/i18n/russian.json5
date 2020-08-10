@@ -144,7 +144,31 @@
     price: "Цена=",
     date: "Дата=",
     chartArea: "Пульс цены=",
-  }
+  },
+  "base_dashboard_index.form": {
+    startDate:  "Начало=",
+    endDate:    "Конец=",
+    closeDate:   "Закрыть=",
+    clearDates:  "Очистить=",
+    clearDates:  "Выручка=",
+    clearDates:  "Себестоимость=",
+    clearDates:  "В долг=",
+    clearDates:  "Прибыль=",
+    clearDates:  "День=",
+    clearDates:  "Стоимость=",
+    clearDates:  "Продажи по дням за период=",
+    clearDates:  "Лучшие продажи=",
+    clearDates:  "Ассортимент=",
+    clearDates:  "Кат=",
+    clearDates:  "Товар=",
+    clearDates:  "Продано=",
+    clearDates:  "Клиентов=",
+    clearDates:  "Осталось=",
+  },
+  "base_currency_listEditor.form":{
+    currencyList: "Список валют=",
+    currencySearch: "Поиск валюты=",
+  },
 
 
 

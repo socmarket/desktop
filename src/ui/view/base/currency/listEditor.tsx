@@ -12,6 +12,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class CurrencyListEditor extends React.Component {
 
@@ -45,6 +46,7 @@ class CurrencyListEditor extends React.Component {
       infoEditorVisible : false,
       idx               : -1,
     }
+    this.t = this.props.t
   }
 
   reloadCurrencyList() {
@@ -159,14 +161,14 @@ class CurrencyListEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="dollar" />
-          Список валют
+          {this.t("currencyList")}
         </Header>
         <Form width={16}>
           <Form.Group>
             <Form.Input
               floated="left"
               icon="search"
-              placeholder="Поиск валюты"
+              placeholder={this.t("currencySearch")}
               value={this.state.pattern}
               control={this.patternInput}
               onChange={this.onPatternChange}
@@ -204,4 +206,4 @@ class CurrencyListEditor extends React.Component {
   }
 }
 
-export default CurrencyListEditor
+export default (withTranslation("base_currency_listEditor.form")(CurrencyListEditor))
