@@ -169,6 +169,18 @@
     currencyList: "Список валют=",
     currencySearch: "Поиск валюты=",
   },
+  "base_currency_infoEditor.form":{
+    name:     "Наименование=",
+    notation: "Сокращение=",
+    create: "Создать=",
+    update: "Изменить=",
+    currencyRegistration: "Регистрация новой валюты=",
+    openingError: "Ошибка открытия=",
+    currency: "Валюта=",
+  },
+
+
+
 
 
 

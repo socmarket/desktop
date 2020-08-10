@@ -9,6 +9,7 @@ import {
   Segment, Message, Modal,
   Container, Header, Divider
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class CurrencyInfoEditor extends React.Component {
 
@@ -30,6 +31,7 @@ class CurrencyInfoEditor extends React.Component {
       ...props.currency,
       errorMsg: "",
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -84,7 +86,7 @@ class CurrencyInfoEditor extends React.Component {
       <Form>
         <Form.Field>
           <Form.Input
-            label="Наименование"
+            label={this.t("name")}
             value={this.state.title || ""}
             control={this.titleInput}
             onChange={this.onTitleChange}
@@ -92,7 +94,7 @@ class CurrencyInfoEditor extends React.Component {
         </Form.Field>
         <Form.Field>
           <Form.Input
-            label="Сокращение"
+            label={this.t("notation")}
             value={this.state.notation || ""}
             onChange={this.onNotationChange}
           />
@@ -101,13 +103,13 @@ class CurrencyInfoEditor extends React.Component {
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onCreate}>Создать (Shift + Enter)
+            onClick={this.onCreate}>{this.t("create")} (Shift + Enter)
         </Button>}
         {this.props.currency.id > 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onUpdate}>Изменить (Shift + Enter)
+            onClick={this.onUpdate}>{this.t("update")} (Shift + Enter)
         </Button>}
       </Form>
     )
@@ -122,14 +124,14 @@ class CurrencyInfoEditor extends React.Component {
   }
 
   currencyDesc() {
-    return `#${this.props.currency.id}: ${this.props.currency.title}` 
+    return `#${this.props.currency.id}: ${this.props.currency.title}`
   }
 
   render() {
     const header =
       this.state.id ?
-        (this.state.id > 0 ? this.currencyDesc() : "Регистрация новой валюты") :
-        "Ошибка открытия"
+        (this.state.id > 0 ? this.currencyDesc() : this.t("currencyRegistration")) :
+        this.t("openingError")
     return (
       <Modal
         open={this.props.open}
@@ -138,7 +140,7 @@ class CurrencyInfoEditor extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Валюта: {header}
+          {this.t("currency")}: {header}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -148,4 +150,4 @@ class CurrencyInfoEditor extends React.Component {
   }
 }
 
-export default CurrencyInfoEditor
+export default (withTranslation("base_currency_infoEditor.form")(CurrencyInfoEditor))
