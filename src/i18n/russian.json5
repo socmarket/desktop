@@ -200,6 +200,9 @@
     client: "Клиент=",
   },
   "base_client_editor.form":{
+    moneyIn: "оплата долга=",
+    moneyOut: "задолженность=",
+    sale: "покупка товара=",
     clients: "Клиенты=",
     clientSearch: "Поиск клиента=",
     chek: "Чек=",

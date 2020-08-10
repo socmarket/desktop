@@ -14,17 +14,6 @@ import {
 } from "semantic-ui-react"
 import { withTranslation } from 'react-i18next';
 
-function kindToLocal(kind) {
-  var local = ""
-  switch (kind) {
-    case "moneyIn"  : local = "оплата долга"  ; break
-    case "moneyOut" : local = "задолженность" ; break
-    case "sale"     : local = "покупка товара" ; break
-    default         : local = "неизвестно"    ; break
-  }
-  return local
-}
-
 class ClientJournal extends React.Component {
 
   constructor(props) {
@@ -135,7 +124,7 @@ class ClientJournal extends React.Component {
       id           : item.id,
       registeredAt : moment.utc(item.registeredAt).local().format("DD-MM-YYYY HH:mm"),
       amount       : item.amount,
-      kind         : kindToLocal(item.kind),
+      kind         : this.t(item.kind),
     }))
     return (
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1} style={{ flex: "1 1 auto", overflow: "auto"}}>
