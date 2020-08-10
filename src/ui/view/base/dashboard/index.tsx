@@ -6,6 +6,7 @@ import { ResponsivePie } from "@nivo/pie"
 import { ResponsiveBar } from "@nivo/bar"
 import { Menu, Container, Grid, Form, Input, Table, Button, Segment, Image, Label, Statistic } from "semantic-ui-react"
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from "react-dates"
+import { withTranslation } from 'react-i18next';
 
 const spaced = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 
@@ -37,6 +38,7 @@ class Dashboard extends React.Component {
         items: [],
       },
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -84,11 +86,11 @@ class Dashboard extends React.Component {
             enableOutsideDays
             isOutsideRange={() => false}
 
-            startDatePlaceholderText="Начало"
-            endDatePlaceholderText="Конец"
+            startDatePlaceholderText={this.t("startDate")}
+            endDatePlaceholderText={this.t("endtDate")}
             phrases={{
-              closeDatePicker: "Закрыть",
-              clearDates: "Очистить"
+              closeDatePicker: this.t("closetDate"),
+              clearDates: this.t("clearDates")
             }}
 
             startDate={this.state.start}
@@ -104,25 +106,25 @@ class Dashboard extends React.Component {
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny">
-            <Statistic.Label>Выручка</Statistic.Label>
+            <Statistic.Label>{this.t("revenue")}</Statistic.Label>
             <Statistic.Value>{spaced(summary.revenue)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny">
-            <Statistic.Label>Себестоимость</Statistic.Label>
+            <Statistic.Label>{this.t("costPrice")}</Statistic.Label>
             <Statistic.Value>{spaced(summary.cost)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny" color="red">
-            <Statistic.Label>В долг</Statistic.Label>
+            <Statistic.Label>{this.t("onCredit")}</Statistic.Label>
             <Statistic.Value>{spaced(summary.credit)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny" color="green">
-            <Statistic.Label>Прибыль</Statistic.Label>
+            <Statistic.Label>{this.t("profit")}</Statistic.Label>
             <Statistic.Value>{spaced(summary.profit)}</Statistic.Value>
           </Statistic>
         </Menu.Item>
@@ -160,11 +162,11 @@ class Dashboard extends React.Component {
         <Table compact celled>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>День</Table.HeaderCell>
-              <Table.HeaderCell>Выручка</Table.HeaderCell>
-              <Table.HeaderCell>Стоимость</Table.HeaderCell>
-              <Table.HeaderCell>В долг</Table.HeaderCell>
-              <Table.HeaderCell>Прибыль</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("day")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("revenue")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("cost")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("onCredit")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("profit")}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -187,7 +189,7 @@ class Dashboard extends React.Component {
     return (
       <Segment raised>
         {this.profitByDayMenu()}
-        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>Продажи по дням за период</Label>
+        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>{this.t("profitByDay")}</Label>
         <Grid>
           <Grid.Row style={{ height: 300, minHeight: 300, maxHeight: 300 }}>
             <Grid.Column width={6} style={{ height: "100%" }}>
@@ -216,7 +218,7 @@ class Dashboard extends React.Component {
     })).filter(x => x.value > 3)
     return (
       <Segment raised style={{ height: 300 }}>
-        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>Лучшие продажи</Label>
+        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>{this.t("bestSelling")}</Label>
         <ResponsivePie
             data={data}
             margin={{ top: 20, right: 50, bottom: 20, left: 20 }}
@@ -252,7 +254,7 @@ class Dashboard extends React.Component {
     }))
     return (
       <Segment raised style={{ height: 300 }}>
-        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>Ассортимент</Label>
+        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>{this.t("range")}</Label>
         <ResponsivePie
             data={data}
             margin={{ top: 20, right: 50, bottom: 20, left: 20 }}
@@ -284,15 +286,15 @@ class Dashboard extends React.Component {
     const data = this.state.lowCountProducts.items
     return (
       <Segment raised style={{ height: 300, overflowY: "auto" }}>
-        <Label color="blue" floating style={{ top: "5%", left: "5%", right: "unset" }}>Мало осталось</Label>
+        <Label color="blue" floating style={{ top: "5%", left: "5%", right: "unset" }}>{this.t("lowStock")}</Label>
         <Table compact celled>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Кат</Table.HeaderCell>
-              <Table.HeaderCell>Товар</Table.HeaderCell>
-              <Table.HeaderCell>Продано</Table.HeaderCell>
-              <Table.HeaderCell>Клиентов</Table.HeaderCell>
-              <Table.HeaderCell>Осталось</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("category")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("product")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("sold")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("clients")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("left")}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -336,4 +338,4 @@ class Dashboard extends React.Component {
 
 }
 
-export default Dashboard
+export default (withTranslation("base_dashboard_index.form")(Dashboard))
