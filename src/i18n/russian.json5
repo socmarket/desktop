@@ -179,6 +179,9 @@
     openingError: "Ошибка открытия=",
     currency: "Валюта=",
   },
+  "base_currency_exchangeRateEditor.form":{
+    exchangeRates: "Курсы валют="
+  }
 
 
 

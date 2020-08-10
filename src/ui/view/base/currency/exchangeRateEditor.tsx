@@ -12,6 +12,7 @@ import {
   Table, Header, Segment, Icon,
   Container, Input, Button, Form,
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class ExchangeRateEditor extends React.Component {
 
@@ -35,6 +36,7 @@ class ExchangeRateEditor extends React.Component {
       fromCurrencyId: props.opt.defaultCurrencyId,
       toCurrencyId  : props.opt.defaultCurrencyId,
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -133,7 +135,7 @@ class ExchangeRateEditor extends React.Component {
       <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="exchange" />
-          {"Курсы"}
+          {this.t("exchangeRates")}
         </Header>
         {this.form()}
         {this.table()}
@@ -142,4 +144,4 @@ class ExchangeRateEditor extends React.Component {
   }
 }
 
-export default React.forwardRef((props, ref) => <ExchangeRateEditor innerRef={ref} {...props} />)
+export default withTranslation("base_currency_exchangeRateEditor.form", { withRef: true })(React.forwardRef((props, ref) => <ExchangeRateEditor innerRef={ref} {...props} />))
