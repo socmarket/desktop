@@ -140,10 +140,10 @@
     showPurchasePrices: "Показывать закупочные цены в кассеs=",
   },
   "base_price_editor.form":{
-    priceHistory: "История цен="
-    price: "Цена="
-    date: "Дата="
-    chartArea: "Пульс цены="
+    priceHistory: "История цен=",
+    price: "Цена=",
+    date: "Дата=",
+    chartArea: "Пульс цены=",
   }
 
 

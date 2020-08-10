@@ -152,7 +152,7 @@ class PriceEditor extends React.Component {
         axisRight={null}
         axisBottom={{
           orient: "bottom",
-          legend: {this.t("date")},
+          legend: this.t("date"),
           legendPosition: "middle"
         }}
         axisLeft={{
