@@ -132,4 +132,4 @@ class SaleJournal extends React.Component {
 
 }
 
-export default (withTranslation()(SaleJournal))
+export default (withTranslation("auto_parts_salecheck_journal.form")(SaleJournal))
