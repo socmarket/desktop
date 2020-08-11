@@ -13,6 +13,7 @@ import {
   Container, Header, Divider,
   Menu, Table,
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class SaleCheckItem extends React.Component {
 
@@ -40,6 +41,7 @@ class SaleCheckItem extends React.Component {
       history: [],
       activeTab: (props.opt.showConsignmentHistoryInSaleCheck ? "history" : "photos"),
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -95,20 +97,20 @@ class SaleCheckItem extends React.Component {
           <Form.Input
             autoFocus
             width={6}
-            label="Цена"
+            label={this.t("price")}
             onChange={this.onPriceChange}
             value={this.state.price || 0}
             control={this.priceInput}
           />
           <Form.Input
             width={6}
-            label="Количество"
+            label={this.t("quantity")}
             onChange={this.onQuantityChange}
             value={this.state.quantity || 0}
             control={this.quantityInput}
           />
           <Form.Field width={4}>
-            <label>Ед. изм.</label>
+            <label>{this.t("unit")}</label>
             <UnitPicker
               api={this.props.api}
               size="large"
@@ -117,13 +119,13 @@ class SaleCheckItem extends React.Component {
             />
           </Form.Field>
         </Form.Group>
-        <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>Изменить (Shift + Enter)</Button>
-        <Message size="mini" header="Модель" content={this.state.productModel} />
-        <Message size="mini" header="Мотор"  content={this.state.productEngine} />
+        <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>{this.t("update")} (Shift + Enter)</Button>
+        <Message size="mini" header={this.t("model")} content={this.state.productModel} />
+        <Message size="mini" header={this.t("engine")} content={this.state.productEngine} />
         <Form.Group widths="equal">
-          <Form.Field><Message size="mini" header="Бренд"    content={this.state.productBrand}  /></Form.Field>
-          <Form.Field><Message size="mini" header="OEM"      content={this.state.productOemNo}  /></Form.Field>
-          <Form.Field><Message size="mini" header="Серийник" content={this.state.productSerial} /></Form.Field>
+            <Form.Field><Message size="mini" header={this.t("brand")} content={this.state.productBrand}  /></Form.Field>
+          <Form.Field><Message size="mini" header={this.t("oem")}  ontent={this.state.productOemNo}  /></Form.Field>
+          <Form.Field><Message size="mini" header={this.t("serialN")} content={this.state.productSerial} /></Form.Field>
         </Form.Group>
       </Form>
     )
@@ -137,8 +139,8 @@ class SaleCheckItem extends React.Component {
             {this.state.errorMsg}
           </Message>
         }
-        <p>Фотографии товара</p>
-        <p>Добавление фотографий будет доступно в новых обновлениях программы</p>
+        <p>{this.t("productPhotos")}</p>
+        <p>{this.t("remark")}</p>
       </Segment>
     )
   }
@@ -148,18 +150,18 @@ class SaleCheckItem extends React.Component {
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Дата     </Table.HeaderCell>
-            <Table.HeaderCell>Поставщик</Table.HeaderCell>
-            <Table.HeaderCell>Кол-во   </Table.HeaderCell>
-            <Table.HeaderCell>Цена     </Table.HeaderCell>
-            <Table.HeaderCell>Валюта   </Table.HeaderCell>
+            <Table.HeaderCell>{this.t("date")}    </Table.HeaderCell>
+            <Table.HeaderCell>{this.t("supplier")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("quantity")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("price")}   </Table.HeaderCell>
+            <Table.HeaderCell>{this.t("currency")}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {this.state.history.map((item, idx) => (
             <Table.Row key={idx}>
 
-                    
+
               <Table.Cell                  >{asDate(item.acceptedAt)}</Table.Cell>
               <Table.Cell                  >{item.supplierName      }</Table.Cell>
               <Table.Cell textAlign="right">{item.quantity          }</Table.Cell>
@@ -179,9 +181,9 @@ class SaleCheckItem extends React.Component {
           <Grid.Column width={8}>
             <Menu attached="top" inverted color={this.props.theme.mainColor}>
               { this.props.opt.showConsignmentHistoryInSaleCheck &&
-                <Menu.Item name="История" active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
+                <Menu.Item name={this.t("history")} active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
               }
-              <Menu.Item name="Фото"    active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
+              <Menu.Item name={this.t("photos")} active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
             </Menu>
             <Segment attached="bottom" style={{ height: "92%" }}>
               { this.state.activeTab === "history" && this.history() }
@@ -207,7 +209,7 @@ class SaleCheckItem extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Продажа: {this.state.productTitle}
+          {this.t("sale")}: {this.state.productTitle}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -217,4 +219,4 @@ class SaleCheckItem extends React.Component {
   }
 }
 
-export default SaleCheckItem
+export default (withTranslation("auto_parts_salecheck_itemEditor.form")(SaleCheckItem))

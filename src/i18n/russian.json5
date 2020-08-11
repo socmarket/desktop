@@ -227,7 +227,7 @@
     openingError: "Ошибка открытия=",
     productGroup: "Группа товаров=",
   },
-  "auto_parts_salecheck.form":{
+  "auto_parts_salecheck_journal.form":{
     chek:     "Чек=",
     product:  "Товар=",
     quantity: "Кол-во=",
@@ -246,6 +246,27 @@
     debt:     "Долг:=",
     inСash:   "Наличными:=",
     surrender: "Сдача:=",
+  },
+  "auto_parts_salecheck_itemEditor.form":{
+    price:    "Цена=",
+    quantity: "Количесво=",
+    unit:     "Ед. изм.=",
+    update:   "Изменить=",
+    model:    "Модель=",
+    engine:   "Двигатель=",
+    brand:    "Бренд=",
+    oem:      "OEM=",
+    serialN:  "Серийник=",
+    productPhotos: "Фотографии товара=",
+    remark:   "Добавление фотографий будет доступно в новых обновлениях программы=",
+    date:     "Дата=",
+    supplier: "Поставщик=",
+    quantity: "Кол-во=",
+    price:    "Цена=",
+    currency: "Валюта=",
+    history:  "История=",
+    photos:   "Фото=",
+    sale:     "Продажа=",
   },
 
 
