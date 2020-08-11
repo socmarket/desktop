@@ -227,6 +227,26 @@
     openingError: "Ошибка открытия=",
     productGroup: "Группа товаров=",
   },
+  "auto_parts_salecheck.form":{
+    chek:     "Чек=",
+    product:  "Товар=",
+    quantity: "Кол-во=",
+    return:   "Возврат=",
+    unit:     "Ед.изм.=",
+    price:    "Цена=",
+    total:    "Общ. ст-сть=",
+    cost:     "Стоимость=",
+    barcode:  "Штрихкод=",
+    oem:      "OEM=",
+    operations:       "Операции=",
+    withoutDiscount:  "Сумма без скидки:=",
+    discount: "Скидка:=",
+    amount:   "Сумма:=",
+    paidUp:   "Оплачено:=",
+    debt:     "Долг:=",
+    inСash:   "Наличными:=",
+    surrender: "Сдача:=",
+  },
 
 
 

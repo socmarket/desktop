@@ -7,6 +7,7 @@ import { Container, Grid, Form, Input, Table, Button, Segment, Image, Label } fr
 const minib = {
   padding: "0.5em 0.5em",
 }
+import { withTranslation } from 'react-i18next';
 
 class SaleJournal extends React.Component {
 
@@ -41,17 +42,17 @@ class SaleJournal extends React.Component {
         <Table celled compact structured striped style={{ height: "100%" }}>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Чек</Table.HeaderCell>
-              <Table.HeaderCell>Товар</Table.HeaderCell>
-              <Table.HeaderCell>Кол-во</Table.HeaderCell>
-              <Table.HeaderCell>Возврат</Table.HeaderCell>
-              <Table.HeaderCell>Ед.изм.</Table.HeaderCell>
-              <Table.HeaderCell>Цена</Table.HeaderCell>
-              <Table.HeaderCell>Общ ст-сть</Table.HeaderCell>
-              <Table.HeaderCell>Стоимость</Table.HeaderCell>
-              <Table.HeaderCell>Штрихкод</Table.HeaderCell>
-              <Table.HeaderCell>OEM</Table.HeaderCell>
-              <Table.HeaderCell>Операции</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("chek")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("product")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("quantity")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("return")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("unit")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("price")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("total")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("cost")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("oem")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("operations")}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -68,19 +69,19 @@ class SaleJournal extends React.Component {
                       <Table.Cell rowSpan={items.length}>
                         {moment.utc(saleCheck.soldAt).local().format("DD-MM-YYYY HH:mm")}
                         <br />{saleCheck.clientName}
-                        <br />Сумма без скидки: {saleCheck.cost}
-                        <br />Скидка: {saleCheck.discount}
-                        <br />Сумма: {saleCheck.cost - saleCheck.discount}
+                        <br />{this.t("withoutDiscount")} {saleCheck.cost}
+                        <br />{this.t("discount")} {saleCheck.discount}
+                        <br />{this.t("amount")} {saleCheck.cost - saleCheck.discount}
                         { (saleCheck.cash < (saleCheck.cost - saleCheck.discount)) &&
                           <Fragment>
-                            <br />Оплачено: {saleCheck.cash}
-                            <br />Долг: {saleCheck.cost - saleCheck.cash - saleCheck.discount}
+                            <br />{this.t("paidUp")} {saleCheck.cash}
+                            <br />{this.t("debt")} {saleCheck.cost - saleCheck.cash - saleCheck.discount}
                           </Fragment>
                         }
                         { (saleCheck.cash >= (saleCheck.cost - saleCheck.discount)) &&
                           <Fragment>
-                            <br />Наличными: {saleCheck.cash}
-                            <br />Сдача: {saleCheck.cash - saleCheck.cost + saleCheck.discount}
+                            <br />{this.t("inСash")} {saleCheck.cash}
+                            <br />{this.t("surrender")} {saleCheck.cash - saleCheck.cost + saleCheck.discount}
                           </Fragment>
                         }
                       </Table.Cell>
@@ -131,4 +132,4 @@ class SaleJournal extends React.Component {
 
 }
 
-export default SaleJournal
+export default (withTranslation()(SaleJournal))
