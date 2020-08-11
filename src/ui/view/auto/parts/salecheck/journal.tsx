@@ -18,6 +18,7 @@ class SaleJournal extends React.Component {
     this.state = {
       items: []
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
