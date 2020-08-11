@@ -15,8 +15,8 @@ import {
   Header, Grid, Table, Form, Input, Select,
   Button, Segment, Icon, Modal,
 } from "semantic-ui-react"
-
 import moment from "moment"
+import { withTranslation } from 'react-i18next';
 
 class SaleCheckEditor extends React.Component {
 
@@ -80,6 +80,7 @@ class SaleCheckEditor extends React.Component {
       item                : this.emptyItem,
       clearConfirmVisible : false,
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -236,7 +237,7 @@ class SaleCheckEditor extends React.Component {
 
   onExportToExcel() {
     const dt = moment().format("YYYY-MM-DD-HH-ss")
-    return this.fileApi.saveFile("чек-" + dt + ".xlsx", [ "xls", "xlsx" ])
+    return this.fileApi.saveFile("chek-" + dt + ".xlsx", [ "xls", "xlsx" ])
       .then(file => {
         if (file) {
           return this.saleCheckApi
@@ -262,15 +263,15 @@ class SaleCheckEditor extends React.Component {
   clearConfirmDialog() {
     return (
       <Modal color="red" size="mini" dimmer="inverted" open onClose={() => this.setState({ clearConfirmVisible: false })}>
-        <Modal.Header>Очистить чек?</Modal.Header>
+        <Modal.Header>{this.t("clearChek")}</Modal.Header>
         <Modal.Content>
-          <p>Все добавленные товары будут убраны из корзины</p>
+          <p>{this.t("clearCart")}</p>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => this.setState({ clearConfirmVisible: false })}>Нет</Button>
+          <Button onClick={() => this.setState({ clearConfirmVisible: false })}>{this.t("no")}</Button>
           <Button
             color={this.props.opt.theme.mainColor}
-            content="Да"
+            content={this.t("yes")}
             onClick={this.onConfirmClearCheck}
           />
         </Modal.Actions>
@@ -297,28 +298,28 @@ class SaleCheckEditor extends React.Component {
       <DTable
         ref={this.tableRef}
         titleIcon="cart"
-        title="Корзина покупателя"
+        title={this.t("cart")}
         color={this.props.theme.mainColor}
         items={this.state.items}
         columns={[
-          { key: "productTitle"  , title: "Товар"   ,                             },
-          { key: "originalPrice" , title: "Цена"    , align: "right"              },
-          { key: "price"         , title: "Со скид" , align: "right", positive: 1 },
-          { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
-          { key: "unitTitle"     , title: "Ед."     ,                             },
-          { key: "cost"          , title: "Сумма"   , align: "right"              },
-          { key: "total"         , title: "Со скид" , align: "right", positive: 1 },
-          { key: "productBarcode", title: "Штрихкод",                             },
+          { key: "productTitle"  , title: this.t("product")       ,                             },
+          { key: "originalPrice" , title: this.t("originalPrice") , align: "right"              },
+          { key: "price"         , title: this.t("price")         , align: "right", positive: 1 },
+          { key: "quantity"      , title: this.t("quantity")      , align: "right", positive: 1 },
+          { key: "unitTitle"     , title: this.t("unitTitle")     ,                             },
+          { key: "cost"          , title: this.t("cost")          , align: "right"              },
+          { key: "total"         , title: this.t("totalWithtDiscount")  , align: "right", positive: 1 },
+          { key: "productBarcode", title: this.t("barcode")       ,                             },
         ]}
         menu={{
           header: {
-            title: "Текущий чек",
+            title: this.t("currentReceipt"),
           },
           items: [
-            { title: "Печатать чек"      , description: "",        icon: "print"     , onClick: this.onPrintCheck },
-            { title: "Сохранить в Excel" , description: "Экспорт", icon: "file excel", onClick: this.onExportToExcel },
+            { title: this.t("printCheck")   , description: ""                         , icon: "print"     , onClick: this.onPrintCheck },
+            { title: this.t("saveToExcel")  , description: this.t("saveToExcelDiscr") , icon: "file excel", onClick: this.onExportToExcel },
             { divider: true },
-            { title: "Очистить чек"      , description: "Удалить все", onClick: this.onWantClearCheck },
+            { title: this.t("clearChek"), description: this.t("clearChekDiscr"),        onClick: this.onWantClearCheck },
           ]
         }}
         onOpenRow={this.onOpenItem}
@@ -331,77 +332,73 @@ class SaleCheckEditor extends React.Component {
   summary() {
     const change = +this.state.cash - (this.state.total - this.state.extraDiscount)
     return (
-      <Translation ns={"salecheck.form"}>
-      { (t, { i18n }) => (
-        <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
-          <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
-            <Icon name="clipboard list" />
-            Текущий чек
-          </Header>
-          <Grid padded>
-            <Grid.Row>
-              <Grid.Column width={6}><Header as="h2">{t("cost")}</Header></Grid.Column>
-              <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{this.state.cost}</Header></Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={6}><Header as="h2">{t("discount")}</Header></Grid.Column>
-              <Grid.Column width={10}>
-                <Header as="h2" dividing textAlign="right">
-                  {this.state.discount} + {this.state.extraDiscount} = {(+this.state.discount) + (+this.state.extraDiscount)}
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
-              <Grid.Column width={10}>
-                <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
-                  {this.state.total - this.state.extraDiscount}
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={6}><Header as="h2">{t("change")}</Header></Grid.Column>
-              <Grid.Column width={10}>
-                <Header dividing as="h2" textAlign="right">
-                  {change > 0 ? change : "0" }
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-          <br />
-          <Form>
-            <Form.Field>
-              <label>Клиент</label>
-              <ClientPicker
-                api={this.props.api}
-                forwardRef={this.clientPickerRef}
-                value={this.state.clientId}
-                onPick={this.onClientChange}
-              />
-            </Form.Field>
-            <Form.Group>
-              <Form.Input
-                width={16}
-                label={t("discount")}
-                value={this.state.extraDiscount}
-                onChange={this.onExtraDiscountChange}
-                control={this.extraDiscountInput}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Input
-                width={16}
-                label={t("cash")}
-                value={this.state.cash}
-                onChange={this.onCashChange}
-                control={this.cashInput}
-              />
-            </Form.Group>
-            <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{t("closeReceipt")} (Shift + Enter)</Button>
-          </Form>
-        </Segment>
-      )}
-      </Translation>
+      <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
+        <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
+          <Icon name="clipboard list" />
+          {this.t("currentReceipt")}
+        </Header>
+        <Grid padded>
+          <Grid.Row>
+            <Grid.Column width={6}><Header as="h2">{this.t("cost")}</Header></Grid.Column>
+            <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{this.state.cost}</Header></Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={6}><Header as="h2">{this.t("discount")}</Header></Grid.Column>
+            <Grid.Column width={10}>
+              <Header as="h2" dividing textAlign="right">
+                {this.state.discount} + {this.state.extraDiscount} = {(+this.state.discount) + (+this.state.extraDiscount)}
+              </Header>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={6}><Header as="h1">{this.t("total")}</Header></Grid.Column>
+            <Grid.Column width={10}>
+              <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
+                {this.state.total - this.state.extraDiscount}
+              </Header>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={6}><Header as="h2">{this.t("change")}</Header></Grid.Column>
+            <Grid.Column width={10}>
+              <Header dividing as="h2" textAlign="right">
+                {change > 0 ? change : "0" }
+              </Header>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <br />
+        <Form>
+          <Form.Field>
+            <label>{this.t("client")}</label>
+            <ClientPicker
+              api={this.props.api}
+              forwardRef={this.clientPickerRef}
+              value={this.state.clientId}
+              onPick={this.onClientChange}
+            />
+          </Form.Field>
+          <Form.Group>
+            <Form.Input
+              width={16}
+              label={this.t("discount")}
+              value={this.state.extraDiscount}
+              onChange={this.onExtraDiscountChange}
+              control={this.extraDiscountInput}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Input
+              width={16}
+              label={this.t("cash")}
+              value={this.state.cash}
+              onChange={this.onCashChange}
+              control={this.cashInput}
+            />
+          </Form.Group>
+          <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{this.t("closeReceipt")} (Shift + Enter)</Button>
+        </Form>
+      </Segment>
     )
   }
 
@@ -437,4 +434,4 @@ class SaleCheckEditor extends React.Component {
   }
 }
 
-export default SaleCheckEditor
+export default (withTranslation("auto_parts_salecheck_edtor.form")(SaleCheckEditor))
