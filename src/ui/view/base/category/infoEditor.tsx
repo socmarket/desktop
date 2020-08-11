@@ -9,6 +9,7 @@ import {
   Segment, Message, Modal,
   Container, Header, Divider
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class CategoryInfoEditor extends React.Component {
 
@@ -29,6 +30,7 @@ class CategoryInfoEditor extends React.Component {
       ...props.category,
       errorMsg: "",
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -77,7 +79,7 @@ class CategoryInfoEditor extends React.Component {
       <Form>
         <Form.Field>
           <Form.Input
-            label="Наименование"
+            label={this.t("name")}
             value={this.state.title || ""}
             control={this.titleInput}
             onChange={this.onTitleChange}
@@ -85,7 +87,7 @@ class CategoryInfoEditor extends React.Component {
         </Form.Field>
         <Form.Field>
           <Form.TextArea
-            label="Заметки"
+            label={this.t("notation")}
             value={this.state.notes || ""}
             onChange={this.onNotesChange}
           />
@@ -94,13 +96,13 @@ class CategoryInfoEditor extends React.Component {
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onCreate}>Создать (Shift + Enter)
+            onClick={this.onCreate}>{this.t("create")} (Shift + Enter)
         </Button>}
         {this.props.category.id > 0 &&
           <Button color={this.props.theme.mainColor}
             type="button"
             disabled={!this.validated()}
-            onClick={this.onUpdate}>Изменить (Shift + Enter)
+            onClick={this.onUpdate}>{this.t("update")} (Shift + Enter)
         </Button>}
       </Form>
     )
@@ -115,14 +117,14 @@ class CategoryInfoEditor extends React.Component {
   }
 
   categoryDesc() {
-    return `#${this.props.category.id}: ${this.props.category.title}` 
+    return `#${this.props.category.id}: ${this.props.category.title}`
   }
 
   render() {
     const header =
       this.state.id ?
-        (this.state.id > 0 ? this.categoryDesc() : "Регистрация новой группы") :
-        "Ошибка открытия"
+        (this.state.id > 0 ? this.categoryDesc() : this.t("groupRegistration")) :
+        this.t("openingError")
     return (
       <Modal
         open={this.props.open}
@@ -131,7 +133,7 @@ class CategoryInfoEditor extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Группа товаров: {header}
+          {this.t("productGroup")}: {header}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -141,4 +143,4 @@ class CategoryInfoEditor extends React.Component {
   }
 }
 
-export default CategoryInfoEditor
+export default (withTranslation("base_category_infoEditor.form")(CategoryInfoEditor))

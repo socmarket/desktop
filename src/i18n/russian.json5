@@ -218,6 +218,15 @@
     productGroups:  "Группы товаров=",
     groupsSearch:  "Поиск группы=",
   },
+  "base_category_infoEditor.form":{
+    name:     "Наименование=",
+    notation: "Сокращение=",
+    create: "Создать=",
+    update: "Изменить=",
+    groupRegistration: "Регистрация новой группы=",
+    openingError: "Ошибка открытия=",
+    productGroup: "Группа товаров=",
+  },
 
 
 
