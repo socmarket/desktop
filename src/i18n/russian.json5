@@ -283,6 +283,37 @@
   "auto_part_product_picker.form":  {
     noPrice:  " (нет цены)",
   },
+  "auto_part_product_list.form":{
+    category:    "Кат.=",
+    name: "Название=",
+    unit:     "Ед.=",
+    model:    "Модель=",
+    engine:   "Двигатель=",
+    barcode:  "Штрихкод=",
+    brand:    "Бренд=",
+    oem:      "OEM=",
+    notes:    "Заметки=",
+  },
+  "auto_part_product_importer.form":{
+    title:    "Наименование=",
+    model:    "Модель=",
+    engine:   "Двигатель=",
+    brand:    "Бренд=",
+    oem:      "OEM=",
+    barcode:  "Штрихкод=",
+    quantity: "Кол-во=",
+    serialN:  "Серийник=",
+    coord:    "Полка=",
+    number:   "#=",
+    file:     "Файл=",
+    date:     "Дата=",
+    fields:   "Поля=",
+    rows:     "Строк=",
+    Successfully: "Успешно=",
+    unit:     "Ед.=",
+    kt:       "Кт=",
+    currency: "$=",
+  },
 
 
 

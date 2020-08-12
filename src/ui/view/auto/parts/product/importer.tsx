@@ -13,6 +13,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Dropdown, Dimmer, Loader, Icon
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 const extensions = "xls|xlsx|xlsm|xlsb|xml|xlw|xlc|csv|txt|dif|sylk|slk|prn|ods|fods|uos|dbf|wks|123|wq1|qpw|htm|html".split("|")
 
@@ -58,6 +59,7 @@ class ProductImporter extends React.Component {
       history: [],
       activeTab: "history",
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -221,7 +223,7 @@ class ProductImporter extends React.Component {
   }
 
   rect(sheet) {
-    let minCol = -1, maxCol = -1 
+    let minCol = -1, maxCol = -1
     let minRow = -1, maxRow = -1
     const cols = [], rows = []
     Object
@@ -316,16 +318,16 @@ class ProductImporter extends React.Component {
                 <Table.HeaderCell key={c} textAlign="right">
                   <Dropdown icon="angle double down" text={this.getColTarget(c)}>
                     <Dropdown.Menu>
-                      {this.targetTag(c, "title", "Наименование")}
-                      {this.targetTag(c, "model", "Модель")}
-                      {this.targetTag(c, "engine", "Мотор")}
-                      {this.targetTag(c, "brand", "Бренд")}
-                      {this.targetTag(c, "oemNo", "OEM")}
-                      {this.targetTag(c, "barcode", "Штрихкод")}
-                      {this.targetTag(c, "quantity", "Кол-во")}
-                      {this.targetTag(c, "price", "Цена")}
-                      {this.targetTag(c, "serial", "Серийник")}
-                      {this.targetTag(c, "coord", "Полка")}
+                      {this.targetTag(c, "title",   this.t("title"))}
+                      {this.targetTag(c, "model",   this.t("model"))}
+                      {this.targetTag(c, "engine",  this.t("engine"))}
+                      {this.targetTag(c, "brand",   this.t("brand"))}
+                      {this.targetTag(c, "oemNo",   this.t("oem"))}
+                      {this.targetTag(c, "barcode", this.t("barcode"))}
+                      {this.targetTag(c, "quantity",  this.t("quantity"))}
+                      {this.targetTag(c, "price",   this.t("price"))}
+                      {this.targetTag(c, "serial",  this.t("serial"))}
+                      {this.targetTag(c, "coord",   this.t("coord"))}
                     </Dropdown.Menu>
                   </Dropdown>
                 </Table.HeaderCell>
@@ -360,15 +362,15 @@ class ProductImporter extends React.Component {
             </Table.Header>
             <Table.Header>
               <Table.Row>
-                <Table.HeaderCell textAlign="right">#      </Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">Файл   </Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">Дата   </Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">Поля   </Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">Строк  </Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">Успешно</Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">Ед</Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">Кт</Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">$</Table.HeaderCell>
+                <Table.HeaderCell textAlign="right">{this.t("number")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("file")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("date")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("fields")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("rows")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("Successfully")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("unit")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("kt")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("currency")}</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -486,4 +488,4 @@ class ProductImporter extends React.Component {
   }
 }
 
-export default ProductImporter
+export default (withTranslation()(ProductImporter))
