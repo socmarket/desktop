@@ -280,6 +280,9 @@
     currentReceipt: "Текущий чек=",
     client: "Клиент=",
   },
+  "auto_part_product_picker.form":  {
+    noPrice:  " (нет цены)",
+  },
 
 
 

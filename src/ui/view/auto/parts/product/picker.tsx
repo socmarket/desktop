@@ -6,6 +6,7 @@ import {
   TextArea, Button, Segment, Image,
   Label, Container, Menu, Message, Divider, List
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 const Option = (props) => {
   const p = props.data.product
@@ -20,12 +21,12 @@ const Option = (props) => {
     innerRef,
     innerProps,
   } = props
-  const cname = className + " ui compact " + 
+  const cname = className + " ui compact " +
     (isFocused ?
       (isSelected ? "blue" : "info") :
       (isSelected ? "blue" : "")
     ) + " message"
-  
+
   return (
     <div
       className={cname}
@@ -44,7 +45,7 @@ const Option = (props) => {
   )
 }
 
-export default class ProductPicker extends React.Component {
+class ProductPicker extends React.Component {
 
   constructor(props) {
     super(props)
@@ -56,6 +57,7 @@ export default class ProductPicker extends React.Component {
       value: -1,
       label: "",
     }
+    this.t = this.props.t
   }
 
   updateLabel(value) {
@@ -73,7 +75,7 @@ export default class ProductPicker extends React.Component {
           })
         }
       })
-    
+
   }
 
   mkLabelFrom(product) {
@@ -111,7 +113,7 @@ export default class ProductPicker extends React.Component {
       .then(products => {
         cb(this.mkOptsFrom(products))
       })
-    
+
   }
 
   onPick(option) {
@@ -192,3 +194,4 @@ export default class ProductPicker extends React.Component {
   }
 
 }
+export default (withTranslation()(ProductPicker))
