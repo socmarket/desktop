@@ -14,6 +14,7 @@ import {
   Container, Header, Table,
   Menu
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class ConsignmentItem extends React.Component {
 
@@ -47,6 +48,7 @@ class ConsignmentItem extends React.Component {
       salePrice: props.item.consignmentPrice * (props.opt.defaultSaleMargin / 100.0) + props.item.consignmentPrice,
       saleCurrencyId: props.item.currencyId,
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -65,7 +67,7 @@ class ConsignmentItem extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.item.productId !== this.props.item.productId) { 
+    if (prevProps.item.productId !== this.props.item.productId) {
       this.consignmentApi
         .productHistory(this.state.productId)
         .then(history => this.setState({
@@ -141,13 +143,13 @@ class ConsignmentItem extends React.Component {
           <Form.Input
             autoFocus
             width={10}
-            label="Цена покупки"
+            label={this.t("purchaseAmount")}
             onChange={this.onPriceChange}
             value={this.state.price || 0}
             control={this.priceInput}
           />
           <Form.Field width={6}>
-            <label>Валюта покупки</label>
+            <label>{this.t("purchaseCurrency")}</label>
             <CurrencyPicker
               size="large"
               api={this.props.api}
@@ -159,13 +161,13 @@ class ConsignmentItem extends React.Component {
         <Form.Group>
           <Form.Input
             width={10}
-            label="Количество"
+            label={this.t("quantity")}
             onChange={this.onQuantityChange}
             value={this.state.quantity || 0}
             control={this.quantityInput}
           />
           <Form.Field width={6}>
-            <label>Ед. изм.</label>
+            <label>{this.t("unit")}</label>
             <UnitPicker
               size="large"
               api={this.props.api}
@@ -178,13 +180,13 @@ class ConsignmentItem extends React.Component {
           <Form.Input
             autoFocus
             width={10}
-            label="Цена продажи"
+            label={this.t("sellingAmount")}
             onChange={this.onSalePriceChange}
             value={this.state.salePrice || 0}
             control={this.salePriceInput}
           />
           <Form.Field width={6}>
-            <label>Валюта продажи</label>
+            <label>{this.t("sellingCurrency")}</label>
             <CurrencyPicker
               size="large"
               api={this.props.api}
@@ -193,13 +195,13 @@ class ConsignmentItem extends React.Component {
             />
           </Form.Field>
         </Form.Group>
-        <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>Изменить (Enter)</Button>
-        <Message size="mini" header="Модель" content={this.state.productModel} />
-        <Message size="mini" header="Мотор"  content={this.state.productEngine} />
+        <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>{this.t("update")} (Enter)</Button>
+        <Message size="mini" header={this.t("model")} content={this.state.productModel} />
+        <Message size="mini" header={this.t("engine")} content={this.state.productEngine} />
         <Form.Group widths="equal">
-          <Form.Field><Message size="mini" header="Бренд"    content={this.state.productBrand}  /></Form.Field>
-          <Form.Field><Message size="mini" header="OEM"      content={this.state.productOemNo}  /></Form.Field>
-          <Form.Field><Message size="mini" header="Серийник" content={this.state.productSerial} /></Form.Field>
+          <Form.Field><Message size="mini" header={this.t("brand")} content={this.state.productBrand}  /></Form.Field>
+          <Form.Field><Message size="mini" header={this.t("oem")} content={this.state.productOemNo}  /></Form.Field>
+          <Form.Field><Message size="mini" header={this.t("serialN")} content={this.state.productSerial} /></Form.Field>
         </Form.Group>
       </Form>
     )
@@ -213,8 +215,8 @@ class ConsignmentItem extends React.Component {
             {this.state.errorMsg}
           </Message>
         }
-        <p>Фотографии товара</p>
-        <p>Добавление фотографий будет доступно в новых обновлениях программы</p>
+        <p>{this.t("productPhotos")}</p>
+        <p>{this.t("remark")}</p>
       </Segment>
     )
   }
@@ -224,11 +226,11 @@ class ConsignmentItem extends React.Component {
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Дата     </Table.HeaderCell>
-            <Table.HeaderCell>Поставщик</Table.HeaderCell>
-            <Table.HeaderCell>Кол-во   </Table.HeaderCell>
-            <Table.HeaderCell>Цена     </Table.HeaderCell>
-            <Table.HeaderCell>Валюта   </Table.HeaderCell>
+            <Table.HeaderCell>{this.t("date")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("supplier")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("quantity")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("price")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("currency")}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -252,8 +254,8 @@ class ConsignmentItem extends React.Component {
         <Grid.Row>
           <Grid.Column width={8}>
             <Menu attached="top" inverted color={this.props.theme.mainColor}>
-              <Menu.Item name="История" active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
-              <Menu.Item name="Фото"    active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
+              <Menu.Item name={this.t("history")} active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
+              <Menu.Item name={this.t("photos")} active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
             </Menu>
             <Segment attached="bottom" style={{ height: "92%" }}>
               { this.state.activeTab === "history" && this.history() }
@@ -279,7 +281,7 @@ class ConsignmentItem extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header color={this.props.theme.mainColor} >
-          Приёмка на склад: {this.state.productTitle}
+          {this.t("warehouseAcceptance")}: {this.state.productTitle}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -289,4 +291,4 @@ class ConsignmentItem extends React.Component {
   }
 }
 
-export default ConsignmentItem
+export default (withTranslation("auto_part_consignmen_itemEditor.form")(ConsignmentItem))
