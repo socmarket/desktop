@@ -82,7 +82,7 @@ class ProductPicker extends React.Component {
     return product.categoryTitle
       + " : " + product.title
       + " : " + (product.quantity ? product.quantity : 0) + " " + product.unitNotation
-      + (product.price ? " : " + product.price : " (нет цены)")
+      + (product.price ? " : " + product.price : this.t("noPrice"))
       + (product.brand ? " | " + product.brand : "")
       + (product.model ? " | " + product.model : "")
       + " | " + product.barcode
