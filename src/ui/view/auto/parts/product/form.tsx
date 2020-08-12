@@ -12,18 +12,7 @@ import {
   Message, Modal, Container, Divider,
   Menu, Table,
 } from "semantic-ui-react"
-
-function opToLocal(op) {
-  var local = ""
-  switch (op) {
-    case "sale"        : local = "продажа" ; break
-    case "consignment" : local = "покупка" ; break
-    case "inPriceSet"  : local = "цена покупки" ; break
-    case "outPriceSet" : local = "цена продажи" ; break
-    default            : local = "неизвестно" ; break
-  }
-  return local
-}
+import { withTranslation } from 'react-i18next';
 
 class ProductForm extends React.Component {
 
@@ -67,6 +56,7 @@ class ProductForm extends React.Component {
     this.barcodeInput    = actionInputWithRef(this.barcodeInputRef   , "add", this.onNewBarcode)
     this.labelCountInput = actionInputWithRef(this.labelCountInputRef, "barcode", this.onPrintLabel)
     this.coordInput      = actionInputWithRef(this.coordInputRef     , "map marker alternate", this.onPrintCoord)
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -96,7 +86,7 @@ class ProductForm extends React.Component {
             if (p) {
               this.setState({
                 barcodeValidated: false,
-                errorMsg: "Есть другой товар с таким же штрихкодом: " +
+                errorMsg: this.t("duplicatedBarcode") +
                   `${p.title}:${p.model}:${p.engine}:OEM:${p.oemNo}:Ser:${p.serial}`
               })
             } else {
@@ -249,40 +239,40 @@ class ProductForm extends React.Component {
         <Form.Group>
           <Form.Input
             width={7}
-            label="Штрихкод"
+            label={this.t("barcode")}
             error={!this.state.barcodeValidated}
             onChange={this.onBarcodeChange}
             value={this.state.barcode || ""}
             control={this.barcodeInput}
           />
           <Form.Field width={3}>
-            <label>Ед. изм.</label>
+            <label>{this.t("unit")}</label>
             <UnitPicker api={this.props.api} value={this.state.unitId} onPick={this.onUnitChange} />
           </Form.Field>
           <Form.Field width={6}>
-            <label>Категория товара</label>
+            <label>{this.t("productType")}</label>
             <CategoryPicker api={this.props.api} value={this.state.categoryId} onPick={this.onCategoryChange} />
           </Form.Field>
         </Form.Group>
         <Message error>{this.state.errorMsg}</Message>
         <Form.Group>
-          <Form.Input width={16} label="Наименование" value={this.state.title || ""} onChange={this.onTitleChange} error={!this.state.titleValidated} />
+          <Form.Input width={16} label={this.t("title")} value={this.state.title || ""} onChange={this.onTitleChange} error={!this.state.titleValidated} />
         </Form.Group>
         <Form.Group>
-          <Form.Input width={16} label="Модель"  value={this.state.model || ""}  onChange={this.onModelChange} />
+          <Form.Input width={16} label={this.t("model")} value={this.state.model || ""}  onChange={this.onModelChange} />
         </Form.Group>
         <Form.Group>
-          <Form.Input width={16} label="Движок"  value={this.state.engine || ""} onChange={this.onEngineChange} />
+          <Form.Input width={16} label={this.t("engine")} value={this.state.engine || ""} onChange={this.onEngineChange} />
         </Form.Group>
         <Form.Group>
-          <Form.Input width={5} label="OEM"      value={this.state.oemNo || ""}  onChange={this.onOemNoChange} />
-          <Form.Input width={5} label="Серийник" value={this.state.serial || ""} onChange={this.onSerialChange} />
-          <Form.Input width={6} label="Бренд"    value={this.state.brand || ""}  onChange={this.onBrandChange} />
+          <Form.Input width={5} label={this.t("oem")} value={this.state.oemNo || ""}  onChange={this.onOemNoChange} />
+          <Form.Input width={5} label={this.t("serialN")} value={this.state.serial || ""} onChange={this.onSerialChange} />
+          <Form.Input width={6} label={this.t("brand")} value={this.state.brand || ""}  onChange={this.onBrandChange} />
         </Form.Group>
         <Form.Group>
           <Form.Input
             width={16}
-            label="Расположение"
+            label={this.t("location")}
             onChange={this.onCoordChange}
             value={this.state.coord || ""}
             control={this.coordInput}
@@ -290,15 +280,15 @@ class ProductForm extends React.Component {
         </Form.Group>
         <Button.Group fluid>
           {this.state.id < 0 && <Button type="button" color={this.props.theme.mainColor}
-            disabled={!this.validated()} onClick={this.onCreate}>Создать (Shift + Enter)</Button>}
+            disabled={!this.validated()} onClick={this.onCreate}>{this.t("create")} (Shift + Enter)</Button>}
           {this.state.id > 0 && <Button type="button" color={this.props.theme.mainColor}
-            disabled={!this.validated()} onClick={this.onUpdate}>Изменить (Shift + Enter)</Button>}
+            disabled={!this.validated()} onClick={this.onUpdate}> (Shift + Enter)</Button>}
         </Button.Group>
         <Divider />
         <Form.Group>
           <Form.Input
             width={16}
-            label="Печатать штрихкод"
+            label={this.t("barcodePrint")}
             onChange={this.onLabelCountChange}
             value={this.state.labelCount || 0}
             control={this.labelCountInput}
@@ -328,7 +318,7 @@ class ProductForm extends React.Component {
             fluid
             size="small"
           >
-            Печатать
+            {this.t("print")}
           </Button>
         </Form.Group>
         {errorMsg.length > 0 && <Message danger>{errorMsg}</Message> }
@@ -345,8 +335,8 @@ class ProductForm extends React.Component {
   photos() {
     return (
       <Segment inverted color={this.props.opt.theme.mainColor} style={{ height: "100%" }}>
-        <p>Фотографии товара</p>
-        <p>Будет доступно в новых обновлениях программы</p>
+        <p>{this.t("productPhotos")}</p>
+        <p>{this.t("remark")}</p>
       </Segment>
     )
   }
@@ -356,10 +346,10 @@ class ProductForm extends React.Component {
       <Table celled>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell textAlign="center">Дата     </Table.HeaderCell>
-            <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
-            <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
-            <Table.HeaderCell textAlign="center">Операция</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("date")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("number")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("number")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("operation")}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -368,7 +358,7 @@ class ProductForm extends React.Component {
               <Table.Cell textAlign="center">{asDate(item.opAt) }</Table.Cell>
               <Table.Cell textAlign="right" >{item.amount       }</Table.Cell>
               <Table.Cell                   >{item.units        }</Table.Cell>
-              <Table.Cell                   >{opToLocal(item.op)}</Table.Cell>
+              <Table.Cell                   >{this.t(item.op)}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
@@ -382,8 +372,8 @@ class ProductForm extends React.Component {
         <Grid.Row>
           <Grid.Column width={8}>
             <Menu attached="top" inverted color={this.props.theme.mainColor}>
-              <Menu.Item name="История" active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
-              <Menu.Item name="Фото"    active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
+              <Menu.Item name={this.t('history')} active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
+              <Menu.Item name={this.t("photos")} active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
             </Menu>
             <Segment attached="bottom" style={{ height: "92%" }}>
               { this.state.activeTab === "history" && this.history() }
@@ -401,14 +391,14 @@ class ProductForm extends React.Component {
   }
 
   productDesc() {
-    return `#${this.props.product.id}: ${this.props.product.title}` 
+    return `#${this.props.product.id}: ${this.props.product.title}`
   }
 
   render() {
     const header =
       this.state.id ?
-        (this.state.id > 0 ? this.productDesc() : "регистрация нового товара") :
-        "Ошибка открытия"
+        (this.state.id > 0 ? this.productDesc() : this.t("productRegistration")) :
+        this.t("opening_error")
     return (
       <Modal
         open={this.props.open}
@@ -417,7 +407,7 @@ class ProductForm extends React.Component {
         onClose={this.props.onClose}
       >
         <Modal.Header>
-          Карточка товара: {header}
+          {this.t("productData")}: {header}
         </Modal.Header>
         <Modal.Content>
           {this.content()}
@@ -427,4 +417,4 @@ class ProductForm extends React.Component {
   }
 }
 
-export default ProductForm
+export default (withTranslation("auto_part_product_form.form")(ProductForm))
