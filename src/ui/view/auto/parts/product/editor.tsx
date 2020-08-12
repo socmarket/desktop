@@ -17,6 +17,7 @@ import {
   Menu, Icon, Popup,
 } from "semantic-ui-react"
 import moment from "moment"
+import { withTranslation } from 'react-i18next';
 
 class ProductEditor extends React.Component {
 
@@ -69,6 +70,7 @@ class ProductEditor extends React.Component {
         offset: 0,
       },
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -107,7 +109,7 @@ class ProductEditor extends React.Component {
 
   onExportToExcel() {
     const dt = moment().format("YYYY-MM-DD-HH-ss")
-    return this.fileApi.saveFile("товары-" + dt + ".xlsx", [ "xls", "xlsx" ])
+    return this.fileApi.saveFile("prod-" + dt + ".xlsx", [ "xls", "xlsx" ])
       .then(file => {
         if (file) {
           return this.productApi
@@ -117,7 +119,7 @@ class ProductEditor extends React.Component {
                 this.props.opt.logoLine1,
                 this.props.opt.logoLine2,
                 this.props.opt.logoLine3,
-                "Сформировано в СоцМаркет 2С",
+                this.t("makedIn"),
                 dt,
               ]
             )
@@ -217,11 +219,11 @@ class ProductEditor extends React.Component {
                 onChange : this.onFilterChange,
               })}
             </Menu.Item>
-            <Popup content="Предыдущая страница" trigger= { <Menu.Item onClick={this.onPrevPage}><Icon name="angle left"  /></Menu.Item> } />
-            <Popup content="Следующая страница"  trigger= { <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item> } />
+            <Popup content={this.t("prevPage")} trigger= { <Menu.Item onClick={this.onPrevPage}><Icon name="angle left"  /></Menu.Item> } />
+            <Popup content={this.t("nextPage")} trigger= { <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item> } />
             <Menu.Menu position="right">
-              <Popup content="Сохранить в Excel" trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
-              <Popup content="Новый товар"       trigger= { <Menu.Item onClick={this.newProduct}>     <Icon name="plus" />      </Menu.Item> } />
+              <Popup content={this.t("saveToExcel")} trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
+              <Popup content={this.t("newProduct")}  trigger= { <Menu.Item onClick={this.newProduct}>     <Icon name="plus" />      </Menu.Item> } />
             </Menu.Menu>
           </Menu>
         </Container>
@@ -251,4 +253,4 @@ const stateMap = (state) => {
 
 export default connect(stateMap, {
   ...AutoPartsProductActions,
-})(ProductEditor)
+})(withTranslation("auto_part_product_editor.form")(ProductEditor))

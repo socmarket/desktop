@@ -344,7 +344,14 @@
     productRegistration: "Регистрация нового товара=",
     opening_error: "Ошибка открытия=",
     productData:  "Карточка товара=",
-  }
+  },
+  "auto_part_product_editor.form":{
+    makedIn:  "Сформировано в СоцМаркет 2С=",
+    prevPage: "Предыдущая страница=",
+    nextPage: "Следующая страница=",
+    saveToExcel:  "Сохранить в Excel=",
+    newProduct: "Новый товар=",
+  },
 
 
 
