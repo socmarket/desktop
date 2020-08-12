@@ -220,43 +220,39 @@ class ConsignmentEditor extends React.Component {
 
   summary() {
     return (
-      <Translation ns={"consignment.form"}>
-      { (t, { i18n }) => (
-        <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
-          <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
-            <Icon name="warehouse" />
-            {this.t("warehouseAcceptance")}
-          </Header>
-          <Grid padded>
-            <Grid.Row>
-              <Grid.Column width={6}><Header as="h2">{t("cost")}</Header></Grid.Column>
-              <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{spacedNum(this.state.cost)}</Header></Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={6}><Header as="h1">{t("total")}</Header></Grid.Column>
-              <Grid.Column width={10}>
-                <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
-                  {spacedNum(this.state.cost)}
-                </Header>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-          <br />
-          <Form>
-            <Form.Field>
-              <label>{this.t("supplier")}</label>
-              <SupplierPicker
-                api={this.props.api}
-                forwardRef={this.supplierPickerRef}
-                value={this.state.supplierId}
-                onPick={this.onSupplierChange}
-              />
-            </Form.Field>
-            <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{t("acceptConsignment")} (Shift + Enter)</Button>
-          </Form>
-        </Segment>
-      )}
-      </Translation>
+      <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
+        <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
+          <Icon name="warehouse" />
+          {this.t("warehouseAcceptance")}
+        </Header>
+        <Grid padded>
+          <Grid.Row>
+            <Grid.Column width={6}><Header as="h2">{this.t("cost")}</Header></Grid.Column>
+            <Grid.Column width={10}><Header as="h2" dividing textAlign="right">{spacedNum(this.state.cost)}</Header></Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column width={6}><Header as="h1">{this.t("total")}</Header></Grid.Column>
+            <Grid.Column width={10}>
+              <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
+                {spacedNum(this.state.cost)}
+              </Header>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <br />
+        <Form>
+          <Form.Field>
+            <label>{this.t("supplier")}</label>
+            <SupplierPicker
+              api={this.props.api}
+              forwardRef={this.supplierPickerRef}
+              value={this.state.supplierId}
+              onPick={this.onSupplierChange}
+            />
+          </Form.Field>
+          <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{this.t("acceptConsignment")} (Shift + Enter)</Button>
+        </Form>
+      </Segment>
     )
   }
 

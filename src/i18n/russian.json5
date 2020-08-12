@@ -1,12 +1,4 @@
 {
-  "consignment.form": {
-    cost: "Сумма=: ",
-    discount: "Скидка=: ",
-    total: "Итог=: ",
-    change: "Сдача=: ",
-    cash: "Наличными=: ",
-    acceptConsignment: "Принять партию на склад=",
-  },
   "base_door.form": {
     cashier: "Кассир=",
     manager: "Менеджер=",
@@ -396,6 +388,9 @@
     warehouseAcceptance:  "Приёмка на склад=",
   },
   "auto_part_consignmen_editor.form":{
+    cost: "Сумма=: ",
+    total: "Итог=: ",
+    acceptConsignment: "Принять партию на склад=",
     consignment:"Партия=",
     product:    "Товар=",
     price:      "Цена=",
@@ -407,12 +402,4 @@
     warehouseAcceptance:  "Приёмка на склад=",
     supplier:   "Поставщик=",
   },
-
-
-
-
-
-
-
-
 }
