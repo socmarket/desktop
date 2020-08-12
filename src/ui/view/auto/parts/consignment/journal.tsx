@@ -5,6 +5,7 @@ import { ResponsivePie } from '@nivo/pie'
 import { Container, Grid, Form, Input, Table, Button, Segment, Image, Label } from "semantic-ui-react"
 
 import "./journal.css"
+import { withTranslation } from 'react-i18next';
 
 const minib = {
   padding: "0.5em 0.5em",
@@ -19,6 +20,7 @@ class ConsignmentJournal extends React.Component {
     this.state = {
       items: []
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -43,18 +45,18 @@ class ConsignmentJournal extends React.Component {
         <Table celled compact structured striped style={{ height: "100%" }}>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Чек</Table.HeaderCell>
-              <Table.HeaderCell>Товар</Table.HeaderCell>
-              <Table.HeaderCell>Кол-во</Table.HeaderCell>
-              <Table.HeaderCell>Возврат</Table.HeaderCell>
-              <Table.HeaderCell>Ед.изм.</Table.HeaderCell>
-              <Table.HeaderCell>Цена</Table.HeaderCell>
-              <Table.HeaderCell>Общ ст-сть</Table.HeaderCell>
-              <Table.HeaderCell>Стоимость</Table.HeaderCell>
-              <Table.HeaderCell>Бренд</Table.HeaderCell>
-              <Table.HeaderCell>Штрихкод</Table.HeaderCell>
-              <Table.HeaderCell>OEM</Table.HeaderCell>
-              <Table.HeaderCell>Операции</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("check")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("product")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("quantity")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("return")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("unit")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("price")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("totalCost")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("cost")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("brand")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("oem")}</Table.HeaderCell>
+              <Table.HeaderCell>{this.t("operations")}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -71,17 +73,17 @@ class ConsignmentJournal extends React.Component {
                       <Table.Cell rowSpan={items.length}>
                         {moment.utc(consignment.soldAt).local().format("DD-MM-YYYY HH:mm")}
                         <br />{consignment.supplierName}
-                        <br />Сумма: {consignment.cost}
+                        <br />{this.t("amount")}: {consignment.cost}
                         { (consignment.cash < consignment.cost) &&
                           <Fragment>
-                            <br />Оплачено: {consignment.cash}
-                            <br />Долг: {consignment.cost - consignment.cash}
+                            <br />{this.t("paidUp")}: {consignment.cash}
+                            <br />{this.t("debt")}: {consignment.cost - consignment.cash}
                           </Fragment>
                         }
                         { (consignment.cash >= consignment.cost) &&
                           <Fragment>
-                            <br />Наличными: {consignment.cash}
-                            <br />Сдача: {consignment.cash - consignment.cost}
+                            <br />{this.t("cach")}: {consignment.cash}
+                            <br />{this.t("change")}: {consignment.cash - consignment.cost}
                           </Fragment>
                         }
                       </Table.Cell>
@@ -134,4 +136,4 @@ class ConsignmentJournal extends React.Component {
 
 }
 
-export default ConsignmentJournal
+export default (withTranslation("auto_part_consignmen_journal.form")(ConsignmentJournal))

@@ -352,6 +352,25 @@
     saveToExcel:  "Сохранить в Excel=",
     newProduct: "Новый товар=",
   },
+  "auto_part_consignmen_journal.form":{
+    check:      "Чек=",
+    product:    "Товар=",
+    quantity:   "Кол-во=",
+    return:     "Возврат=",
+    unit:       "Ед.=",
+    prices:     "Цена=",
+    totalCost:  "Общ ст-сть=",
+    cost:       "Стоимость=",
+    barcode:    "Штрихкод=",
+    brand:      "Бренд=",
+    oem:        "OEM=",
+    operations: "Операции=",
+    amount:     "Сумма=",
+    paidUp:     "Оплачено=",
+    debt:       "Долг=",
+    change: "Сдача=: ",
+    cash: "Наличными=: ",
+  },
 
 
 
