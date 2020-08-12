@@ -395,6 +395,18 @@
     photos:           "Фото=",
     warehouseAcceptance:  "Приёмка на склад=",
   },
+  "auto_part_consignmen_editor.form":{
+    consignment:"Партия=",
+    product:    "Товар=",
+    price:      "Цена=",
+    quantity:   "Кол-во=",
+    unit:       "Ед.=",
+    amount:     "Сумма=",
+    currency:   "Валюта=",
+    barcode:    "Штрихкод=",
+    warehouseAcceptance:  "Приёмка на склад=",
+    supplier:   "Поставщик=",
+  },
 
 
 

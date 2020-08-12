@@ -19,6 +19,7 @@ import {
   Label, Container, Menu, Message, Divider,
   Rail, Dropdown
 } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class ConsignmentEditor extends React.Component {
 
@@ -63,6 +64,7 @@ class ConsignmentEditor extends React.Component {
       lastUsedCurrencyId : props.opt.defaultCurrencyId || 1,
       item               : this.emptyItem,
     }
+    this.t = this.props.t
   }
 
   componentDidMount() {
@@ -197,17 +199,17 @@ class ConsignmentEditor extends React.Component {
       <DTable
         ref={this.tableRef}
         titleIcon="clipboard list"
-        title="Партия"
+        title={this.t("consignment")}
         color={this.props.theme.mainColor}
         items={this.state.items}
         columns={[
-          { key: "productTitle"  , title: "Товар"   ,                             },
-          { key: "price"         , title: "Цена"    , align: "right", positive: 1 },
-          { key: "quantity"      , title: "Кол-во"  , align: "right", positive: 1 },
-          { key: "unitTitle"     , title: "Ед."     ,                             },
-          { key: "cost"          , title: "Сумма"   , align: "right", positive: 1 },
-          { key: "currencyTitle" , title: "Валюта"  ,                             },
-          { key: "productBarcode", title: "Штрихкод",                             },
+          { key: "productTitle"  , title: this.t("product") ,                             },
+          { key: "price"         , title: this.t("price")   , align: "right", positive: 1 },
+          { key: "quantity"      , title: this.t("quantity"), align: "right", positive: 1 },
+          { key: "unitTitle"     , title: this.t("unit")    ,                             },
+          { key: "cost"          , title: this.t("amount")  , align: "right", positive: 1 },
+          { key: "currencyTitle" , title: this.t("currency"),                             },
+          { key: "productBarcode", title: this.t("barcode") ,                             },
         ]}
         onOpenRow={this.onOpenItem}
         onDeleteRow={this.onDeleteItem}
@@ -223,7 +225,7 @@ class ConsignmentEditor extends React.Component {
         <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
           <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
             <Icon name="warehouse" />
-            Приёмка на склад
+            {this.t("warehouseAcceptance")}
           </Header>
           <Grid padded>
             <Grid.Row>
@@ -242,7 +244,7 @@ class ConsignmentEditor extends React.Component {
           <br />
           <Form>
             <Form.Field>
-              <label>Поставщик</label>
+              <label>{this.t("supplier")}</label>
               <SupplierPicker
                 api={this.props.api}
                 forwardRef={this.supplierPickerRef}
@@ -289,4 +291,4 @@ class ConsignmentEditor extends React.Component {
   }
 }
 
-export default ConsignmentEditor
+export default (withTranslation("auto_part_consignmen_editor.form")(ConsignmentEditor))
