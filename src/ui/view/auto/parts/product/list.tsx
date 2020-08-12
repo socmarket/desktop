@@ -1,10 +1,12 @@
 import React from "react";
 import { Table, Icon } from "semantic-ui-react"
+import { withTranslation } from 'react-i18next';
 
 class ProductList extends React.Component {
 
   constructor(props) {
     super(props)
+    this.t  = this.props.t
   }
 
   table(height) {
@@ -12,16 +14,16 @@ class ProductList extends React.Component {
       <Table compact celled selectable style={{ height: "100%" }}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Кат</Table.HeaderCell>
-            <Table.HeaderCell>Название</Table.HeaderCell>
-            <Table.HeaderCell>Ед</Table.HeaderCell>
-            <Table.HeaderCell>Модель</Table.HeaderCell>
-            <Table.HeaderCell>Движок</Table.HeaderCell>
-            <Table.HeaderCell>Штрихкод</Table.HeaderCell>
-            <Table.HeaderCell>Бренд</Table.HeaderCell>
-            <Table.HeaderCell>OEM</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("category")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("name")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("unit")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("model")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("engine")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("brand")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("oem")}</Table.HeaderCell>
             <Table.HeaderCell><Icon name="map marker alternate" /></Table.HeaderCell>
-            <Table.HeaderCell>Заметки</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("notes")}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -50,4 +52,4 @@ class ProductList extends React.Component {
 
 }
 
-export default ProductList
+export default (withTranslation("auto_part_product_list.form")(ProductList))
