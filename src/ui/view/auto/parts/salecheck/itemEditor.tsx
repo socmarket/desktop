@@ -123,8 +123,8 @@ class SaleCheckItem extends React.Component {
         <Message size="mini" header={this.t("model")} content={this.state.productModel} />
         <Message size="mini" header={this.t("engine")} content={this.state.productEngine} />
         <Form.Group widths="equal">
-            <Form.Field><Message size="mini" header={this.t("brand")} content={this.state.productBrand}  /></Form.Field>
-          <Form.Field><Message size="mini" header={this.t("oem")}  ontent={this.state.productOemNo}  /></Form.Field>
+          <Form.Field><Message size="mini" header={this.t("brand")}   content={this.state.productBrand}  /></Form.Field>
+          <Form.Field><Message size="mini" header={this.t("oem")}     content={this.state.productOemNo}  /></Form.Field>
           <Form.Field><Message size="mini" header={this.t("serialN")} content={this.state.productSerial} /></Form.Field>
         </Form.Group>
       </Form>

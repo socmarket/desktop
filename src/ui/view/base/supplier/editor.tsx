@@ -216,7 +216,7 @@ class SupplierEditor extends React.Component {
       <Fragment>
         <Grid padded tabIndex={-1} onKeyDown={this.onGlobalKeyDown} className="light-focus">
           <Grid.Column width={4}>
-            // {this.list()}
+            {this.list()}
           </Grid.Column>
           <Grid.Column width={6}>
             {this.state.supplier.id > 0 && this.journal()}

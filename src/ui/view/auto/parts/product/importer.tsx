@@ -367,7 +367,7 @@ class ProductImporter extends React.Component {
                 <Table.HeaderCell textAlign="center">{this.t("date")}</Table.HeaderCell>
                 <Table.HeaderCell textAlign="center">{this.t("fields")}</Table.HeaderCell>
                 <Table.HeaderCell textAlign="center">{this.t("rows")}</Table.HeaderCell>
-                <Table.HeaderCell textAlign="center">{this.t("Successfully")}</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">{this.t("successfully")}</Table.HeaderCell>
                 <Table.HeaderCell textAlign="center">{this.t("unit")}</Table.HeaderCell>
                 <Table.HeaderCell textAlign="center">{this.t("kt")}</Table.HeaderCell>
                 <Table.HeaderCell textAlign="center">{this.t("currency")}</Table.HeaderCell>
