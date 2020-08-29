@@ -203,13 +203,14 @@ class ConsignmentEditor extends React.Component {
         color={this.props.theme.mainColor}
         items={this.state.items}
         columns={[
-          { key: "productTitle"  , title: this.t("product") ,                             },
-          { key: "price"         , title: this.t("price")   , align: "right", positive: 1 },
-          { key: "quantity"      , title: this.t("quantity"), align: "right", positive: 1 },
-          { key: "unitTitle"     , title: this.t("unit")    ,                             },
-          { key: "cost"          , title: this.t("amount")  , align: "right", positive: 1 },
-          { key: "currencyTitle" , title: this.t("currency"),                             },
-          { key: "productBarcode", title: this.t("barcode") ,                             },
+          { key: "productTitle"  , title: this.t("product")  ,                             },
+          { key: "price"         , title: this.t("price")    , align: "right", positive: 1 },
+          { key: "quantity"      , title: this.t("quantity") , align: "right", positive: 1 },
+          { key: "unitTitle"     , title: this.t("unit")     ,                             },
+          { key: "cost"          , title: this.t("amount")   , align: "right", positive: 1 },
+          { key: "currencyTitle" , title: this.t("currency") ,                             },
+          { key: "productBarcode", title: this.t("barcode")  ,                             },
+          { key: "salePrice"     , title: this.t("salePrice"), align: "right", positive: 1 },
         ]}
         onOpenRow={this.onOpenItem}
         onDeleteRow={this.onDeleteItem}

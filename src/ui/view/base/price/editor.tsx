@@ -61,7 +61,7 @@ class PriceEditor extends React.Component {
   onPriceChange(ev) {
     ifNumberF(ev, (value) => {
       if (value >= 0) {
-        this.setState({ price: +value })
+        this.setState({ price: value })
       }
     })
   }

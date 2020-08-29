@@ -394,6 +394,7 @@
     consignment:"Партия",
     product:    "Товар",
     price:      "Цена",
+    salePrice:  "Цена прод.",
     quantity:   "Кол-во",
     unit:       "Ед.",
     amount:     "Сумма",

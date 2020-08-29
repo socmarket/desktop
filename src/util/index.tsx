@@ -29,7 +29,7 @@ const ifNumberF = (ev, f) => {
     if (event.target.value === "") {
       f(0)
     } else if (!isNaN(value) && isFinite(value)) {
-      f(event.target.value)
+      f(event.target.value.replace(/^(0+([1-9].*))/, "$2").replace(/^(0+(\.*))/, "0$2"))
     }
   } catch (e) {
   }

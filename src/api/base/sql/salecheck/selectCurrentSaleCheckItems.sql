@@ -3,23 +3,23 @@ select
   c.productId                          as productId,
   c.unitId                             as unitId,
   c.currencyId                         as currencyId,
-  round(c.price / 100, 2)              as price,
-  round(c.originalPrice / 100, 2)      as originalPrice,
-  round(c.quantity / 100, 2)           as quantity,
+  round(c.price / 100.0, 2)            as price,
+  round(c.originalPrice / 100.0, 2)    as originalPrice,
+  round(c.quantity / 100.0, 2)         as quantity,
 
   round(
-    (c.originalPrice - c.price) / 100
+    (c.originalPrice - c.price) / 100.0
    , 2)                                as discount,
 
   round(
-    (c.originalPrice / 100) *
-    (c.quantity / 100)
+    (c.originalPrice / 100.0) *
+    (c.quantity / 100.0)
     , 2
   )                                    as cost,
 
   round(
-    (c.price / 100) *
-    (c.quantity / 100)
+    (c.price / 100.0) *
+    (c.quantity / 100.0)
     , 2
   )                                    as total,
 

@@ -40,12 +40,13 @@ class ConsignmentItem extends React.Component {
     this.priceApi       = props.api.price
     this.consignmentApi = props.api.consignment
 
+    const salePrice = props.item.price * (props.opt.defaultSaleMargin / 100.0) + props.item.price
+
     this.state = {
       ...props.item,
       errorMsg: "",
       history: [],
       activeTab: "history",
-      salePrice: props.item.consignmentPrice * (props.opt.defaultSaleMargin / 100.0) + props.item.consignmentPrice,
       saleCurrencyId: props.item.currencyId,
     }
     this.t = this.props.t
@@ -77,18 +78,21 @@ class ConsignmentItem extends React.Component {
   }
 
   onPriceChange(ev) {
-    ifNumberF(ev, (value) => this.setState({
-      price: +value,
-      salePrice: (this.props.opt.defaultSaleMargin / 100.0) * Number(value) + Number(value),
-    }))
+    ifNumberF(ev, value => {
+      const salePrice = (this.props.opt.defaultSaleMargin / 100.0) * Number(value) + Number(value)
+      this.setState({
+        price: value,
+        salePrice: Math.round(salePrice * 100) / 100,
+      })
+    })
   }
 
   onSalePriceChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ salePrice: +value }))
+    ifNumberF(ev, (value) => this.setState({ salePrice: value }))
   }
 
   onQuantityChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ quantity: +value }))
+    ifNumberF(ev, (value) => this.setState({ quantity: value }))
   }
 
   onUnitChange(unit) {
@@ -118,7 +122,7 @@ class ConsignmentItem extends React.Component {
         if (this.state.salePrice > 0) {
           return this.priceApi.setPrice({
             productId  : this.state.productId,
-            price      : this.state.salePrice,
+            price      : +this.state.salePrice,
             currencyId : this.state.saleCurrencyId,
           })
         } else {

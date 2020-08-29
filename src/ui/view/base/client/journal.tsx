@@ -59,7 +59,7 @@ class ClientJournal extends React.Component {
   }
 
   onAmountChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ amount: +value }))
+    ifNumberF(ev, (value) => this.setState({ amount: value }))
   }
 
   onCurrencyChange(currency) {

@@ -3,14 +3,23 @@ select
   c.productId                          as productId,
   c.unitId                             as unitId,
   c.currencyId                         as currencyId,
-  round(c.price / 100, 2)              as price,
-  round(c.quantity / 100, 2)           as quantity,
+  round(c.price / 100.0, 2)              as price,
+  round(c.quantity / 100.0, 2)           as quantity,
 
   round(
-    (c.price / 100) *
-    (c.quantity / 100)
+    (c.price / 100.0) *
+    (c.quantity / 100.0)
     , 2
   )                                    as cost,
+
+  round(
+    (select price
+    from price
+    where
+      productId = product.id
+    order by setAt desc
+    limit 1) / 100.0, 2
+  )                                    as salePrice,
 
   unit.notation                        as unitTitle,
   currency.notation                    as currencyTitle,

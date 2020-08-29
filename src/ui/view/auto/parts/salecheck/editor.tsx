@@ -126,13 +126,13 @@ class SaleCheckEditor extends React.Component {
   }
 
   onCashChange(ev) {
-    ifNumberF(ev, (value) => this.setState({ cash: +value }))
+    ifNumberF(ev, (value) => this.setState({ cash: value }))
   }
 
   onExtraDiscountChange(ev) {
     ifNumberF(ev, (value) => {
       if (value <= this.state.cost) {
-        this.setState({ extraDiscount: +value })
+        this.setState({ extraDiscount: value })
       }
     })
   }
