@@ -1,6 +1,6 @@
 select
   registeredAt,
-  round(amount) as amount,
+  round(amount, 2) as amount,
   kind
 from (
   select

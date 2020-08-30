@@ -5,7 +5,8 @@ import ProductPicker from "View/auto/parts/product/picker"
 import ClientPicker  from "View/base/client/picker"
 import {
   numberInputWithRef,
-  ifNumberF
+  ifNumberF,
+  mround,
 }                    from "Util"
 
 import React, { Fragment } from "react"
@@ -330,7 +331,7 @@ class SaleCheckEditor extends React.Component {
   }
 
   summary() {
-    const change = +this.state.cash - (this.state.total - this.state.extraDiscount)
+    const change = mround(+this.state.cash - (this.state.total - this.state.extraDiscount))
     return (
       <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
@@ -346,7 +347,7 @@ class SaleCheckEditor extends React.Component {
             <Grid.Column width={6}><Header as="h2">{this.t("discount")}</Header></Grid.Column>
             <Grid.Column width={10}>
               <Header as="h2" dividing textAlign="right">
-                {this.state.discount} + {this.state.extraDiscount} = {(+this.state.discount) + (+this.state.extraDiscount)}
+                {this.state.discount} + {this.state.extraDiscount} = {mround((+this.state.discount) + (+this.state.extraDiscount))}
               </Header>
             </Grid.Column>
           </Grid.Row>
@@ -354,7 +355,7 @@ class SaleCheckEditor extends React.Component {
             <Grid.Column width={6}><Header as="h1">{this.t("total")}</Header></Grid.Column>
             <Grid.Column width={10}>
               <Header dividing as="h1" textAlign="right" color={this.props.theme.mainColor}>
-                {this.state.total - this.state.extraDiscount}
+                {mround(this.state.total - this.state.extraDiscount)}
               </Header>
             </Grid.Column>
           </Grid.Row>

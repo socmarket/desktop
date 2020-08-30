@@ -1,5 +1,5 @@
 select
-  round(price / 100.0) as price
+  round(price / 100.0, 2) as price
 from (
   select
     price
@@ -12,7 +12,7 @@ from (
 union all
 
 select
-  round(price * rate * ($margin / 100.0) + price * rate) as price
+  round(price * rate * ($margin / 100.0) + price * rate, 2) as price
 from (
   select
     price / 100.00 as price,

@@ -4,6 +4,10 @@ import moment from "moment"
 import { ResponsivePie } from '@nivo/pie'
 import { Container, Grid, Form, Input, Table, Button, Segment, Image, Label } from "semantic-ui-react"
 
+import {
+  mround,
+}                    from "Util"
+
 const minib = {
   padding: "0.5em 0.5em",
 }
@@ -72,7 +76,7 @@ class SaleJournal extends React.Component {
                         <br />{saleCheck.clientName}
                         <br />{this.t("withoutDiscount")} {saleCheck.cost}
                         <br />{this.t("discount")} {saleCheck.discount}
-                        <br />{this.t("amount")} {saleCheck.cost - saleCheck.discount}
+                        <br />{this.t("amount")} {mround(saleCheck.cost - saleCheck.discount)}
                         { (saleCheck.cash < (saleCheck.cost - saleCheck.discount)) &&
                           <Fragment>
                             <br />{this.t("paidUp")} {saleCheck.cash}
@@ -82,7 +86,7 @@ class SaleJournal extends React.Component {
                         { (saleCheck.cash >= (saleCheck.cost - saleCheck.discount)) &&
                           <Fragment>
                             <br />{this.t("inСash")} {saleCheck.cash}
-                            <br />{this.t("surrender")} {saleCheck.cash - saleCheck.cost + saleCheck.discount}
+                            <br />{this.t("surrender")} {mround(saleCheck.cash - saleCheck.cost + saleCheck.discount)}
                           </Fragment>
                         }
                       </Table.Cell>

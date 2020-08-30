@@ -1,5 +1,5 @@
 select
-  round(price / 100, 2) as price,
+  round(price / 100.0, 2) as price,
   setAt                 as setAt,
   currencyId            as currencyId,
   currency.notation     as currencyNotation

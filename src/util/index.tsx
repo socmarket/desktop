@@ -39,6 +39,10 @@ function asDate(value) {
   return moment.utc(value).local().format("DD-MM-YYYY HH:mm")
 }
 
+function mround(value) {
+  return Math.round(value * 100) / 100
+}
+
 const asDateBadge = (date, color) => (
   <Label color={color} size="large">{moment.utc(date).fromNow()}</Label>
 )
@@ -46,6 +50,7 @@ const asDateBadge = (date, color) => (
 const spacedNum = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 
 export {
+  mround,
   numberInputWithRef,
   inputWithRef,
   actionInputWithRef,

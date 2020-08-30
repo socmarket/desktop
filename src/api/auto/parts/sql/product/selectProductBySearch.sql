@@ -29,12 +29,12 @@ from
         where productId = product.id
       ) as outQuantity,
       (select
-        coalesce(sum(quantity) / 100.00, 0)
+        coalesce(round(sum(quantity) / 100.00, 2), 0)
         from currentsalecheck
         where productId = product.id
       ) as outReservedQuantity,
       (select
-        coalesce(price.price / 100.00, 0) as price
+        coalesce(round(price.price / 100.00, 2), 0.0) as price
         from
           price
         where

@@ -5,11 +5,11 @@ select
   op
 from (
   select
-    soldAt                                as opAt,
+    soldAt                                   as opAt,
     round((salecheckitem.quantity -
-        coalesce(ret.quantity, 0)) / 100) as amount,
-    unit.notation                         as units,
-    'sale'                                as op
+        coalesce(ret.quantity, 0)) / 100, 2) as amount,
+    unit.notation                            as units,
+    'sale'                                   as op
   from
     salecheckitem
     left join salecheck on salecheck.id = salecheckitem.saleCheckId
@@ -25,11 +25,11 @@ from (
   union all
 
   select
-    acceptedAt                            as opAt,
+    acceptedAt                               as opAt,
     round((consignmentitem.quantity -
-        coalesce(ret.quantity, 0)) / 100) as amount,
-    unit.notation                         as units,
-    'consignment'                         as op
+        coalesce(ret.quantity, 0)) / 100, 2) as amount,
+    unit.notation                            as units,
+    'consignment'                            as op
   from
     consignmentitem
     left join consignment on consignment.id = consignmentitem.consignmentId
@@ -46,7 +46,7 @@ from (
 
   select
     updatedAt                             as opAt,
-    round(price / 100.00)                 as amount,
+    round(price / 100.00, 2)              as amount,
     currency.notation                     as units,
     'inPriceSet'                          as op
   from
@@ -59,7 +59,7 @@ from (
 
   select
     setAt                                 as opAt,
-    round(price / 100.00)                 as amount,
+    round(price / 100.00, 2)              as amount,
     currency.notation                     as units,
     'outPriceSet'                         as op
   from

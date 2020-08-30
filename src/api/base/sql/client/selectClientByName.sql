@@ -3,7 +3,7 @@ select
   name,
   contacts,
   notes,
-  round(coalesce(balance, 0) - coalesce(cost, 0)) as balance
+  round(coalesce(balance, 0) - coalesce(cost, 0), 2) as balance
 from (
   select
     client.id                 as id,
