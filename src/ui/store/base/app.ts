@@ -93,11 +93,11 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  //activePage    : "autoPartsSaleCheckEditor",
-  activePage    : "baseAuthSettings",
+  activePage    : "autoPartsSaleCheckEditor",
+  // activePage    : "baseAuthSettings",
   user          : "admin",
   unlocked      : true,
-  authenticated : true,
+  authenticated : false,
   lastError     : "",
   online        : false,
 }, action) {

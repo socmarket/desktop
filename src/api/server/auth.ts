@@ -8,15 +8,14 @@ export default function initAuthApi(axios, db) {
       captcha     : captcha,
       fingerprint : fingerprint,
     }),
-    verify: (msisdn, code) => {
-      return axios.post("/api/auth/verify", {
+    verifyCode: (msisdn, code) => {
+      return axios.post("/api/auth/verifyCode", {
           msisdn : msisdn,
           code   : code,
         }).then(res => {
-          console.log(res)
           return db.exec(insertTokenSql, {
-            $msisdn : res.msisdn + "",
-            $token  : res.token,
+            $msisdn : res.data.msisdn + "",
+            $token  : res.data.token,
           }).then(_ => res)
         })
     },

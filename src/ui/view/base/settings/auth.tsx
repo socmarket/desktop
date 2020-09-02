@@ -83,9 +83,16 @@ class Auth extends React.Component {
   onVerify() {
     this.serverApi
       .auth
-      .verify(this.state.msisdn, this.state.code)
+      .verifyCode(this.state.msisdn, this.state.code)
       .then(res => {
-        console.log(res)
+        this.serverApi
+          .auth
+          .accounts()
+          .then(accounts => {
+            this.setState({
+              accounts: accounts
+            })
+          })
       })
       .catch(e => {
         console.log(e)
@@ -157,11 +164,13 @@ class Auth extends React.Component {
     return (
       <Table>
         <Table.Header>
-          <Table.HeaderCell>Номер</Table.HeaderCell>
+          <Table.Row>
+            <Table.HeaderCell>Номер</Table.HeaderCell>
+          </Table.Row>
         </Table.Header>
         <Table.Body>
-          { this.state.accounts.map(acc => (
-            <Table.Row>
+          { this.state.accounts.map((acc, idx) => (
+            <Table.Row key={idx}>
               <Table.HeaderCell>{acc.msisdn}</Table.HeaderCell>
             </Table.Row>
           )) }
@@ -172,7 +181,7 @@ class Auth extends React.Component {
 
   accountsPage() { 
     return (
-      <Grid>
+      <Grid padded>
         <Grid.Column width={8}>
           {this.accountsTable()}
         </Grid.Column>

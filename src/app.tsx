@@ -34,7 +34,7 @@ function serverHealthCheckerUp(store) {
         .catch(e => {
           store.dispatch({ type: "SERVER_HEALTH_NOT_OK", data: e })
         })
-        .then(() => healthChecker(5000))
+        .then(() => healthChecker(60000))
     }, interval)
   }
   healthChecker(0)
