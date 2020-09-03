@@ -38,7 +38,9 @@ function readSettings(rows) {
 }
 
 function setKey(db, key, value) {
-  return db.exec(upsertOptionSql, { $key: key, $value: value })
+  return db
+    .exec(upsertOptionSql, { $key: key, $value: value })
+    .then(_ => db.exec("delete from sync where entity = 'setting' and id in (select id from settings where key = $key)", { $key : key }))
 }
 
 export default function initSettingsApi(db) {

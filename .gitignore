@@ -2,6 +2,7 @@ src/ui/img
 
 socmag.db
 socmag.dev.db
+socmag.db-journal
 
 .webpack
 

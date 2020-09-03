@@ -211,7 +211,9 @@ export default function initProductApi(db) {
       if (product.id < 0) {
         return db.exec(insertProductSql, p)
       } else {
-        return db.exec(updateProductSql, { $id: product.id, ...p })
+        return db
+          .exec(updateProductSql, { $id: product.id, ...p })
+          .then(_ => db.exec("delete from sync where entity = 'product' and id = $id", { $id: product.id }))
       }
     },
     genBarcode: (prefix = "Z") => genBarcode(db, prefix),

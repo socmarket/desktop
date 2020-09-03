@@ -28,13 +28,15 @@ export default function initSupplierApi(db) {
       })
     ),
     update: (supplier) => (
-      db.exec(updateSupplierSql, {
-        $id        : supplier.id            ,
-        $name      : supplier.name     || "",
-        $nameLower : (supplier.name    || "").toLowerCase(),
-        $contacts  : supplier.contacts || "",
-        $notes     : supplier.notes    || "",
-      })
+      db
+        .exec(updateSupplierSql, {
+          $id        : supplier.id            ,
+          $name      : supplier.name     || "",
+          $nameLower : (supplier.name    || "").toLowerCase(),
+          $contacts  : supplier.contacts || "",
+          $notes     : supplier.notes    || "",
+        })
+        .then(_ => db.exec("delete from sync where entity = 'supplier' and id = $id", { $id: supplier.id }))
     ),
     moneyIn: ({ id, amount, currencyId }) => (
       db.exec("insert into supplierbalance(supplierId, amount, currencyId) values(?, ?, ?)", [

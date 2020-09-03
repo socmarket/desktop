@@ -89,17 +89,23 @@ const AppActions = {
   signOut: () => ({
     type: "APP_SIGN_OUT",
   }),
+  goIdle: () => ({
+    type: "APP_WENT_IDLE",
+  }),
+  goWork: () => ({
+    type: "APP_WENT_WORK",
+  }),
   auth: auth,
 }
 
 function AppReducer (state = {
   activePage    : "autoPartsSaleCheckEditor",
-  // activePage    : "baseAuthSettings",
   user          : "admin",
-  unlocked      : true,
+  unlocked      : false,
   authenticated : false,
   lastError     : "",
   online        : false,
+  idle          : false,
 }, action) {
   switch (action.type) {
     case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
@@ -147,6 +153,11 @@ function AppReducer (state = {
       return Object.assign({}, state, { unlocked: false })
     case "APP_SIGN_OUT":
       return Object.assign({}, state, { unlocked: false })
+
+    case "APP_WENT_IDLE":
+      return Object.assign({}, state, { idle: true })
+    case "APP_WENT_WORK":
+      return Object.assign({}, state, { idle: false })
 
     case "SERVER_HEALTH_OK": {
       if (state.online) {

@@ -28,13 +28,15 @@ export default function initCurrencyApi(db) {
       })
     ),
     update: (currency) => (
-      db.exec(updateCurrencySql, {
-        $id            : currency.id             ,
-        $title         : currency.title     || "",
-        $titleLower    : (currency.title    || "").toLowerCase(),
-        $notation      : currency.notation  || "",
-        $notationLower : (currency.notation || "").toLowerCase(),
-      })
+      db
+        .exec(updateCurrencySql, {
+          $id            : currency.id             ,
+          $title         : currency.title     || "",
+          $titleLower    : (currency.title    || "").toLowerCase(),
+          $notation      : currency.notation  || "",
+          $notationLower : (currency.notation || "").toLowerCase(),
+        })
+        .then(_ => db.exec("delete from sync where entity = 'currency' and id = $id", { $id: currency.id }))
     ),
     selectExchangeRates: () => (
       db.select(selectExchangeRatesSql)

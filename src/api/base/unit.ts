@@ -27,13 +27,15 @@ export default function initUnitApi(db) {
       })
     ),
     update: (unit) => (
-      db.exec(updateUnitSql, {
-        $id            : unit.id             ,
-        $title         : unit.title     || "",
-        $titleLower    : (unit.title    || "").toLowerCase(),
-        $notation      : unit.notation  || "",
-        $notationLower : (unit.notation || "").toLowerCase(),
-      })
+      db
+        .exec(updateUnitSql, {
+          $id            : unit.id             ,
+          $title         : unit.title     || "",
+          $titleLower    : (unit.title    || "").toLowerCase(),
+          $notation      : unit.notation  || "",
+          $notationLower : (unit.notation || "").toLowerCase(),
+        })
+        .then(_ => db.exec("delete from sync where entity = 'unit' and id = $id", { $id: unit.id }))
     ),
   }
 }

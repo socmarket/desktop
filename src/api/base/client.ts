@@ -30,13 +30,15 @@ export default function initClientApi(db) {
       })
     ),
     update: (client) => (
-      db.exec(updateClientSql, {
-        $id        : client.id            ,
-        $name      : client.name     || "",
-        $nameLower : (client.name    || "").toLowerCase(),
-        $contacts  : client.contacts || "",
-        $notes     : client.notes    || "",
-      })
+      db
+        .exec(updateClientSql, {
+          $id        : client.id            ,
+          $name      : client.name     || "",
+          $nameLower : (client.name    || "").toLowerCase(),
+          $contacts  : client.contacts || "",
+          $notes     : client.notes    || "",
+        })
+        .then(_ => db.exec("delete from sync where entity = 'client' and id = $id", { $id: client.id }))
     ),
     moneyIn: ({ id, amount, currencyId }) => (
       db.exec("insert into clientbalance(clientId, amount, currencyId) values(?, ?, ?)", [

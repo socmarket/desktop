@@ -29,6 +29,34 @@ function initDb(fileName: string): Database {
         }
       })
     },
+    bulk: async function (sql: string, params: Array) {
+      return new Promise((resolve, reject) => {
+        if (sql.trim().length === 0) {
+          resolve()
+        } else {
+          db.run("begin", {}, function(err: Error) {
+            if (err) {
+              db.run("rollback")
+              reject(err)
+            } else {
+              let i = 0
+              let serr = false
+              while (i < params.length) {
+                db.run(sql, params[i], function (e) { serr = e })
+                ++i
+              }
+              if (err) {
+                db.run("rollback")
+                reject(serr)
+              } else {
+                db.run("commit")
+                resolve()
+              }
+            }
+          })
+        }
+      })
+    },
     exec: async function (sql: string, params: object) {
       return new Promise((resolve, reject) => {
         if (sql.trim().length === 0) {

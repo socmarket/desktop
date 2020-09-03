@@ -27,12 +27,14 @@ export default function initCategoryApi(db: Database): CategoryApi {
       })
     ),
     update: (category) => (
-      db.exec(updateCategorySql, {
-        $id         : category.id          ,
-        $title      : category.title  || "",
-        $titleLower : (category.title || "").toLowerCase(),
-        $notes      : category.notes  || "",
-      })
+      db
+        .exec(updateCategorySql, {
+          $id         : category.id          ,
+          $title      : category.title  || "",
+          $titleLower : (category.title || "").toLowerCase(),
+          $notes      : category.notes  || "",
+        })
+        .then(_ => db.exec("delete from sync where entity = 'category' and id = $id", { $id: category.id }))
     ),
   }
 }
