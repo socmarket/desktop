@@ -11,6 +11,7 @@ const defaultSettings = {
   defaultCategoryId                 : 1,
   barcodePrefix                     : "Z",
   theme                             : "violet",
+  language                          : "ru",
   defaultSaleMargin                 : 20,
   showConsignmentHistoryInSaleCheck : true,
 
@@ -49,6 +50,7 @@ export default function initSettingsApi(db) {
       db.select("select * from settings")
         .then(rows => readSettings(rows ? rows : []))
     ),
+    changeLanguage            : (language)   => setKey(db, 'language'            , language),
     changeTheme               : (themeName)  => setKey(db, "theme"               , themeName ),
     changeAppMode             : (appMode)    => setKey(db, "appMode"             , appMode   ),
     changeDefaultClient       : (clientId)   => setKey(db, "defaultClientId"     , clientId  ),

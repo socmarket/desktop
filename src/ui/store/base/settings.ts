@@ -1,4 +1,12 @@
 
+const languages = {
+  "ru": {
+    name : "ru"
+  },
+  "en": {
+    name : "en"
+  }
+}
 const themes = {
   "red": {
     name      : "red", 
@@ -64,6 +72,11 @@ const evThemeChanged = (themeName) => ({
   themeName: themeName,
 })
 
+const evLanguageChanged = (language) => ({
+  type: "SETTINGS_LANGUAGE_CHANGED",
+  language: language
+})
+
 const reloadSettings = () => (dispatch, getState, { api }) => {
   return api.settings
     .getSettings()
@@ -75,14 +88,20 @@ const changeTheme = (themeName) => (dispatch, getState, { api }) => {
     .then(_ => dispatch(evThemeChanged(themeName)))
 }
  
+const changeLanguage = (language) => (dispatch, getState, { api}) => {
+  return api.settings.changeLanguage(language)
+    .then(_ => dispatch(evLanguageChanged(language)))
+}
 
 const SettingsActions = {
   reloadSettings: reloadSettings,
   changeTheme   : changeTheme,
+  changeLanguage : changeLanguage,
 }
 
 function SettingsReducer (state = {
   themes: themes,
+  languages: languages,
 }, action) {
   switch (action.type) {
     case "SETTINGS_RELOADED": {
@@ -108,12 +127,18 @@ function SettingsReducer (state = {
         logoLine3                         : action.settings.logoLine3,
 
         theme                             : themes[action.settings.theme] ? themes[action.settings.theme] : themes["blue"],
+        language                          : languages[action.settings.language] ? languages[action.settings.language] : languages["ru"],
         showConsignmentHistoryInSaleCheck : Boolean(+action.settings.showConsignmentHistoryInSaleCheck),
       })
     }
     case "SETTINGS_THEME_CHANGED": {
       return Object.assign({}, state, {
         theme           : themes[action.themeName] ? themes[action.themeName] : themes["blue"],
+      })
+    }
+    case "SETTINGS_LANGUAGE_CHANGED": {
+      return Object.assign({}, state, {
+        language        : languages[action.language] ? languages[action.language] : languages["ru"],
       })
     }
     default:

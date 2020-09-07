@@ -29,6 +29,7 @@
     clients: "Клиенты",
     suppliers: "Поставщики",
     paintBrush: "Цвет",
+    languageTitle: "Язык",
     settings: "Настройки",
     changeSettings:"Изменить настройки",
     changeAuthSettings: "Доступ к облаку",

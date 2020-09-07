@@ -29,6 +29,7 @@
     clients: "Клиенттер",
     suppliers: "Поставщики",
     paintBrush: "Түс",
+    languageTitle: "Тил",
     settings: "Орнотуулар",
     changeSettings:"Орнотууларды өзгөртүү",
     codeBranch: "Версия",
