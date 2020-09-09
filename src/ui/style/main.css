@@ -28,8 +28,8 @@
 }
 
 @font-face {
-  font-family: "rumono";
-  src: url('~Font/anonymouspro.woff') format('woff');
+  font-family: "KumbhSans";
+  src: url('~Font/KumbhSans-Regular.ttf') format('ttf');
   font-weight: 600;
   font-style: normal;
 }

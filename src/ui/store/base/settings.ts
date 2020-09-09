@@ -6,6 +6,9 @@ const languages = {
   },
   "en": {
     name : "en"
+  },
+  "ky": {
+    name : "ky"
   }
 }
 const themes = {

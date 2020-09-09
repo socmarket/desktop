@@ -82,7 +82,7 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff',
+            mimetype: 'application/font-ttf',
           }
         }
       },
@@ -92,7 +92,7 @@ module.exports = {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            mimetype: 'application/font-woff',
+            mimetype: 'application/font-ttf',
           }
         }
       },
