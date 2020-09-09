@@ -1,3 +1,4 @@
+import i18next from "i18next"
 
 const languages = {
   "ru": {
@@ -81,6 +82,7 @@ const reloadSettings = () => (dispatch, getState, { api }) => {
   return api.settings
     .getSettings()
     .then(settings => dispatch(evSettingsReloaded(settings)))
+    .then(({ settings }) => i18next.changeLanguage(settings.language))
 }
 
 const changeTheme = (themeName) => (dispatch, getState, { api }) => {
@@ -89,7 +91,9 @@ const changeTheme = (themeName) => (dispatch, getState, { api }) => {
 }
  
 const changeLanguage = (language) => (dispatch, getState, { api}) => {
-  return api.settings.changeLanguage(language)
+  return i18next
+    .changeLanguage(language)
+    .then(_ => api.settings.changeLanguage(language))
     .then(_ => dispatch(evLanguageChanged(language)))
 }
 

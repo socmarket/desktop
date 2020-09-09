@@ -9,7 +9,6 @@ import {
   Dropdown, Modal, Grid, Divider,
 }                          from "semantic-ui-react"
 import { withTranslation } from 'react-i18next';
-import i18next from "i18next"
 
 const sales = [
   "autoPartsSaleCheckEditor",
@@ -210,17 +209,17 @@ class MainMenu extends React.Component {
               <Dropdown.Menu>
                 <Dropdown.Item
                   icon=""
-                  onClick={() => i18next.changeLanguage("ru").then(_ => this.props.changeLanguage("ru"))}
+                  onClick={() => this.props.changeLanguage("ru")}
                   text="Русский"
                 />
                 <Dropdown.Item
                   icon=""
-                  onClick={() => i18next.changeLanguage("en").then(_ => this.props.changeLanguage("en"))}
+                  onClick={() => this.props.changeLanguage("en")}
                   text="English"
                 />
                 <Dropdown.Item
                   icon=""
-                  onClick={() => i18next.changeLanguage("ky").then(_ => this.props.changeLanguage("ky"))}
+                  onClick={() => this.props.changeLanguage("ky")}
                   text="Кыргызча"
                 />
               </Dropdown.Menu>
