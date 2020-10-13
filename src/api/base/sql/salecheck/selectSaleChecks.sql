@@ -6,6 +6,7 @@ select
   round(salecheck.change / 100.0, 2)   as change,
   salecheck.soldAt                     as soldAt,
   date(salecheck.soldAt, 'localtime')  as soldAtDate,
+  time(salecheck.soldAt, 'localtime')  as soldAtTime,
   (
     select sum ((salecheckitem.quantity - coalesce(ret.quantity, 0)) * price) / 10000.0 as cost
     from salecheckitem
@@ -19,5 +20,9 @@ select
 from
   salecheck
   left join client on client.id = salecheck.clientId
+where
+  $all 
+  or date(salecheck.soldAt, 'localtime') = $day
 order by
   salecheck.soldAt desc
+limit 2000

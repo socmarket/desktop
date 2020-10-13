@@ -40,3 +40,17 @@
 .ui.header {
   font-family: "rumono";
 }
+
+table.compact tr {
+  line-height: 1em;
+}
+
+.ui.compact.table td {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.DateInput_input {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}

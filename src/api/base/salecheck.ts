@@ -83,8 +83,8 @@ export default function initSaleCheckApi(db) {
           return db.exec("rollback")
         })
     },
-    selectSaleJournal: () => {
-      return db.select(selectSaleChecksSql)
+    selectSaleJournal: (day, all) => {
+      return db.select(selectSaleChecksSql, { $all: all, $day: day })
         .then(items => {
           return Promise.all(
             items.map(saleCheck =>

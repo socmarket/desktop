@@ -4,6 +4,7 @@ import AutoPartsProductEditor      from "View/auto/parts/product/editor"
 import AutoPartsProductImporter    from "View/auto/parts/product/importer"
 import AutoPartsSaleCheckEditor    from "View/auto/parts/salecheck/editor"
 import AutoPartsSaleJournal        from "View/auto/parts/salecheck/journal"
+import AutoPartsCompactSaleJournal from "View/auto/parts/salecheck/compactJournal"
 import AutoPartsConsignmentEditor  from "View/auto/parts/consignment/editor"
 import AutoPartsConsignmentJournal from "View/auto/parts/consignment/journal"
 
@@ -27,6 +28,7 @@ const ViewMap = {
   "autoPartsProductImporter"    : (props) => <AutoPartsProductImporter    api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "autoPartsSaleCheckEditor"    : (props) => <AutoPartsSaleCheckEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "autoPartsSaleJournal"        : (props) => <AutoPartsSaleJournal        api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "autoPartsCompactSaleJournal" : (props) => <AutoPartsCompactSaleJournal api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "autoPartsConsignmentEditor"  : (props) => <AutoPartsConsignmentEditor  api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "autoPartsConsignmentJournal" : (props) => <AutoPartsConsignmentJournal api={props.api} theme={props.opt.theme} opt={props.opt} />,
 

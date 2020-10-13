@@ -97,6 +97,12 @@ class MainMenu extends React.Component {
                   onClick={() => this.props.openAutoPartsSaleJournal()}
                   text={this.t("salesList")}
                 />
+                <Dropdown.Item
+                  icon="list layout"
+                  active={this.props.app.activePage === "autoPartsCompactSaleJournal"}
+                  onClick={() => this.props.openAutoPartsCompactSaleJournal()}
+                  text={this.t("salesListCompact")}
+                />
               </Dropdown.Menu>
             </Dropdown>
             }

@@ -241,6 +241,8 @@
     debt:     "Debt:",
     inСash:   "Cash:",
     surrender: "Surrender:",
+    date: "Date",
+    time: "Time",
   },
   "auto_parts_salecheck_itemEditor.form":{
     price:    "Price",
