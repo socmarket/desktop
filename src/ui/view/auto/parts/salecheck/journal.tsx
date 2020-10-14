@@ -53,12 +53,14 @@ class SaleJournal extends React.Component {
   }
 
   changeDay(day) {
-    this.setState({
-      day: day,
-      all: false,
-    }, () => {
-      this.reloadJournal(day, this.state.false)
-    })
+    if (day) {
+      this.setState({
+        day: day,
+        all: false,
+      }, () => {
+        this.reloadJournal(day, this.state.false)
+      })
+    }
   }
 
   nextDay() {

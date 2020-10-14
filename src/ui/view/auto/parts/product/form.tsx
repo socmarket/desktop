@@ -343,7 +343,7 @@ class ProductForm extends React.Component {
 
   history() {
     return (
-      <Table celled>
+      <Table compact celled>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell textAlign="center">{this.t("date")}</Table.HeaderCell>

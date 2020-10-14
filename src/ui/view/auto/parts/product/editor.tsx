@@ -66,7 +66,7 @@ class ProductEditor extends React.Component {
       search: {
         id: -1,
         pattern: "",
-        limit: 20,
+        limit: 30,
         offset: 0,
       },
     }
