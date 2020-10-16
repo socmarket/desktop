@@ -71,8 +71,8 @@ export default function initConsignmentApi(db) {
           return db.exec("rollback")
         })
     },
-    selectConsignmentJournal: () => {
-      return db.select(selectConsignmentsSql)
+    selectConsignmentJournal: (day, all) => {
+      return db.select(selectConsignmentsSql, { $all: all, $day: day })
         .then(items => {
           return Promise.all(
             items.map(consignment =>

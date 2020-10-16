@@ -36,13 +36,15 @@ class SaleJournal extends React.Component {
   }
 
   reloadJournal(day, all) {
-    this.saleCheckApi
-      .selectSaleJournal(day.utc().format("YYYY-MM-DD"), all)
-      .then(items => {
-        this.setState({
-          items: items
+    if (day) {
+      this.saleCheckApi
+        .selectSaleJournal(day.utc().format("YYYY-MM-DD"), all)
+        .then(items => {
+          this.setState({
+            items: items
+          })
         })
-      })
+    }
   }
 
   changeDay(day) {

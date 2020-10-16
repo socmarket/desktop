@@ -3,6 +3,7 @@ select
   supplier.name                             as supplierName,
   consignment.acceptedAt                    as acceptedAt,
   date(consignment.acceptedAt, 'localtime') as acceptedAtDate,
+  time(consignment.acceptedAt, 'localtime') as acceptedAtTime,
   (
     select sum ((consignmentitem.quantity - coalesce(ret.quantity, 0)) * price) / 10000.0 as cost
     from consignmentitem
@@ -16,5 +17,8 @@ select
 from
   consignment
   left join supplier on supplier.id = consignment.supplierId
+where
+  $all 
+  or date(consignment.acceptedAt, 'localtime') = $day
 order by
   consignment.acceptedAt desc
