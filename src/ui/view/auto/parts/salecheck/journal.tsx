@@ -138,7 +138,7 @@ class SaleJournal extends React.Component {
                     <Fragment key={saleCheck.id}>
                       { idx > 0 && <Table.Row warning><Table.Cell colSpan={11}></Table.Cell></Table.Row> }
                       <Table.Row>
-                        <Table.Cell rowSpan={items.length}>
+                        <Table.Cell rowSpan={items.length} valign="top">
                           {moment.utc(saleCheck.soldAt).local().format("DD-MM-YYYY HH:mm")}
                           <br />{saleCheck.clientName}
                           <br />{this.t("withoutDiscount")} {saleCheck.cost}

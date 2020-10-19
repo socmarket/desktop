@@ -135,7 +135,7 @@ class ConsignmentJournal extends React.Component {
                     <Fragment key={consignment.id}>
                       <Table.Row warning><Table.Cell colSpan={12}></Table.Cell></Table.Row>
                       <Table.Row>
-                        <Table.Cell rowSpan={items.length}>
+                        <Table.Cell rowSpan={items.length} valign="top">
                           {moment.utc(consignment.acceptedAt).local().format("DD-MM-YYYY HH:mm")}
                           <br />{consignment.supplierName}
                           <br />{this.t("amount")}: {consignment.cost}
