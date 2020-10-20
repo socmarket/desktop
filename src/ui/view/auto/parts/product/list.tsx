@@ -6,6 +6,7 @@ class ProductList extends React.Component {
 
   constructor(props) {
     super(props)
+    console.log(props.items)
     this.t  = this.props.t
   }
 
@@ -15,11 +16,12 @@ class ProductList extends React.Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>{this.t("category")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("name")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("quantity")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("unit")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("model")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("engine")}</Table.HeaderCell>
-            <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("brand")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("oem")}</Table.HeaderCell>
             <Table.HeaderCell><Icon name="map marker alternate" /></Table.HeaderCell>
@@ -30,11 +32,12 @@ class ProductList extends React.Component {
           { this.props.items.map((product, idx) => (
             <Table.Row key={product.id} onClick={() => this.props.onProductOpen(product, idx)}>
               <Table.Cell>{product.categoryTitle}</Table.Cell>
+              <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell style={{whiteSpace: "nowrap"}}>{product.title}</Table.Cell>
-              <Table.Cell>{product.unitTitle}</Table.Cell>
+              <Table.Cell textAlign="right">{product.quantity}</Table.Cell>
+              <Table.Cell>{product.unitNotation}</Table.Cell>
               <Table.Cell>{product.model}</Table.Cell>
               <Table.Cell>{product.engine}</Table.Cell>
-              <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell>{product.brand}</Table.Cell>
               <Table.Cell>{product.oemNo}</Table.Cell>
               <Table.Cell>{product.coord}</Table.Cell>
