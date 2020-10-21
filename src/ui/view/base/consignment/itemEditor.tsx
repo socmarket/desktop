@@ -142,7 +142,7 @@ class ConsignmentItem extends React.Component {
   form() {
     return (
       <Form size="large" width={16} onKeyDown={this.onKeyDown}>
-        <Message header={this.state.productBarcode} content={this.state.productTitle} />
+        <Message header={this.state.productBarcode} content={this.state.productTitle + ": " + this.state.productBrand} />
         <Form.Group>
           <Form.Input
             autoFocus
@@ -200,13 +200,6 @@ class ConsignmentItem extends React.Component {
           </Form.Field>
         </Form.Group>
         <Button fluid type="button" color={this.props.theme.mainColor} onClick={this.onUpdate}>{this.t("update")} (Enter)</Button>
-        <Message size="mini" header={this.t("model")} content={this.state.productModel} />
-        <Message size="mini" header={this.t("engine")} content={this.state.productEngine} />
-        <Form.Group widths="equal">
-          <Form.Field><Message size="mini" header={this.t("brand")} content={this.state.productBrand}  /></Form.Field>
-          <Form.Field><Message size="mini" header={this.t("oem")} content={this.state.productOemNo}  /></Form.Field>
-          <Form.Field><Message size="mini" header={this.t("serialN")} content={this.state.productSerial} /></Form.Field>
-        </Form.Group>
       </Form>
     )
   }

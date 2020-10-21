@@ -1,5 +1,5 @@
 {
-  "base_door.form": {
+  "door": {
     cashier: "Кассир",
     manager: "Менеджер",
     admin: "Владелец",
@@ -8,7 +8,7 @@
     placeholder1: "Пин",
     placeholder2: "Пин кайталоо",
   },
-  "base_menu.form": {
+  "menu": {
     version: "Версия",
     build: "Сборка",
     buildDate: "Дата сборки",
@@ -36,16 +36,16 @@
     signOut: "Чыгуу",
     calculations: "Эсептөөлөр",
   },
-  "base_about.form": {
+  "about": {
     version: "Версия",
     build: "Сборка",
     buildDate: "Дата сборки",
   },
-  "base_unit_listEditor.form": {
+  "unit_listEditor.form": {
     units: "Өлчөө биримдиги",
     unitSearch: "Өлчөө биримдиги издөө",
   },
-  "base_unit_infoEditor.form": {
+  "unit_infoEditor.form": {
     name: "Аты",
     reduction: "Кыскартуу",
     create: "Кошуу",
@@ -54,7 +54,7 @@
     opening_error: "Ачуу мезгилиндеги ката",
     unit: "Өлчөө биримдиги",
   },
-  "base_tornover_index.form": {
+  "tornover_index.form": {
     group: "Группа",
     purchased: "Сатып алынды",
     sold: "Сатылды",
@@ -63,7 +63,7 @@
     amount: "Сумма",
     turnover: "Оборот",
   },
-  "base_supplier_journal.form": {
+  "supplier_journal.form": {
     moneyIn:         "карыз төлөө",
     moneyOut:        "карыз",
     consignment:     "товарга карыз",
@@ -73,7 +73,7 @@
     amount:          "Сумма",
     whoToWhom:       "Кимге",
   },
-  "base_supplier_infoEditor.form": {
+  "supplier_infoEditor.form": {
     fullName: "Аты жөнү",
     contacts: "Контакттар",
     notes: "Заметки",
@@ -83,11 +83,11 @@
     openingError: "Ачуу мезгилиндеги ката",
     supplier: "Поставщик",
   },
-  "base_supplier_editor.form": {
+  "supplier_editor.form": {
     suppliers: "Поставщики",
     supplierSearch: "Поставщикди издөө",
   },
-  "base_settings_service.form": {
+  "settings_service.form": {
     autoParts: "Авто/Запчасттар",
     autoAccessories: "Авто/Аксессуарлар",
     miniMarket: "Мини маркет",
@@ -96,7 +96,7 @@
     defaultCurrency: " Валюта по умолчанию",
     sqlEditor: " SQL Editor",
   },
-  "base_settings_editor.form": {
+  "settings_editor.form": {
     autoParts: "Авто/Запчасттар",
     autoAccessories: "Авто/Аксессуарлар",
     miniMarket: "Мини маркет",
@@ -116,13 +116,13 @@
     checkTitle3: "Заголовок чека #3",
     showPurchasePrices: "Показывать закупочные цены в кассе",
   },
-  "base_price_editor.form":{
+  "price_editor.form":{
     priceHistory: "Баалар тарыхы",
     price: "Баасы",
     date: "Дата",
     chartArea: "Баа пульсу",
   },
-  "base_dashboard_index.form": {
+  "dashboard_index.form": {
     startDate:  "Баштап",
     endDate:    "Чейин",
     closeDate:   "Жабуу",
@@ -143,11 +143,11 @@
     clients:  "Клиенттер",
     left:  "Калды",
   },
-  "base_currency_listEditor.form":{
+  "currency_listEditor.form":{
     currencyList: "Валюта списогу",
     currencySearch: "Валюта издөө",
   },
-  "base_currency_infoEditor.form":{
+  "currency_infoEditor.form":{
     name:     "Наименование",
     notation: "Сокращение",
     create: "Создать",
@@ -156,17 +156,15 @@
     openingError: "Ачуу мезгилиндеги ката",
     currency: "Валюта",
   },
-  "base_currency_exchangeRateEditor.form":{
-    exchangeRates: "Валюта курстары",
-  },
-  "base_client_jornal.form": {
+  "client_jornal.form": {
     settlementWith: "Баштам эсептөө ",
     number:          "#",
     dateTime:        "Убакыт",
     amount:          "Сумма",
     whoToWhom:       "Кимге",
   },
-  "base_currency_exchangeRateEditor.form":{
+  "currency_exchangeRateEditor.form":{
+    exchangeRates: "Валюта курстары",
     fullName: "Аты жөнү",
     contacts: "Контакттар",
     notes: "Заметки",
@@ -176,7 +174,7 @@
     openingError: "Ачуу мезгилиндеги ката",
     client: "Кардар",
   },
-  "base_client_editor.form":{
+  "client_editor.form":{
     moneyIn: "карыз төлө",
     moneyOut: "карыз",
     sale: "товар сатып алууу",
@@ -191,11 +189,11 @@
     cost: "Сумма",
     barcode: "Штрихкод",
   },
-  "base_category_listEditor.form":{
+  "category_listEditor.form":{
     productGroups:  "Товарлар группасы",
     groupsSearch:  "Группа издөө",
   },
-  "base_category_infoEditor.form":{
+  "category_infoEditor.form":{
     name:     "Наименование",
     notation: "Сокращение",
     create: "Кошуу",
@@ -204,7 +202,7 @@
     openingError: "Ачуу мезгилинде ката",
     productGroup: "Товарлар группасы",
   },
-  "auto_parts_salecheck_journal.form":{
+  "salecheck_journal.form":{
     chek:     "Чек",
     product:  "Товар",
     quantity: "Саны",
@@ -224,7 +222,7 @@
     inСash:   "Накталай:",
     surrender: "Сдача:",
   },
-  "auto_parts_salecheck_itemEditor.form":{
+  "salecheck_itemEditor.form":{
     price:    "Баасы",
     quantity: "Саны",
     unit:     "Ед. изм.",
@@ -245,7 +243,7 @@
     photos:   "Сүрөт",
     sale:     "Сатуулар",
   },
-  "auto_parts_salecheck_edtor.form": {
+  "salecheck_editor.form": {
     clearChek:  "Чекти тазалоо?",
     clearCart:  "Все добавленные товары будут убраны из корзины",
     no:         "Жок",
@@ -273,10 +271,10 @@
     currentReceipt: "Текущий чек",
     client: "Кардар",
   },
-  "auto_part_product_picker.form":  {
+  "product_picker.form":  {
     noPrice:  " (баасы жок)",
   },
-  "auto_part_product_list.form":{
+  "product_list.form":{
     category:    "Кат.",
     name: "Аты",
     unit:     "Ед.",
@@ -287,7 +285,7 @@
     oem:      "OEM",
     notes:    "Заметки",
   },
-  "auto_part_product_importer.form":{
+  "product_importer.form":{
     title:    "Аты",
     model:    "Модель",
     engine:   "Двигатель",
@@ -307,7 +305,7 @@
     kt:       "Кт",
     currency: "$",
   },
-  "auto_part_product_form.form":{
+  "product_form.form":{
     sale:         "сатуу",
     consignment:  "сатып алуу",
     inPriceSet:   "сатып алуу баасы",
@@ -338,14 +336,14 @@
     opening_error: "Ошибка открытия",
     productData:  "Товар карточкасы",
   },
-  "auto_part_product_editor.form":{
+  "product_editor.form":{
     makedIn:  "Сформировано в СоцМаркет 2С",
     prevPage: "Мурунку бет",
     nextPage: "Кийинки бет",
     saveToExcel:  "Excelге сактоо",
     newProduct: "Жаңы товар",
   },
-  "auto_part_consignmen_journal.form":{
+  "consignment_journal.form":{
     check:      "Чек",
     product:    "Товар",
     quantity:   "Саны",
@@ -364,7 +362,7 @@
     change: "Сдача: ",
     cash: "Накталай: ",
   },
-  "auto_part_consignmen_itemEditor.form":{
+  "consignment_itemEditor.form":{
     purchaseAmount:   "Сатып алынган баасы",
     purchaseCurrency: "Сатып алынган валюта",
     quantity:         "Саны",
@@ -388,7 +386,7 @@
     photos:           "Фото",
     warehouseAcceptance:  "Складка кабыл алуу",
   },
-  "auto_part_consignmen_editor.form":{
+  "consignment_editor.form":{
     cost: "Сумма: ",
     total: "Итог: ",
     acceptConsignment: "Партияны складка кабыл алуу",

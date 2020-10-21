@@ -179,4 +179,4 @@ class SupplierJournal extends React.Component {
   }
 }
 
-export default withTranslation("base_supplier_journal.form", { withRef: true })(React.forwardRef((props, ref) => <SupplierJournal innerRef={ref} {...props} />))
+export default withTranslation("supplier_journal.form", { withRef: true })(React.forwardRef((props, ref) => <SupplierJournal innerRef={ref} {...props} />))

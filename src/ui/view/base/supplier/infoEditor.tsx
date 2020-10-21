@@ -157,4 +157,4 @@ class SupplierInfoEditor extends React.Component {
   }
 }
 
-export default withTranslation("base_supplier_infoEditor.form")(SupplierInfoEditor)
+export default withTranslation("supplier_infoEditor.form")(SupplierInfoEditor)

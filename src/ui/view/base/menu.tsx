@@ -2,24 +2,24 @@ import { AppActions }      from "Store/base/app"
 import { SettingsActions } from "Store/base/settings"
 import AboutDialog         from "./about"
 
-import React, { Fragment } from "react";
-import { connect }         from "react-redux";
+import React, { Fragment } from "react"
+import { connect }         from "react-redux"
 import {
   Button, Menu, Segment, Label, Icon,
   Dropdown, Modal, Grid, Divider,
 }                          from "semantic-ui-react"
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next"
 
 const sales = [
-  "autoPartsSaleCheckEditor",
-  "autoPartsSaleJournal",
+  "saleCheckEditor",
+  "saleJournal",
 ]
 
 const products = [
   "productEditor",
-  "autoPartsProductImporter",
-  "autoPartsConsignmentEditor",
-  "autoPartsConsignmentJournal",
+  "productImporter",
+  "consignmentEditor",
+  "consignmentJournal",
 
   "baseProductEditor",
   "baseProductImporter",
@@ -102,8 +102,8 @@ class MainMenu extends React.Component {
               />
               <Dropdown.Item
                 icon="list layout"
-                active={this.props.app.activePage === "autoPartsCompactSaleJournal"}
-                onClick={() => this.props.openAutoPartsCompactSaleJournal()}
+                active={this.props.app.activePage === "compactSaleJournal"}
+                onClick={() => this.props.openCompactSaleJournal()}
                 text={this.t("salesListCompact")}
               />
             </Dropdown.Menu>
@@ -115,14 +115,14 @@ class MainMenu extends React.Component {
             <Dropdown.Menu>
               <Dropdown.Item
                 icon="zip"
-                active={this.props.app.activePage === "autoPartsConsignmentEditor"}
-                onClick={() => this.props.openAutoPartsConsignmentEditor()}
+                active={this.props.app.activePage === "consignmentEditor"}
+                onClick={() => this.props.openConsignmentEditor()}
                 text={this.t("consignmentAcceptance")}
               />
               <Dropdown.Item
                 icon="list layout"
-                active={this.props.app.activePage === "autoPartsConsignmentJournal"}
-                onClick={() => this.props.openAutoPartsConsignmentJournal()}
+                active={this.props.app.activePage === "consignmentJournal"}
+                onClick={() => this.props.openConsignmentJournal()}
                 text={this.t("consignmentList")}
               />
               <Dropdown.Item
@@ -133,8 +133,8 @@ class MainMenu extends React.Component {
               />
               <Dropdown.Item
                 icon="file excel"
-                active={this.props.app.activePage === "autoPartsProductImporter"}
-                onClick={() => this.props.openAutoPartsProductImporter()}
+                active={this.props.app.activePage === "productImporter"}
+                onClick={() => this.props.openProductImporter()}
                 text={this.t("productImporter")}
               />
               <Dropdown.Item
@@ -287,4 +287,4 @@ const stateMap = (state) => {
 export default connect(stateMap, {
   ...AppActions,
   ...SettingsActions,
-})(withTranslation("base_menu.form")(MainMenu))
+})(withTranslation("menu")(MainMenu))

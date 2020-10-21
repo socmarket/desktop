@@ -15,7 +15,7 @@
     cash: "With cash: ",
     acceptConsignment: "Accept",
   },
-  "base_door.form": {
+  "door": {
     cashier: "Cashier",
     manager: "Manager",
     admin: "Owner",
@@ -24,7 +24,7 @@
     placeholder1: "PIN",
     placeholder2: "Confirm Pin",
   },
-  "base_menu.form": {
+  "menu": {
     version: "Version",
     build: "Build",
     buildDate: "Build date",
@@ -53,17 +53,17 @@
     signOut: "Log out",
     calculations: "Calculations",
   },
-  "base_about.form": {
+  "about": {
     version: "Version",
     build: "Build",
     buildDate: "Build date",
     apiVersion: "API version",
   },
-  "base_unit_listEditor.form": {
+  "unit_listEditor.form": {
     units: "Unit",
     unitSearch: "Search unit",
   },
-  "base_unit_infoEditor.form": {
+  "unit_infoEditor.form": {
     name: "Name",
     reduction: "Reduction",
     create: "Create",
@@ -72,7 +72,7 @@
     opening_error: "Error on open",
     unit: "Unit",
   },
-  "base_tornover_index.form": {
+  "tornover_index.form": {
     group: "Group",
     purchased: "Purchased",
     sold: "Sold",
@@ -81,7 +81,7 @@
     amount: "Amount",
     turnover: "Turnover",
   },
-  "base_supplier_journal.form": {
+  "supplier_journal.form": {
     moneyIn:         "pay debt",
     moneyOut:        "debt",
     consignment:     "dept for product",
@@ -91,7 +91,7 @@
     amount:          "Amount",
     whoToWhom:       "Who to whom",
   },
-  "base_supplier_infoEditor.form": {
+  "supplier_infoEditor.form": {
     fullName: "Full name",
     contacts: "Contacts",
     notes: "Note",
@@ -101,11 +101,11 @@
     openingError: "Error on open",
     supplier: "Supplier",
   },
-  "base_supplier_editor.form": {
+  "supplier_editor.form": {
     suppliers: "Suppliers",
     supplierSearch: "Search supplier",
   },
-  "base_settings_service.form": {
+  "settings_service.form": {
     autoParts: "Auto/Parts",
     autoAccessories: "Auto/Accessories",
     miniMarket: "Mini market",
@@ -114,7 +114,7 @@
     defaultCurrency: " Default currency",
     sqlEditor: " SQL Editor",
   },
-  "base_settings_editor.form": {
+  "settings_editor.form": {
     autoParts: "Auto/Parts",
     autoAccessories: "Auto/Accessories",
     miniMarket: "Mini market",
@@ -134,13 +134,13 @@
     checkTitle3: "Check header #3",
     showPurchasePrices: "Show purchase prices in salepoints",
   },
-  "base_price_editor.form":{
+  "price_editor.form":{
     priceHistory: "Price history",
     price: "Price",
     date: "Date",
     chartArea: "Chart area",
   },
-  "base_dashboard_index.form": {
+  "dashboard_index.form": {
     startDate:  "Start date",
     endDate:    "End date",
     closeDate:   "Close",
@@ -161,11 +161,11 @@
     clients:  "Customers",
     left:  "Left",
   },
-  "base_currency_listEditor.form":{
+  "currency_listEditor.form":{
     currencyList: "Currency list",
     currencySearch: "Search currency",
   },
-  "base_currency_infoEditor.form":{
+  "currency_infoEditor.form":{
     name:     "Name",
     notation: "Notation",
     create: "Create",
@@ -174,17 +174,17 @@
     openingError: "Error on open",
     currency: "Currency",
   },
-  "base_currency_exchangeRateEditor.form":{
+  "currency_exchangeRateEditor.form":{
     exchangeRates: "Exchange rates",
   },
-  "base_client_jornal.form": {
+  "client_jornal.form": {
     settlementWith: "Settlement with ",
     number:          "#",
     dateTime:        "Date/Time",
     amount:          "Amount",
     whoToWhom:       "who to whom",
   },
-  "base_currency_exchangeRateEditor.form":{
+  "currency_exchangeRateEditor.form":{
     fullName: "Full name",
     contacts: "Contacts",
     notes: "Notes",
@@ -194,7 +194,7 @@
     openingError: "Error on open",
     client: "Customer",
   },
-  "base_client_editor.form":{
+  "client_editor.form":{
     moneyIn: "pay debt",
     moneyOut: "debt",
     sale: "purchase of product",
@@ -209,11 +209,11 @@
     cost: "Cost",
     barcode: "Barcode",
   },
-  "base_category_listEditor.form":{
+  "category_listEditor.form":{
     productGroups:  "Product groups",
     groupsSearch:  "Search group",
   },
-  "base_category_infoEditor.form":{
+  "category_infoEditor.form":{
     name:     "Name",
     notation: "Notation",
     create: "Create",
@@ -222,7 +222,7 @@
     openingError: "Error on open",
     productGroup: "Product groups",
   },
-  "auto_parts_salecheck_journal.form":{
+  "salecheck_journal.form":{
     chek:     "Check",
     product:  "Product",
     quantity: "Quantity",
@@ -244,7 +244,7 @@
     date: "Date",
     time: "Time",
   },
-  "auto_parts_salecheck_itemEditor.form":{
+  "salecheck_itemEditor.form":{
     price:    "Price",
     quantity: "Quantity",
     unit:     "Unit",
@@ -265,7 +265,7 @@
     photos:   "Photo",
     sale:     "Sales",
   },
-  "auto_parts_salecheck_edtor.form": {
+  "salecheck_editor.form": {
     clearChek:  "Clear cart?",
     clearCart:  "Cart will be cleared",
     no:         "No",
@@ -293,10 +293,10 @@
     currentReceipt: "Текущий чек",
     client: "Клиент",
   },
-  "auto_part_product_picker.form":  {
+  "product_picker.form":  {
     noPrice:  " (нет цены)",
   },
-  "auto_part_product_list.form":{
+  "product_list.form":{
     category:    "Кат.",
     name: "Название",
     unit:     "Ед.",
@@ -307,7 +307,7 @@
     oem:      "OEM",
     notes:    "Заметки",
   },
-  "auto_part_product_importer.form":{
+  "product_importer.form":{
     title:    "Наименование",
     model:    "Модель",
     engine:   "Двигатель",
@@ -327,7 +327,7 @@
     kt:       "Кт",
     currency: "$",
   },
-  "auto_part_product_form.form":{
+  "product_form.form":{
     sale:         "продажа",
     consignment:  "покупка",
     inPriceSet:   "price покупки",
@@ -358,14 +358,14 @@
     opening_error: "Ошибка открытия",
     productData:  "Карточка Productа",
   },
-  "auto_part_product_editor.form":{
+  "product_editor.form":{
     makedIn:  "Сформировано в СоцМаркет 2С",
     prevPage: "Предыдущая страница",
     nextPage: "Следующая страница",
     saveToExcel:  "Сохранить в Excel",
     newProduct: "Новый Product",
   },
-  "auto_part_consignmen_journal.form":{
+  "consignment_journal.form":{
     check:      "Чек",
     product:    "Product",
     quantity:   "Quantity",
@@ -384,7 +384,7 @@
     change: "Сдача: ",
     cash: "Наличными: ",
   },
-  "auto_part_consignmen_itemEditor.form":{
+  "consignment_itemEditor.form":{
     purchaseAmount:   "price покупки",
     purchaseCurrency: "Валюта покупки",
     quantity:         "Количество",
@@ -408,7 +408,7 @@
     photos:           "Фото",
     warehouseAcceptance:  "Приёмка на склад",
   },
-  "auto_part_consignmen_editor.form":{
+  "consignment_editor.form":{
     cost: "Сумма: ",
     total: "Итог: ",
     acceptConsignment: "Принять партию на склад",

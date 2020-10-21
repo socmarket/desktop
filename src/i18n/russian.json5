@@ -1,5 +1,5 @@
 {
-  "base_door.form": {
+  "door": {
     cashier: "Кассир",
     manager: "Менеджер",
     admin: "Владелец",
@@ -8,7 +8,7 @@
     placeholder1: "Пин",
     placeholder2: "Повторите пин",
   },
-  "base_menu.form": {
+  "menu": {
     version: "Версия",
     build: "Сборка",
     buildDate: "Дата сборки",
@@ -38,17 +38,17 @@
     signOut: "Выйти",
     calculations: "Расчёты",
   },
-  "base_about.form": {
+  "about": {
     version: "Версия",
     build: "Сборка",
     buildDate: "Дата сборки",
     apiVersion: "Версия API",
   },
-  "base_unit_listEditor.form": {
+  "unit_listEditor.form": {
     units: "Ед. измерения",
     unitSearch: "Поиск ед. измерения",
   },
-  "base_unit_infoEditor.form": {
+  "unit_infoEditor.form": {
     name: "Наименование",
     reduction: "Сокращение",
     create: "Создать",
@@ -57,7 +57,7 @@
     opening_error: "Ошибка открытия",
     unit: "Единица измерения",
   },
-  "base_tornover_index.form": {
+  "tornover_index.form": {
     group: "Группа",
     purchased: "Куплено",
     sold: "Продано",
@@ -66,7 +66,7 @@
     amount: "Сумма",
     turnover: "Оборот",
   },
-  "base_supplier_journal.form": {
+  "supplier_journal.form": {
     moneyIn:         "оплата долга",
     moneyOut:        "задолженность",
     consignment:     "долг за товар",
@@ -76,7 +76,7 @@
     amount:          "Сумма",
     whoToWhom:       "Кто кому",
   },
-  "base_supplier_infoEditor.form": {
+  "supplier_infoEditor.form": {
     fullName: "ФИО",
     contacts: "Контакты",
     notes: "Заметки",
@@ -86,11 +86,11 @@
     openingError: "Ошибка открытия",
     supplier: "Поставщик",
   },
-  "base_supplier_editor.form": {
+  "supplier_editor.form": {
     suppliers: "Поставщики",
     supplierSearch: "Поиск поставщика",
   },
-  "base_settings_service.form": {
+  "settings_service.form": {
     base: "Базовая",
     autoParts: "Авто/Запчасти",
     autoAccessories: "Авто/Аксессуары",
@@ -100,7 +100,7 @@
     defaultCurrency: " Валюта по умолчанию",
     sqlEditor: " SQL Editor",
   },
-  "base_settings_editor.form": {
+  "settings_editor.form": {
     autoParts: "Авто/Запчасти",
     autoAccessories: "Авто/Аксессуары",
     miniMarket: "Мини маркет",
@@ -120,13 +120,13 @@
     checkTitle3: "Заголовок чека #3",
     showPurchasePrices: "Показывать закупочные цены в кассеs",
   },
-  "base_price_editor.form":{
+  "price_editor.form":{
     priceHistory: "История цен",
     price: "Цена",
     date: "Дата",
     chartArea: "Пульс цены",
   },
-  "base_dashboard_index.form": {
+  "dashboard_index.form": {
     startDate:  "Начало",
     endDate:    "Конец",
     closeDate:   "Закрыть",
@@ -147,11 +147,11 @@
     clients:  "Клиентов",
     left:  "Осталось",
   },
-  "base_currency_listEditor.form":{
+  "currency_listEditor.form":{
     currencyList: "Список валют",
     currencySearch: "Поиск валюты",
   },
-  "base_currency_infoEditor.form":{
+  "currency_infoEditor.form":{
     name:     "Наименование",
     notation: "Сокращение",
     create: "Создать",
@@ -160,17 +160,15 @@
     openingError: "Ошибка открытия",
     currency: "Валюта",
   },
-  "base_currency_exchangeRateEditor.form":{
-    exchangeRates: "Курсы валют",
-  },
-  "base_client_jornal.form": {
+  "client_jornal.form": {
     settlementWith: "Расчёт с ",
     number:          "#",
     dateTime:        "Дата/Время",
     amount:          "Сумма",
     whoToWhom:       "Кто кому",
   },
-  "base_currency_exchangeRateEditor.form":{
+  "currency_exchangeRateEditor.form":{
+    exchangeRates: "Курсы валют",
     fullName: "ФИО",
     contacts: "Контакты",
     notes: "Заметки",
@@ -180,7 +178,7 @@
     openingError: "Ошибка открытия",
     client: "Клиент",
   },
-  "base_client_editor.form":{
+  "client_editor.form":{
     moneyIn: "оплата долга",
     moneyOut: "задолженность",
     sale: "покупка товара",
@@ -195,11 +193,11 @@
     cost: "Сумма",
     barcode: "Штрихкод",
   },
-  "base_category_listEditor.form":{
+  "category_listEditor.form":{
     productGroups:  "Группы товаров",
     groupsSearch:  "Поиск группы",
   },
-  "base_category_infoEditor.form":{
+  "category_infoEditor.form":{
     name:     "Наименование",
     notation: "Сокращение",
     create: "Создать",
@@ -235,7 +233,7 @@
     prevDay        : "Предыдущий день",
     nextDay        : "Следующий день",
   },
-  "auto_parts_salecheck_itemEditor.form":{
+  "salecheck_itemEditor.form":{
     price:    "Цена",
     quantity: "Количесво",
     unit:     "Ед. изм.",
@@ -256,28 +254,7 @@
     photos:   "Фото",
     sale:     "Продажа",
   },
-  "base_salecheck_itemEditor.form":{
-    price:    "Цена",
-    quantity: "Количесво",
-    unit:     "Ед. изм.",
-    update:   "Изменить",
-    model:    "Модель",
-    engine:   "Двигатель",
-    brand:    "Бренд",
-    oem:      "OEM",
-    serialN:  "Серийник",
-    productPhotos: "Фотографии товара",
-    remark:   "Добавление фотографий будет доступно в новых обновлениях программы",
-    date:     "Дата",
-    supplier: "Поставщик",
-    quantity: "Кол-во",
-    price:    "Цена",
-    currency: "Валюта",
-    history:  "История",
-    photos:   "Фото",
-    sale:     "Продажа",
-  },
-  "auto_parts_salecheck_edtor.form": {
+  "salecheck_editor.form": {
     clearChek:  "Очистить чек?",
     clearCart:  "Все добавленные товары будут убраны из корзины",
     no:         "Нет",
@@ -305,38 +282,10 @@
     currentReceipt: "Текущий чек",
     client: "Клиент",
   },
-  "base_salecheck_editor.form": {
-    clearChek:  "Очистить чек?",
-    clearCart:  "Все добавленные товары будут убраны из корзины",
-    no:         "Нет",
-    yes:        "Да",
-    cart:       "Корзина покупателя",
-    product:    "Товар",
-    originalPrice:  "Цена",
-    quantity: "Кол-во",
-    unitTitle: "Ед.",
-    price: "Со скид",
-    barcode: "Штрихкод",
-    printCheck: "Печатать чек",
-    cost: "Сумма",
-    discount: "Скидка",
-    totalWithtDiscount: "Со скид",
-    barcode:  "Штрихкод",
-    saveToExcel:  "Сохранить в Excel",
-    saveToExcelDiscr:  "Экспорт",
-    clearChek:      "Очистить чек",
-    clearChekDiscr: "Удалить все",
-    total: "Итог",
-    change: "Сдача",
-    cash: "Наличными",
-    closeReceipt: "Закрыть чек",
-    currentReceipt: "Текущий чек",
-    client: "Клиент",
-  },
-  "auto_part_product_picker.form":  {
+  "product_picker.form":  {
     noPrice:  " (нет цены)",
   },
-  "auto_part_product_list.form":{
+  "product_list.form":{
     category:    "Кат.",
     name: "Название",
     unit:     "Ед.",
@@ -348,16 +297,7 @@
     notes:    "Заметки",
     quantity: "Остаток",
   },
-  "base_product_list.form":{
-    category  : "Кат.",
-    name      : "Название",
-    unit      : "Ед.",
-    barcode   : "Штрихкод",
-    brand     : "Фирма",
-    notes     : "Заметки",
-    quantity  : "Остаток",
-  },
-  "auto_part_product_importer.form":{
+  "product_importer.form":{
     title:    "Наименование",
     model:    "Модель",
     engine:   "Двигатель",
@@ -377,7 +317,7 @@
     kt:       "Кт",
     currency: "$",
   },
-  "auto_part_product_form.form":{
+  "product_form.form":{
     sale:         "продажа",
     consignment:  "покупка",
     inPriceSet:   "цена покупки",
@@ -408,49 +348,14 @@
     opening_error: "Ошибка открытия",
     productData:  "Карточка товара",
   },
-  "base_product_form.form":{
-    sale:         "продажа",
-    consignment:  "покупка",
-    inPriceSet:   "цена покупки",
-    outPriceSet:  "цена продажи",
-    duplicatedBarcode: "Есть другой товар с таким же штрихкодом: ",
-    barcode:      "Штрихкод",
-    unit:         "Ед. изм.",
-    productType:  "Категория товара",
-    title:        "Наименование",
-    brand:        "Производитель",
-    serialN:  "Серийник",
-    location: "Расположение",
-    create:   "Создать",
-    update:   "Изменить",
-    barcodePrint: "Печатать штрихкод",
-    print:    "Печатать",
-    productPhotos: "Фотографии товара",
-    remark:   "Будет доступно в новых обновлениях программы",
-    date:     "Дата",
-    number:   "#",
-    operation:  "Операция",
-    history:    "История",
-    photos:     "Фото",
-    productRegistration: "Регистрация нового товара",
-    opening_error: "Ошибка открытия",
-    productData:  "Карточка товара",
-  },
-  "auto_part_product_editor.form":{
+  "product_editor.form":{
     makedIn:  "Сформировано в СоцМаркет 2С",
     prevPage: "Предыдущая страница",
     nextPage: "Следующая страница",
     saveToExcel:  "Сохранить в Excel",
     newProduct: "Новый товар",
   },
-  "base_product_editor.form":{
-    makedIn:  "Сформировано в СоцМаркет 2С",
-    prevPage: "Предыдущая страница",
-    nextPage: "Следующая страница",
-    saveToExcel:  "Сохранить в Excel",
-    newProduct: "Новый товар",
-  },
-  "auto_part_consignmen_journal.form":{
+  "consignment_journal.form":{
     check:      "Чек",
     product:    "Товар",
     quantity:   "Кол-во",
@@ -477,7 +382,7 @@
     prevDay        : "Предыдущий день",
     nextDay        : "Следующий день",
   },
-  "auto_part_consignmen_itemEditor.form":{
+  "consignment_itemEditor.form":{
     purchaseAmount:   "Цена покупки",
     purchaseCurrency: "Валюта покупки",
     quantity:         "Количество",
@@ -501,7 +406,7 @@
     photos:           "Фото",
     warehouseAcceptance:  "Приёмка на склад",
   },
-  "auto_part_consignmen_editor.form":{
+  "consignment_editor.form":{
     cost: "Сумма: ",
     total: "Итог: ",
     acceptConsignment: "Принять партию на склад",

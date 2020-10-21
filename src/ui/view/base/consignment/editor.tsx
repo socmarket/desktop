@@ -1,7 +1,7 @@
 import ConsignmentItem from "./itemEditor"
 
 import DTable        from "View/comp/dtable"
-import ProductPicker from "View/auto/parts/product/picker"
+import ProductPicker from "View/base/product/picker"
 import SupplierPicker  from "View/base/supplier/picker"
 import {
   numberInputWithRef,

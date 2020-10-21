@@ -54,4 +54,4 @@ class ProductList extends React.Component {
 
 }
 
-export default (withTranslation("auto_part_product_list.form")(ProductList))
+export default (withTranslation("product_list.form")(ProductList))

@@ -101,4 +101,4 @@ class Turnover extends React.Component {
 
 }
 
-export default withTranslation("base_tornover_index.form")(Turnover)
+export default withTranslation("tornover_index.form")(Turnover)

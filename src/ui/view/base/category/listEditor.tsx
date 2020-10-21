@@ -204,4 +204,4 @@ class CategoryListEditor extends React.Component {
   }
 }
 
-export default withTranslation("base_category_listEditor.form")(CategoryListEditor)
+export default withTranslation("category_listEditor.form")(CategoryListEditor)

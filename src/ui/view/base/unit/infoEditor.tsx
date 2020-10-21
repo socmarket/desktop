@@ -145,4 +145,4 @@ class UnitInfoEditor extends React.Component {
   }
 }
 
-export default withTranslation("base_unit_infoEditor.form")(UnitInfoEditor)
+export default withTranslation("unit_infoEditor.form")(UnitInfoEditor)

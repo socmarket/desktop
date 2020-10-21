@@ -143,4 +143,4 @@ class CategoryInfoEditor extends React.Component {
   }
 }
 
-export default (withTranslation("base_category_infoEditor.form")(CategoryInfoEditor))
+export default (withTranslation("category_infoEditor.form")(CategoryInfoEditor))

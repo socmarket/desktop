@@ -434,4 +434,4 @@ class SaleCheckEditor extends React.Component {
   }
 }
 
-export default (withTranslation("base_salecheck_editor.form")(SaleCheckEditor))
+export default (withTranslation("salecheck_editor.form")(SaleCheckEditor))

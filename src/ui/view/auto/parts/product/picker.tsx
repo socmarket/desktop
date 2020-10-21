@@ -194,4 +194,4 @@ class ProductPicker extends React.Component {
   }
 
 }
-export default (withTranslation("auto_part_product_picker.form")(ProductPicker))
+export default (withTranslation("product_picker.form")(ProductPicker))

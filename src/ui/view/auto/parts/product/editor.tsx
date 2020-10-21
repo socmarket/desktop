@@ -253,4 +253,4 @@ const stateMap = (state) => {
 
 export default connect(stateMap, {
   ...ProductActions,
-})(withTranslation("auto_part_product_editor.form")(ProductEditor))
+})(withTranslation("product_editor.form")(ProductEditor))

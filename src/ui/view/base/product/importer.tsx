@@ -488,4 +488,4 @@ class ProductImporter extends React.Component {
   }
 }
 
-export default (withTranslation("base_product_importer.form")(ProductImporter))
+export default (withTranslation("product_importer.form")(ProductImporter))

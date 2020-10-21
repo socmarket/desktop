@@ -144,4 +144,4 @@ class ExchangeRateEditor extends React.Component {
   }
 }
 
-export default withTranslation("base_currency_exchangeRateEditor.form", { withRef: true })(React.forwardRef((props, ref) => <ExchangeRateEditor innerRef={ref} {...props} />))
+export default withTranslation("currency_exchangeRateEditor.form", { withRef: true })(React.forwardRef((props, ref) => <ExchangeRateEditor innerRef={ref} {...props} />))

@@ -4,7 +4,7 @@ import { SettingsActions } from "Store/base/settings"
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { Button, Form, Grid, Header, Image, Message, Segment, Label } from "semantic-ui-react"
-import { withTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next"
 
 class Door extends React.Component {
 
@@ -105,7 +105,7 @@ class Door extends React.Component {
           </Grid.Column>
         </Grid>
       </Fragment>
-    );
+    )
   }
 }
 
@@ -117,4 +117,4 @@ const stateMap = (state) => {
 }
 
 export default connect(stateMap,
-  { ...AppActions, ...SettingsActions })(withTranslation("base_door.form")(Door));
+  { ...AppActions, ...SettingsActions })(withTranslation("door")(Door))

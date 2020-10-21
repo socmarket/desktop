@@ -95,4 +95,4 @@ const stateMap = (state) => {
   }
 }
 
-export default connect(stateMap, { ...AppActions })(withTranslation("base_about.form")(AboutDialog))
+export default connect(stateMap, { ...AppActions })(withTranslation("about")(AboutDialog))
