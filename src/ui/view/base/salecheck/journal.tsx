@@ -1,7 +1,6 @@
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import moment from "moment"
-import { ResponsivePie } from '@nivo/pie'
 import { SingleDatePicker } from "react-dates"
 import {
   Container, Grid, Form, Input,
@@ -16,7 +15,7 @@ import {
 const minib = {
   padding: "0.5em 0.5em",
 }
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next"
 
 class SaleJournal extends React.Component {
 
@@ -99,8 +98,8 @@ class SaleJournal extends React.Component {
         <Menu icon style={{ marginRight: 15, marginLeft: 15, marginTop: 0, marginBottom: 5 }}>
           <Menu.Menu position="left">
             <Menu.Item onClick={() => this.showAll()}            active={this.state.all}>{this.t("all")}</Menu.Item>
-            <Menu.Item onClick={() => this.changeDay(today)}     active={today.isSame(this.state.day, 'day') && !this.state.all}>{this.t("today")}</Menu.Item>
-            <Menu.Item onClick={() => this.changeDay(yesterday)} active={yesterday.isSame(this.state.day, 'day') && !this.state.all}>{this.t("yesterday")}</Menu.Item>
+            <Menu.Item onClick={() => this.changeDay(today)}     active={today.isSame(this.state.day, "day") && !this.state.all}>{this.t("today")}</Menu.Item>
+            <Menu.Item onClick={() => this.changeDay(yesterday)} active={yesterday.isSame(this.state.day, "day") && !this.state.all}>{this.t("yesterday")}</Menu.Item>
           </Menu.Menu>
           <Menu.Menu position="right">
             <Popup content={this.t("prevDay")} trigger= { <Menu.Item onClick={() => this.prevDay()}><Icon name="angle left"  /></Menu.Item> } />
@@ -123,7 +122,6 @@ class SaleJournal extends React.Component {
                 <Table.HeaderCell>{this.t("total")}</Table.HeaderCell>
                 <Table.HeaderCell>{this.t("cost")}</Table.HeaderCell>
                 <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
-                <Table.HeaderCell>{this.t("oem")}</Table.HeaderCell>
                 <Table.HeaderCell>{this.t("operations")}</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
@@ -167,7 +165,6 @@ class SaleJournal extends React.Component {
                             <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                             <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
                             <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.barcode}</Table.Cell>
-                            <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.oemNo}</Table.Cell>
                             <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
                               { (item.retQuantity > 0)             && <Button style={minib} size="mini" icon="plus"  onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
                               { (item.quantity > item.retQuantity) && <Button style={minib} size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id,  1)} /> }
@@ -185,7 +182,6 @@ class SaleJournal extends React.Component {
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.costBeforeRet}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.cost}</Table.Cell>
                           <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.barcode}</Table.Cell>
-                          <Table.Cell                   {...(item.retQuantity > 0 ? {negative: true} : {})} >{item.oemNo}</Table.Cell>
                           <Table.Cell textAlign="right" {...(item.retQuantity > 0 ? {negative: true} : {})} >
                             { (item.retQuantity > 0) && <Button style={minib} size="mini" icon="plus" onClick={() => this.returnSaleCheckItem(item.id, -1)} /> }
                             { (item.quantity > item.retQuantity) && <Button style={minib} size="mini" icon="minus" onClick={() => this.returnSaleCheckItem(item.id, 1)} /> }

@@ -10,6 +10,8 @@ import AutoPartsConsignmentJournal from "View/auto/parts/consignment/journal"
 
 import BaseProductEditor   from "View/base/product/editor"
 import BaseProductImporter from "View/base/product/importer"
+import BaseSaleCheckEditor from "View/base/salecheck/editor"
+import BaseSaleJournal     from "View/base/salecheck/journal"
 
 import BaseClientEditor    from "View/base/client/editor"
 import BaseSupplierEditor  from "View/base/supplier/editor"
@@ -38,18 +40,40 @@ class ProductEditor extends React.Component {
   }
 }
 
-const ViewMap = {
-  "productEditor"               : (props) => <ProductEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
+class SaleCheckEditor extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    switch (this.props.opt.appMode) {
+      case "base"      : return (<BaseSaleCheckEditor      api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+      case "auto/parts": return (<AutoPartsSaleCheckEditor api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+    }
+  }
+}
 
-  "autoPartsProductImporter"    : (props) => <AutoPartsProductImporter    api={props.api} theme={props.opt.theme} opt={props.opt} />,
-  "autoPartsSaleCheckEditor"    : (props) => <AutoPartsSaleCheckEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,
+class SaleJournal extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    switch (this.props.opt.appMode) {
+      case "base"      : return (<BaseSaleJournal      api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+      case "auto/parts": return (<AutoPartsSaleJournal api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+    }
+  }
+}
+
+
+const ViewMap = {
+  "productEditor"   : (props) => <ProductEditor   api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "saleCheckEditor" : (props) => <SaleCheckEditor api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "saleJournal"     : (props) => <SaleJournal     api={props.api} theme={props.opt.theme} opt={props.opt} />,
+
   "autoPartsSaleJournal"        : (props) => <AutoPartsSaleJournal        api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "autoPartsCompactSaleJournal" : (props) => <AutoPartsCompactSaleJournal api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "autoPartsConsignmentEditor"  : (props) => <AutoPartsConsignmentEditor  api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "autoPartsConsignmentJournal" : (props) => <AutoPartsConsignmentJournal api={props.api} theme={props.opt.theme} opt={props.opt} />,
-
-  "baseProductEditor"   : (props) => <BaseProductEditor   api={props.api} theme={props.opt.theme} opt={props.opt} />,
-  "baseProductImporter" : (props) => <BaseProductImporter api={props.api} theme={props.opt.theme} opt={props.opt} />,
 
   "baseClientEditor"    : (props) => <BaseClientEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "baseSupplierEditor"  : (props) => <BaseSupplierEditor  api={props.api} theme={props.opt.theme} opt={props.opt} />,

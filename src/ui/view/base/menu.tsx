@@ -90,14 +90,14 @@ class MainMenu extends React.Component {
             <Dropdown.Menu>
               <Dropdown.Item
                 icon="calculator"
-                active={this.props.app.activePage === "autoPartsSaleCheckEditor"}
-                onClick={() => this.props.openAutoPartsSaleCheckEditor()}
+                active={this.props.app.activePage === "saleCheckEditor"}
+                onClick={() => this.props.openSaleCheckEditor()}
                 text={this.t("cashier")}
               />
               <Dropdown.Item
                 icon="list layout"
-                active={this.props.app.activePage === "autoPartsSaleJournal"}
-                onClick={() => this.props.openAutoPartsSaleJournal()}
+                active={this.props.app.activePage === "saleJournal"}
+                onClick={() => this.props.openSaleJournal()}
                 text={this.t("salesList")}
               />
               <Dropdown.Item
