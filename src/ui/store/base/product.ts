@@ -1,21 +1,28 @@
 const productListFiltered = (pattern, items) => ({
-  type: "AUTO_PRODUCT_LIST_FILTERED",
+  type: "PRODUCT_LIST_FILTERED",
   items: items,
   pattern: pattern,
 })
 
 function filterProductList(pattern, limit, offset) {
   return (dispatch, getState, { api }) => {
-    return api.autoParts.product.find(pattern, limit, offset)
-      .then(items => dispatch(productListFiltered(pattern, items)))
+    const { settings: { appMode } } = getState()
+    switch (appMode) {
+      case "base":
+        return api.product.find(pattern, limit, offset)
+          .then(items => dispatch(productListFiltered(pattern, items)))
+      case "auto/parts":
+        return api.autoParts.product.find(pattern, limit, offset)
+          .then(items => dispatch(productListFiltered(pattern, items)))
+    }
   }
 }
 
-const AutoPartsProductActions = {
+const ProductActions = {
   filterProductList: filterProductList,
 }
 
-function AutoPartsProductReducer (state = {
+function ProductReducer (state = {
   productList: {
     items: [],
     pattern: "",
@@ -24,7 +31,7 @@ function AutoPartsProductReducer (state = {
   }
 }, action) {
   switch (action.type) {
-    case 'AUTO_PRODUCT_LIST_FILTERED':
+    case "PRODUCT_LIST_FILTERED":
       return Object.assign({}, state, {
         productList: {
           items: action.items,
@@ -38,4 +45,4 @@ function AutoPartsProductReducer (state = {
   }
 }
 
-export { AutoPartsProductActions, AutoPartsProductReducer }
+export { ProductActions, ProductReducer }

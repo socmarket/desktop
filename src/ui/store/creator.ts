@@ -1,6 +1,6 @@
 import { AppActions, AppReducer } from "./base/app"
 import { SettingsActions, SettingsReducer } from "./base/settings"
-import { AutoPartsProductActions, AutoPartsProductReducer } from "./auto/parts/product"
+import { ProductActions, ProductReducer } from "./base/product"
 
 import {
   createStore as createReduxStore,
@@ -13,11 +13,9 @@ import thunk from "redux-thunk"
 
 function createRootReducer() {
   return combineReducers({
-    app       : AppReducer,
-    settings  : SettingsReducer,
-    autoParts : combineReducers({
-      product : AutoPartsProductReducer,
-    })
+    app      : AppReducer,
+    settings : SettingsReducer,
+    product  : ProductReducer,
   })
 }
 
@@ -29,7 +27,7 @@ function devCreateStore(thunkM) {
   const actionCreators = {
     ...AppActions,
     ...SettingsActions,
-    ...AutoPartsProductActions,
+    ...ProductActions,
   }
   const composeEnhancers = 
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?

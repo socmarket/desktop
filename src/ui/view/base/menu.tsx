@@ -16,10 +16,14 @@ const sales = [
 ]
 
 const products = [
-  "autoPartsProductEditor",
+  "productEditor",
   "autoPartsProductImporter",
   "autoPartsConsignmentEditor",
   "autoPartsConsignmentJournal",
+
+  "baseProductEditor",
+  "baseProductImporter",
+
   "baseCategoryEditor",
   "baseUnitEditor",
 ]
@@ -80,77 +84,75 @@ class MainMenu extends React.Component {
           <Label color="green" size="big" style={{ padding: 5, margin: 0 }}>Market</Label>
           <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>2C</Label>
         </Menu.Item>
-        { (this.props.opt.appMode === "auto/parts") &&
-          <Fragment>
-            { (user === "cashier" || user === "manager" || user === "admin") &&
-            <Dropdown tabIndex={-1} text={this.t("sales")} pointing className={"link item " + salesActive}>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  icon="calculator"
-                  active={this.props.app.activePage === "autoPartsSaleCheckEditor"}
-                  onClick={() => this.props.openAutoPartsSaleCheckEditor()}
-                  text={this.t("cashier")}
-                />
-                <Dropdown.Item
-                  icon="list layout"
-                  active={this.props.app.activePage === "autoPartsSaleJournal"}
-                  onClick={() => this.props.openAutoPartsSaleJournal()}
-                  text={this.t("salesList")}
-                />
-                <Dropdown.Item
-                  icon="list layout"
-                  active={this.props.app.activePage === "autoPartsCompactSaleJournal"}
-                  onClick={() => this.props.openAutoPartsCompactSaleJournal()}
-                  text={this.t("salesListCompact")}
-                />
-              </Dropdown.Menu>
-            </Dropdown>
-            }
+        <Fragment>
+          { (user === "cashier" || user === "manager" || user === "admin") &&
+          <Dropdown tabIndex={-1} text={this.t("sales")} pointing className={"link item " + salesActive}>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                icon="calculator"
+                active={this.props.app.activePage === "autoPartsSaleCheckEditor"}
+                onClick={() => this.props.openAutoPartsSaleCheckEditor()}
+                text={this.t("cashier")}
+              />
+              <Dropdown.Item
+                icon="list layout"
+                active={this.props.app.activePage === "autoPartsSaleJournal"}
+                onClick={() => this.props.openAutoPartsSaleJournal()}
+                text={this.t("salesList")}
+              />
+              <Dropdown.Item
+                icon="list layout"
+                active={this.props.app.activePage === "autoPartsCompactSaleJournal"}
+                onClick={() => this.props.openAutoPartsCompactSaleJournal()}
+                text={this.t("salesListCompact")}
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+          }
 
-            { (user === "manager" || user === "admin") &&
-            <Dropdown tabIndex={-1} text={this.t("products")} pointing className={"link item " + productsActive}>
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  icon="zip"
-                  active={this.props.app.activePage === "autoPartsConsignmentEditor"}
-                  onClick={() => this.props.openAutoPartsConsignmentEditor()}
-                  text={this.t("consignmentAcceptance")}
-                />
-                <Dropdown.Item
-                  icon="list layout"
-                  active={this.props.app.activePage === "autoPartsConsignmentJournal"}
-                  onClick={() => this.props.openAutoPartsConsignmentJournal()}
-                  text={this.t("consignmentList")}
-                />
-                <Dropdown.Item
-                  icon="book"
-                  active={this.props.app.activePage === "autoPartsProductEditor"}
-                  onClick={() => this.props.openAutoPartsProductEditor()}
-                  text={this.t("productsDescription")}
-                />
-                <Dropdown.Item
-                  icon="file excel"
-                  active={this.props.app.activePage === "autoPartsProductImporter"}
-                  onClick={() => this.props.openAutoPartsProductImporter()}
-                  text={this.t("productImporter")}
-                />
-                <Dropdown.Item
-                  icon="sitemap"
-                  active={this.props.app.activePage === "baseCategoryEditor"}
-                  onClick={() => this.props.openCategoryEditor()}
-                  text={this.t("productsCategories")}
-                />
-                <Dropdown.Item
-                  icon="law"
-                  active={this.props.app.activePage === "baseUnitEditor"}
-                  onClick={() => this.props.openUnitEditor()}
-                  text={this.t("units")}
-                />
-              </Dropdown.Menu>
-            </Dropdown>
-            }
-          </Fragment>
-        }
+          { (user === "manager" || user === "admin") &&
+          <Dropdown tabIndex={-1} text={this.t("products")} pointing className={"link item " + productsActive}>
+            <Dropdown.Menu>
+              <Dropdown.Item
+                icon="zip"
+                active={this.props.app.activePage === "autoPartsConsignmentEditor"}
+                onClick={() => this.props.openAutoPartsConsignmentEditor()}
+                text={this.t("consignmentAcceptance")}
+              />
+              <Dropdown.Item
+                icon="list layout"
+                active={this.props.app.activePage === "autoPartsConsignmentJournal"}
+                onClick={() => this.props.openAutoPartsConsignmentJournal()}
+                text={this.t("consignmentList")}
+              />
+              <Dropdown.Item
+                icon="book"
+                active={this.props.app.activePage === "productEditor"}
+                onClick={() => this.props.openProductEditor()}
+                text={this.t("productsDescription")}
+              />
+              <Dropdown.Item
+                icon="file excel"
+                active={this.props.app.activePage === "autoPartsProductImporter"}
+                onClick={() => this.props.openAutoPartsProductImporter()}
+                text={this.t("productImporter")}
+              />
+              <Dropdown.Item
+                icon="sitemap"
+                active={this.props.app.activePage === "baseCategoryEditor"}
+                onClick={() => this.props.openCategoryEditor()}
+                text={this.t("productsCategories")}
+              />
+              <Dropdown.Item
+                icon="law"
+                active={this.props.app.activePage === "baseUnitEditor"}
+                onClick={() => this.props.openUnitEditor()}
+                text={this.t("units")}
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+          }
+        </Fragment>
         { (user === "admin") &&
         <Dropdown tabIndex={-1} text={this.t("calculations")} pointing className={"link item " + calcsActive}>
           <Dropdown.Menu>

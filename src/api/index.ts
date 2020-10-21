@@ -2,6 +2,10 @@ import initAutoProductApi, {
   AutoProductApi,
 } from "./auto/parts/product"
 
+import initProductApi, {
+  ProductApi,
+} from "./base/product"
+
 import initSettingsApi, {
   SettingsApi,
 } from "./base/settings"
@@ -70,6 +74,7 @@ export function initApi(db, usb) {
     printer: initPrinterApi(db, usb),
     file: initFileApi(db),
     server: initServerApi(db),
+    product: initProductApi(db),
     migrateDb: () => db.migrate(),
   }
 }

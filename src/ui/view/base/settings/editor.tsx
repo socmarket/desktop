@@ -47,11 +47,6 @@ class SettingsEditor extends React.Component {
     }
     this.t = this.props.t
     this.S = {
-      appMode: [
-        { key: "auto/parts"      , value: "auto/parts"      , text: this.t("autoParts")       },
-        { key: "auto/accessories", value: "auto/accessories", text: this.t("autoAccessories") },
-        { key: "miniMarket"      , value: "miniMarket"      , text: this.t("miniMarket")      },
-      ],
       labelSize: [
         { key: "30x20", value: "30x20", text: "30mm x 20mm" },
         { key: "60x30", value: "60x30", text: "60mm x 30mm" },

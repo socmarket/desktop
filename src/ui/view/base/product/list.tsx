@@ -1,6 +1,6 @@
-import React from "react";
+import React from "react"
 import { Table, Icon } from "semantic-ui-react"
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next"
 
 class ProductList extends React.Component {
 
@@ -17,12 +17,9 @@ class ProductList extends React.Component {
             <Table.HeaderCell>{this.t("category")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("name")}</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("brand")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("quantity")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("unit")}</Table.HeaderCell>
-            <Table.HeaderCell>{this.t("model")}</Table.HeaderCell>
-            <Table.HeaderCell>{this.t("engine")}</Table.HeaderCell>
-            <Table.HeaderCell>{this.t("brand")}</Table.HeaderCell>
-            <Table.HeaderCell>{this.t("oem")}</Table.HeaderCell>
             <Table.HeaderCell><Icon name="map marker alternate" /></Table.HeaderCell>
             <Table.HeaderCell>{this.t("notes")}</Table.HeaderCell>
           </Table.Row>
@@ -33,12 +30,9 @@ class ProductList extends React.Component {
               <Table.Cell>{product.categoryTitle}</Table.Cell>
               <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell style={{whiteSpace: "nowrap"}}>{product.title}</Table.Cell>
+              <Table.Cell>{product.brand}</Table.Cell>
               <Table.Cell textAlign="right">{product.quantity}</Table.Cell>
               <Table.Cell>{product.unitNotation}</Table.Cell>
-              <Table.Cell>{product.model}</Table.Cell>
-              <Table.Cell>{product.engine}</Table.Cell>
-              <Table.Cell>{product.brand}</Table.Cell>
-              <Table.Cell>{product.oemNo}</Table.Cell>
               <Table.Cell>{product.coord}</Table.Cell>
               <Table.Cell>{product.notes}</Table.Cell>
             </Table.Row>
@@ -54,4 +48,4 @@ class ProductList extends React.Component {
 
 }
 
-export default (withTranslation("auto_part_product_list.form")(ProductList))
+export default (withTranslation("base_product_list.form")(ProductList))

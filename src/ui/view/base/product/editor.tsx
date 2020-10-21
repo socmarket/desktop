@@ -17,7 +17,7 @@ import {
   Menu, Icon, Popup,
 } from "semantic-ui-react"
 import moment from "moment"
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next"
 
 class ProductEditor extends React.Component {
 
@@ -29,9 +29,6 @@ class ProductEditor extends React.Component {
     categoryId    : "",
     categoryTitle : "",
     barcode       : "",
-    model         : "",
-    engine        : "",
-    oemNo         : "",
     serial        : "",
     brand         : "",
   }
@@ -54,7 +51,7 @@ class ProductEditor extends React.Component {
     this.filterInput = inputWithRef(this.filterRef)
 
     this.fileApi    = props.api.file
-    this.productApi = props.api.autoParts.product
+    this.productApi = props.api.product
 
     this.state = {
       product: {
@@ -170,7 +167,7 @@ class ProductEditor extends React.Component {
   }
 
   newProduct() {
-    this.props.api.autoParts.product.genBarcode(this.props.opt.barcodePrefix)
+    this.props.api.product.genBarcode(this.props.opt.barcodePrefix)
       .then(barcode => this.setState({
         product: Object.assign({}, this.emptyProduct, {
           barcode    : barcode,
@@ -253,4 +250,4 @@ const stateMap = (state) => {
 
 export default connect(stateMap, {
   ...ProductActions,
-})(withTranslation("auto_part_product_editor.form")(ProductEditor))
+})(withTranslation("base_product_editor.form")(ProductEditor))

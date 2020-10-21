@@ -2,35 +2,13 @@ import sha256 from 'crypto-js/sha256';
 
 function auth(pin) {
   return function (dispatch, getState, { api }) {
-    const { app: { user }, settings: { cashierPinHash, managerPinHash, adminPinHash } } = getState()
-    const hash = sha256(pin) + ""
-    switch (user) {
-      case "cashier":
-        if (hash === cashierPinHash)
-          return dispatch({
-            type: "APP_AUTH_OK",
-          })
-        break
-      case "manager":
-        if (hash === managerPinHash)
-          return dispatch({
-            type: "APP_AUTH_OK",
-          })
-        break
-      case "admin":
-        if (hash === adminPinHash)
-          return dispatch({
-            type: "APP_AUTH_OK",
-          })
-        break
-    }
-    return dispatch({
-      type: "APP_AUTH_FAIL",
-    })
   }
 }
 
 const AppActions = {
+  openProductEditor: () => ({
+    type: "APP_OPEN_PRODUCT_EDITOR",
+  }),
   openAutoPartsSaleCheckEditor: () => ({
     type: "APP_OPEN_AUTO_PARTS_SALE_CHECK_EDITOR",
   }),
@@ -45,9 +23,6 @@ const AppActions = {
   }),
   openAutoPartsConsignmentJournal: () => ({
     type: "APP_OPEN_AUTO_PARTS_CONSIGNMENT_JOURNAL",
-  }),
-  openAutoPartsProductEditor: () => ({
-    type: "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR",
   }),
   openAutoPartsProductImporter: () => ({
     type: "APP_OPEN_AUTO_PARTS_PRODUCT_IMPORTER",
@@ -111,8 +86,8 @@ function AppReducer (state = {
   idle          : false,
 }, action) {
   switch (action.type) {
-    case "APP_OPEN_AUTO_PARTS_PRODUCT_EDITOR":
-      return Object.assign({}, state, { activePage: "autoPartsProductEditor" })
+    case "APP_OPEN_PRODUCT_EDITOR":
+      return Object.assign({}, state, { activePage: "productEditor" })
     case "APP_OPEN_AUTO_PARTS_PRODUCT_IMPORTER":
       return Object.assign({}, state, { activePage: "autoPartsProductImporter" })
     case "APP_OPEN_AUTO_PARTS_SALE_CHECK_EDITOR":
