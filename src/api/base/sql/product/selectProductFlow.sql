@@ -2,6 +2,8 @@ select
   opAt,
   amount,
   units,
+  price,
+  currency,
   op
 from (
   select
@@ -9,11 +11,14 @@ from (
     round((salecheckitem.quantity -
         coalesce(ret.quantity, 0)) / 100, 2) as amount,
     unit.notation                            as units,
+    round(salecheckitem.price / 100, 2)      as price,
+    currency.notation                        as currency,
     'sale'                                   as op
   from
     salecheckitem
     left join salecheck on salecheck.id = salecheckitem.saleCheckId
     left join unit on unit.id = salecheckitem.unitId
+    left join currency on currency.id = salecheckitem.currencyId
     left join (
       select saleCheckItemId, sum(quantity) as quantity
       from salecheckreturn
@@ -29,11 +34,14 @@ from (
     round((consignmentitem.quantity -
         coalesce(ret.quantity, 0)) / 100, 2) as amount,
     unit.notation                            as units,
+    round(consignmentitem.price / 100, 2)    as price,
+    currency.notation                        as currency,
     'consignment'                            as op
   from
     consignmentitem
     left join consignment on consignment.id = consignmentitem.consignmentId
     left join unit on unit.id = consignmentitem.unitId
+    left join currency on currency.id = consignmentitem.currencyId
     left join (
       select consignmentItemId, sum(quantity) as quantity
       from consignmentreturn
@@ -46,8 +54,10 @@ from (
 
   select
     updatedAt                             as opAt,
-    round(price / 100.00, 2)              as amount,
-    currency.notation                     as units,
+    null                                  as amount,
+    ''                                    as units,
+    round(price / 100.00, 2)              as price,
+    currency.notation                     as currency,
     'inPriceSet'                          as op
   from
     consignmentprice
@@ -59,8 +69,10 @@ from (
 
   select
     setAt                                 as opAt,
-    round(price / 100.00, 2)              as amount,
-    currency.notation                     as units,
+    null                                  as amount,
+    ''                                    as units,
+    round(price / 100.00, 2)              as price,
+    currency.notation                     as currency,
     'outPriceSet'                         as op
   from
     price

@@ -321,6 +321,8 @@ class ProductForm extends React.Component {
             <Table.HeaderCell textAlign="center">{this.t("date")}</Table.HeaderCell>
             <Table.HeaderCell textAlign="center">{this.t("number")}</Table.HeaderCell>
             <Table.HeaderCell textAlign="center">{this.t("number")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("number")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("number")}</Table.HeaderCell>
             <Table.HeaderCell textAlign="center">{this.t("operation")}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -330,6 +332,8 @@ class ProductForm extends React.Component {
               <Table.Cell textAlign="center">{asDate(item.opAt) }</Table.Cell>
               <Table.Cell textAlign="right" >{item.amount       }</Table.Cell>
               <Table.Cell                   >{item.units        }</Table.Cell>
+              <Table.Cell textAlign="right" >{item.price        }</Table.Cell>
+              <Table.Cell                   >{item.currency     }</Table.Cell>
               <Table.Cell                   >{this.t(item.op)}</Table.Cell>
             </Table.Row>
           ))}
@@ -347,7 +351,7 @@ class ProductForm extends React.Component {
               <Menu.Item name={this.t('history')} active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
               <Menu.Item name={this.t("photos")} active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
             </Menu>
-            <Segment attached="bottom" style={{ height: "92%" }}>
+            <Segment attached="bottom" style={{ height: "400px", overflowY: "auto" }}>
               { this.state.activeTab === "history" && this.history() }
               { this.state.activeTab === "photos"  && this.photos()  }
             </Segment>
