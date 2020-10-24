@@ -190,8 +190,8 @@ class CategoryListEditor extends React.Component {
               onDoubleClick={() => this.editCategory(category, idx)}
             >
               {category.title}
-              <Label size="large" color={category.balance < 0 ? "red" : "green"}>
-                {category.balance}
+              <Label color={this.props.opt.theme.mainColor}>
+                {category.productCount}
               </Label>
             </Menu.Item>
           ))}

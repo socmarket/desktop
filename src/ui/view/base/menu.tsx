@@ -134,12 +134,6 @@ class MainMenu extends React.Component {
                 text={this.t("productImporter")}
               />
               <Dropdown.Item
-                icon="sitemap"
-                active={this.props.app.activePage === "baseCategoryEditor"}
-                onClick={() => this.props.openCategoryEditor()}
-                text={this.t("productsCategories")}
-              />
-              <Dropdown.Item
                 icon="law"
                 active={this.props.app.activePage === "baseUnitEditor"}
                 onClick={() => this.props.openUnitEditor()}

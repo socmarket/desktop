@@ -3,7 +3,8 @@ select
   category.title,
   category.parentId,
   coalesce(parent.title, "") as parentTitle,
-  category.notes
+  category.notes,
+  (select count(id) from product where categoryId = category.id) as productCount
 from
   category
   left join category parent on parent.id == category.parentId
