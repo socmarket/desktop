@@ -15,10 +15,7 @@
 
 #root::after {
   content: "";
-  background-image: url("~Img/auto-parts-tile.jpg");
-  background-position: center center;
-  background-size: repeat;
-  opacity: 0.08;
+  opacity: 0.1;
   top: 0;
   left: 0;
   bottom: 0;

@@ -109,6 +109,7 @@ api.migrateDb()
     startIdlenessDetektor(store, api, IdleDetectTimeout)
     serverHealthCheckerUp(store, api, HealthCheckInterval)
     startJobs(store, api)
+    AppActions.reloadBg()(store.dispatch, store.getState)
     return ReactDom.render(
       <Provider store={store}>
         <StartPage api={api} />

@@ -20,10 +20,6 @@ const products = [
   "productImporter",
   "consignmentEditor",
   "consignmentJournal",
-
-  "baseProductEditor",
-  "baseProductImporter",
-
   "baseCategoryEditor",
   "baseUnitEditor",
 ]

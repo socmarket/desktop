@@ -1,0 +1,7 @@
+#root::after {
+  background-image: url("~Img/bg-office-desk-7.jpg");
+  background-position: center center;
+  background-repeat: repeat;
+  background-size: cover;
+  opacity: 0.2;
+}

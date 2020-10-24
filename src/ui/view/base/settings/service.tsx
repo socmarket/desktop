@@ -1,3 +1,4 @@
+import { AppActions }      from "Store/base/app"
 import { SettingsActions } from "Store/base/settings"
 
 import CurrencyPicker from "View/base/currency/picker"
@@ -47,12 +48,14 @@ class SettingsEditor extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.S.appMode)
   }
 
   onAppModeChange(ev, { value }) {
     this.settingsApi
       .changeAppMode(value)
       .then(_ => this.props.reloadSettings())
+      .then(_ => this.props.reloadBg())
   }
 
   onBarcodePrefixChange(ev) {
@@ -176,4 +179,4 @@ const stateMap = (state) => {
   }
 }
 
-export default connect(stateMap, { ...SettingsActions })(withTranslation("settings_service.form")(SettingsEditor))
+export default connect(stateMap, { ...SettingsActions, ...AppActions })(withTranslation("settings_service.form")(SettingsEditor))

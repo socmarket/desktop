@@ -12,6 +12,7 @@ import BaseProductEditor      from "View/base/product/editor"
 import BaseProductImporter    from "View/base/product/importer"
 import BaseSaleCheckEditor    from "View/base/salecheck/editor"
 import BaseSaleJournal        from "View/base/salecheck/journal"
+import BaseSaleCompactJournal from "View/base/salecheck/compactJournal"
 import BaseConsignmentEditor  from "View/base/consignment/editor"
 import BaseConsignmentJournal from "View/base/consignment/journal"
 
@@ -38,6 +39,18 @@ class ProductEditor extends React.Component {
     switch (this.props.opt.appMode) {
       case "base"      : return (<BaseProductEditor      api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
       case "auto/parts": return (<AutoPartsProductEditor api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+    }
+  }
+}
+
+class ProductImporter extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    switch (this.props.opt.appMode) {
+      case "base"      : return (<BaseProductImporter      api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+      case "auto/parts": return (<AutoPartsProductImporter api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
     }
   }
 }
@@ -104,6 +117,8 @@ class ConsignmentJournal extends React.Component {
 
 const ViewMap = {
   "productEditor"      : (props) => <ProductEditor      api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "productImporter"    : (props) => <ProductImporter    api={props.api} theme={props.opt.theme} opt={props.opt} />,
+
   "saleCheckEditor"    : (props) => <SaleCheckEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "saleJournal"        : (props) => <SaleJournal        api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "compactSaleJournal" : (props) => <CompactSaleJournal api={props.api} theme={props.opt.theme} opt={props.opt} />,

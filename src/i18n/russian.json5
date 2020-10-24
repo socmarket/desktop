@@ -314,6 +314,8 @@
     rows:     "Строк",
     successfully: "Успешно",
     unit:     "Ед.",
+    serial:   "Серийник",
+    price:    "Цена",
     kt:       "Кт",
     currency: "$",
   },

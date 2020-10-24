@@ -5,7 +5,28 @@ function auth(pin) {
   }
 }
 
+function setBg(url) {
+  const bg = document.querySelectorAll("#root")[0]
+  console.log(bg)
+  bg.style.backgroundImage = `url(${url.default})`;
+  bg.style.backgroundPosition = "center center";
+  bg.style.backgroundRepeat = "no-repeat";
+  bg.style.backgroundSize = "cover";
+}
+
+const loadBg = () => (dispatch, getState) => {
+  const { settings: { appMode } } = getState()
+  const baseImg = import("Img/bg-base.jpg")
+  const autoImg = import("Img/bg-auto.jpg")
+  switch (appMode) {
+    case "base"       : return import("Style/base.css");
+    case "auto/parts" : return import("Style/auto.css");
+  }
+}
+
+
 const AppActions = {
+  reloadBg: loadBg,
   openProductEditor: () => ({
     type: "APP_OPEN_PRODUCT_EDITOR",
   }),
