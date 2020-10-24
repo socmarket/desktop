@@ -14,6 +14,7 @@ class ProductList extends React.Component {
       <Table compact celled selectable>
         <Table.Header>
           <Table.Row>
+            <Table.HeaderCell>#</Table.HeaderCell>
             { this.props.showCategory && <Table.HeaderCell>{this.t("category")}</Table.HeaderCell> }
             <Table.HeaderCell>{this.t("barcode")}</Table.HeaderCell>
             <Table.HeaderCell>{this.t("name")}</Table.HeaderCell>
@@ -30,6 +31,7 @@ class ProductList extends React.Component {
         <Table.Body>
           { this.props.items.map((product, idx) => (
             <Table.Row key={product.id} onClick={() => this.props.onProductOpen(product, idx)}>
+              <Table.Cell textAlign="right">{idx + this.props.offset + 1}</Table.Cell>
               { this.props.showCategory && <Table.Cell>{product.categoryTitle}</Table.Cell> }
               <Table.Cell>{product.barcode}</Table.Cell>
               <Table.Cell style={{whiteSpace: "nowrap"}}>{product.title}</Table.Cell>

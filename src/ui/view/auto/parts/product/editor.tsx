@@ -232,6 +232,7 @@ class ProductEditor extends React.Component {
         items={this.state.productList.items}
         onProductOpen={this.openProductForm}
         showCategory={this.state.search.category.id < 0}
+        offset={this.state.search.offset}
       />
     )
   }
