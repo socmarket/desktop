@@ -17,7 +17,7 @@ import {
   Header, Grid, Table, Form, Input, Select,
   TextArea, Button, Segment, Image, Icon,
   Label, Container, Menu, Message, Divider,
-  Rail, Dropdown
+  Rail, Dropdown, Modal,
 } from "semantic-ui-react"
 import { withTranslation } from 'react-i18next';
 
@@ -40,14 +40,17 @@ class ConsignmentEditor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onProductPick          = this.onProductPick.bind(this)
-    this.onSupplierChange       = this.onSupplierChange.bind(this)
-    this.onOpenItem             = this.onOpenItem.bind(this)
-    this.onDeleteItem           = this.onDeleteItem.bind(this)
-    this.onItemUpdate           = this.onItemUpdate.bind(this)
-    this.onItemEditorClose      = this.onItemEditorClose.bind(this)
-    this.onGlobalKeyDown        = this.onGlobalKeyDown.bind(this)
-    this.onActivate             = this.onActivate.bind(this)
+    this.onProductPick       = this.onProductPick.bind(this)
+    this.onSupplierChange    = this.onSupplierChange.bind(this)
+    this.onOpenItem          = this.onOpenItem.bind(this)
+    this.onDeleteItem        = this.onDeleteItem.bind(this)
+    this.onItemUpdate        = this.onItemUpdate.bind(this)
+    this.onItemEditorClose   = this.onItemEditorClose.bind(this)
+    this.onGlobalKeyDown     = this.onGlobalKeyDown.bind(this)
+    this.onActivate          = this.onActivate.bind(this)
+    this.onWantClearList     = this.onWantClearList.bind(this)
+    this.onExportToExcel     = this.onExportToExcel.bind(this)
+    this.onConfirmClearList  = this.onConfirmClearList.bind(this)
 
     this.productPickerRef      = React.createRef()
     this.supplierPickerRef     = React.createRef()
@@ -55,14 +58,17 @@ class ConsignmentEditor extends React.Component {
 
     this.activateLock = React.createRef(false)
 
+    this.fileApi        = props.api.file
     this.consignmentApi = props.api.consignment
+
     this.state = {
-      items              : [],
-      cost               : 0,
-      itemEditorVisible  : false,
-      supplierId         : props.opt.defaultSupplierId || 1,
-      lastUsedCurrencyId : props.opt.defaultCurrencyId || 1,
-      item               : this.emptyItem,
+      items               : [],
+      cost                : 0,
+      itemEditorVisible   : false,
+      supplierId          : props.opt.defaultSupplierId || 1,
+      lastUsedCurrencyId  : props.opt.defaultCurrencyId || 1,
+      item                : this.emptyItem,
+      clearConfirmVisible : false,
     }
     this.t = this.props.t
   }
@@ -78,6 +84,7 @@ class ConsignmentEditor extends React.Component {
         this.setState({
           ...consignment,
           supplierId      : this.props.opt.defaultSupplierId || 1,
+          clearConfirmVisible : false,
         })
       })
   }
@@ -180,6 +187,56 @@ class ConsignmentEditor extends React.Component {
     })
   }
 
+  onWantClearList() {
+    this.setState({
+      clearConfirmVisible: true,
+    })
+  }
+
+  onExportToExcel() {
+    const dt = moment().format("YYYY-MM-DD-HH-ss")
+    return this.fileApi.saveFile("consignment-" + dt + ".xlsx", [ "xls", "xlsx" ])
+      .then(file => {
+        if (file) {
+          return this.consignmentApi
+            .exportToExcel(
+              file,
+              this.state.items,
+              [
+                this.props.opt.logoLine1,
+                this.props.opt.logoLine2,
+                this.props.opt.logoLine3,
+                dt,
+              ]
+            )
+        }
+      })
+  }
+
+  onConfirmClearList() {
+    this.consignmentApi.clearCurrentConsignment()
+      .then(_ => this.reloadCurrentConsignment())
+  }
+
+  clearConfirmDialog() {
+    return (
+      <Modal color="red" size="mini" dimmer="inverted" open onClose={() => this.setState({ clearConfirmVisible: false })}>
+        <Modal.Header>{this.t("clearCurrentConsignment")}</Modal.Header>
+        <Modal.Content>
+          <p>{this.t("clearCurrentConsignmentList")}</p>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={() => this.setState({ clearConfirmVisible: false })}>{this.t("no")}</Button>
+          <Button
+            color={this.props.opt.theme.mainColor}
+            content={this.t("yes")}
+            onClick={this.onConfirmClearList}
+          />
+        </Modal.Actions>
+      </Modal>
+    )
+  }
+
   itemEditor() {
     return (
       <ConsignmentItem
@@ -212,6 +269,16 @@ class ConsignmentEditor extends React.Component {
           { key: "productBarcode", title: this.t("barcode")  ,                             },
           { key: "salePrice"     , title: this.t("salePrice"), align: "right", positive: 1 },
         ]}
+        menu={{
+          header: {
+            title: this.t("currentConsignment"),
+          },
+          items: [
+            { title: this.t("saveToExcel")  , description: this.t("saveToExcelDesc") , icon: "file excel", onClick: this.onExportToExcel },
+            { divider: true },
+            { title: this.t("clearList"), description: this.t("clearListDesc"),        onClick: this.onWantClearList },
+          ]
+        }}
         onOpenRow={this.onOpenItem}
         onDeleteRow={this.onDeleteItem}
         onActivate={this.onActivate}
@@ -283,9 +350,10 @@ class ConsignmentEditor extends React.Component {
           </Grid.Row>
         </Grid>
         {this.state.itemEditorVisible && this.itemEditor()}
+        {this.state.clearConfirmVisible && this.clearConfirmDialog()}
       </Fragment>
     )
   }
 }
 
-export default (withTranslation("consignment_editor.form")(ConsignmentEditor))
+export default (withTranslation("consignment_editor")(ConsignmentEditor))

@@ -9,6 +9,8 @@ import selectConsignmentByProductIdSql  from "./sql/consignment/selectConsignmen
 
 import { groupBy } from "../util"
 
+import X from "xlsx"
+
 export default function initConsignmentApi(db) {
   return {
     productHistory: (productId) => (
@@ -71,6 +73,9 @@ export default function initConsignmentApi(db) {
           return db.exec("rollback")
         })
     },
+    clearCurrentConsignment: () => {
+      return db.exec("delete from currentconsignment")
+    },
     selectConsignmentJournal: (day, all) => {
       return db.select(selectConsignmentsSql, { $all: all, $day: day })
         .then(items => {
@@ -110,6 +115,31 @@ export default function initConsignmentApi(db) {
             return 0
           }
         })
+    },
+    exportToExcel: (file, items, header) => {
+      const hdr = header.map(x => [[ x ]])
+      const data = hdr
+        .concat(
+          [[ "Товар", "Кол-во", "Ед.изм.", "Штрихкод", ]],
+        ).concat(
+          items.map(item => [
+            item.productTitle,
+            item.quantity,
+            item.unitTitle,
+            item.productBarcode,
+          ])
+        )
+      const wb = X.utils.book_new()
+      const ws = {
+        ...(X.utils.aoa_to_sheet(data)),
+        "!ref": `A1:G${data.length+1}`,
+        "!merges": hdr.map((h, idx) => ({
+          s: {c: 0, r: idx},
+          e: {c: 6, r: idx},
+        }))
+      }
+      X.utils.book_append_sheet(wb, ws, "consignment1")
+      X.writeFile(wb, file.path);
     },
   }
 }

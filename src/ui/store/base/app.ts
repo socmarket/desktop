@@ -98,7 +98,7 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage    : "saleJournal",
+  activePage    : "consignmentEditor",
   user          : "admin",
   unlocked      : true,
   authenticated : false,
