@@ -26,7 +26,7 @@ class SaleJournal extends React.Component {
     this.saleCheckApi = props.api.saleCheck
     this.state = {
       total : 0,
-      day   : moment().subtract(0, "days"),
+      day   : moment(),
       all   : false,
       items : [],
     }
@@ -40,7 +40,7 @@ class SaleJournal extends React.Component {
   reloadJournal(day, all) {
     if (day) {
       this.saleCheckApi
-        .selectSaleJournal(day.utc().format("YYYY-MM-DD"), all)
+        .selectSaleJournal(day.format("YYYY-MM-DD"), all)
         .then(items => {
           const total = items.map(d =>
             d.items
@@ -87,6 +87,7 @@ class SaleJournal extends React.Component {
   }
 
   dayPicker() {
+    console.log(this.state.day)
     return (
       <SingleDatePicker
         isOutsideRange={() => false}

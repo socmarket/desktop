@@ -40,7 +40,7 @@ class SaleJournal extends React.Component {
 
   reloadJournal(day, all) {
     this.saleCheckApi
-      .selectSaleJournal(day.utc().format("YYYY-MM-DD"), all)
+      .selectSaleJournal(day.format("YYYY-MM-DD"), all)
       .then(items => {
         const total = items.map(d =>
           d.items
