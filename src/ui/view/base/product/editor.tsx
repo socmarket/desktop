@@ -233,19 +233,6 @@ class ProductEditor extends React.Component {
     )
   }
 
-  categoryList() {
-    return (
-      <Menu vertical fluid>
-        <Menu.Item header>
-          {this.t("categories")}
-        </Menu.Item>
-        <Menu.Item>
-          <Input placeholder={this.t("search")} />
-        </Menu.Item>
-      </Menu>
-    )
-  }
-
   render() {
     return (
       <Fragment>

@@ -1,18 +1,19 @@
-import selectProductByIdSql            from "./sql/product/selectProductById.sql"
-import selectProductBySearchSql        from "./sql/product/selectProductBySearch.sql"
-import selectUnusedBarcodeSql          from "./sql/product/selectUnusedBarcode.sql"
-import insertBarcodeSql                from "./sql/product/insertBarcode.sql"
-import selectProductWithSameBarcodeSql from "./sql/product/selectProductWithSameBarcode.sql"
-import insertProductSql                from "./sql/product/insertProduct.sql"
-import updateProductSql                from "./sql/product/updateProduct.sql"
-import selectIfProductExistsSql        from "./sql/product/selectIfProductExists.sql"
-import importCurrentConsignmentItemSql from "./sql/product/importCurrentConsignmentItem.sql"
-import selectImportedProductSql        from "./sql/product/selectImportedProduct.sql"
-import insertConsignmentPriceSql       from "./sql/product/insertConsignmentPrice.sql"
-import selectProductFlowSql            from "./sql/product/selectProductFlow.sql"
-import insertImportInfoSql             from "./sql/product/insertImportInfo.sql"
-import selectImportHistorySql          from "./sql/product/selectImportHistory.sql"
-import selectProductsForExportSql      from "./sql/product/selectProductsForExport.sql"
+import selectProductByIdSql               from "./sql/product/selectProductById.sql"
+import selectProductBySearchSql           from "./sql/product/selectProductBySearch.sql"
+import selectProductBySearchInCategorySql from "./sql/product/selectProductBySearchInCategory.sql"
+import selectUnusedBarcodeSql             from "./sql/product/selectUnusedBarcode.sql"
+import insertBarcodeSql                   from "./sql/product/insertBarcode.sql"
+import selectProductWithSameBarcodeSql    from "./sql/product/selectProductWithSameBarcode.sql"
+import insertProductSql                   from "./sql/product/insertProduct.sql"
+import updateProductSql                   from "./sql/product/updateProduct.sql"
+import selectIfProductExistsSql           from "./sql/product/selectIfProductExists.sql"
+import importCurrentConsignmentItemSql    from "./sql/product/importCurrentConsignmentItem.sql"
+import selectImportedProductSql           from "./sql/product/selectImportedProduct.sql"
+import insertConsignmentPriceSql          from "./sql/product/insertConsignmentPrice.sql"
+import selectProductFlowSql               from "./sql/product/selectProductFlow.sql"
+import insertImportInfoSql                from "./sql/product/insertImportInfo.sql"
+import selectImportHistorySql             from "./sql/product/selectImportHistory.sql"
+import selectProductsForExportSql         from "./sql/product/selectProductsForExport.sql"
 
 import path from "path"
 import X from "xlsx"
@@ -178,6 +179,19 @@ export default function initProductApi(db) {
         $key2   : key[2],
         $limit  : limit,
         $offset : offset,
+      })
+    },
+    findInCategory: (category, patternRaw, limit = 50, offset = 0) => {
+      const pattern = patternRaw.toLowerCase().trim()
+      const key = pattern.split(" ").concat([ "", "", "" ])
+      return db.select(selectProductBySearchInCategorySql, {
+        $barcode   : patternRaw,
+        $categoryId: category.id,
+        $key0      : key[0],
+        $key1      : key[1],
+        $key2      : key[2],
+        $limit     : limit,
+        $offset    : offset,
       })
     },
     select: ({ id, barcode }) => {

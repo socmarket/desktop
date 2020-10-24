@@ -3,6 +3,7 @@ import CategoryPicker from "View/base/category/picker"
 
 import ProductForm     from "./form"
 import ProductList     from "./list"
+import CategoryEditor  from "../../../base/category/editor"
 
 import { ProductActions } from "Store/base/product"
 
@@ -62,12 +63,14 @@ class ProductEditor extends React.Component {
         categoryId : props.opt.defaultCategoryId,
         ...this.emptyProduct
       },
+      productList: { items: [] },
       formVisible: false,
       search: {
         id: -1,
         pattern: "",
         limit: 30,
         offset: 0,
+        category: { id: -1 },
       },
     }
     this.t = this.props.t
@@ -88,23 +91,23 @@ class ProductEditor extends React.Component {
   }
 
   onFilterChange(ev) {
-    this.setFilter(ev.target.value, this.state.search.limit, this.state.search.offset)
+    this.setFilter(ev.target.value, this.state.search.limit, this.state.search.offset, this.state.search.category)
   }
 
   onNextPage() {
     const lim = this.state.search.limit
     const ofs = this.state.search.offset
-    const cnt = this.props.productList.items.length
+    const cnt = this.state.productList.items.length
     const inc = cnt < lim ? 0 : lim
-    this.setFilter(this.state.search.pattern, lim, ofs + inc)
+    this.setFilter(this.state.search.pattern, lim, ofs + inc, this.state.search.category)
   }
 
   onPrevPage() {
     const lim = this.state.search.limit
     const ofs = this.state.search.offset
-    const rem = this.props.productList.items.length
+    const rem = this.state.productList.items.length
     const inc = ofs < lim ? ofs : lim
-    this.setFilter(this.state.search.pattern, lim, ofs - inc)
+    this.setFilter(this.state.search.pattern, lim, ofs - inc, this.state.search.category)
   }
 
   onExportToExcel() {
@@ -128,12 +131,34 @@ class ProductEditor extends React.Component {
   }
 
   updateList() {
-    this.props.filterProductList(
-        this.state.search.pattern,
-        this.state.search.limit,
-        this.state.search.offset,
-      )
-      .then(_ => this.filterRef.current.focus())
+    if (this.state.search.category.id < 0) {
+      this.productApi
+        .find(
+          this.state.search.pattern,
+          this.state.search.limit,
+          this.state.search.offset,
+        )
+        .then(items => {
+          this.setState({
+            productList: { items: items }
+          })
+        })
+        .then(_ => this.filterRef.current.focus())
+    } else {
+      this.productApi
+        .findInCategory(
+          this.state.search.category,
+          this.state.search.pattern,
+          this.state.search.limit,
+          this.state.search.offset,
+        )
+        .then(items => {
+          this.setState({
+            productList: { items: items },
+          })
+        })
+        .then(_ => this.filterRef.current.focus())
+    }
   }
 
   openProductForm(product, idx) {
@@ -151,13 +176,14 @@ class ProductEditor extends React.Component {
     })
   }
 
-  setFilter(pattern, limit, offset) {
+  setFilter(pattern, limit, offset, category = { id: -1 }) {
     if (this.state.search.id > 0) { clearTimeout(this.state.search.id) }
     this.setState({
       search: {
         pattern: pattern,
         limit: limit,
         offset: offset,
+        category: category,
         id: setTimeout(
           () => {
             clearTimeout(this.state.search.id)
@@ -181,6 +207,10 @@ class ProductEditor extends React.Component {
       }))
   }
 
+  onCategorySelected(category) {
+    this.setFilter(this.state.search.pattern, 30, 0, category)
+  }
+
   form() {
     return (
       <ProductForm
@@ -199,8 +229,9 @@ class ProductEditor extends React.Component {
   list() {
     return (
       <ProductList
-        items={this.props.productList.items}
+        items={this.state.productList.items}
         onProductOpen={this.openProductForm}
+        showCategory={this.state.search.category.id < 0}
       />
     )
   }
@@ -227,7 +258,6 @@ class ProductEditor extends React.Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        {this.state.formVisible && this.form()}
         <Container
           fluid
           style={{
@@ -238,8 +268,23 @@ class ProductEditor extends React.Component {
             marginBottom: 20
           }}
         >
-          {this.list()}
+          <Grid>
+            <Grid.Row> 
+              <Grid.Column width={3}>
+                <CategoryEditor
+                  api={this.props.api}
+                  theme={this.props.theme}
+                  opt={this.props.opt}
+                  onCategorySelected={(c) => this.onCategorySelected(c)}
+                />
+              </Grid.Column>
+              <Grid.Column width={13}>
+                {this.list()}
+              </Grid.Column>
+            </Grid.Row> 
+          </Grid>
         </Container>
+        {this.state.formVisible && this.form()}
       </Fragment>
     )
   }
