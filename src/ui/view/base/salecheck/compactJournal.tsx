@@ -11,6 +11,7 @@ import {
 
 import {
   mround,
+  spacedNum,
 }                    from "Util"
 
 const minib = {
@@ -24,6 +25,7 @@ class SaleJournal extends React.Component {
     super(props)
     this.saleCheckApi = props.api.saleCheck
     this.state = {
+      total : 0,
       day   : moment().subtract(0, "days"),
       all   : false,
       items : [],
@@ -40,8 +42,14 @@ class SaleJournal extends React.Component {
       this.saleCheckApi
         .selectSaleJournal(day.utc().format("YYYY-MM-DD"), all)
         .then(items => {
+          const total = items.map(d =>
+            d.items
+              .map(i => i.saleCheck.cost - i.saleCheck.discount)
+              .reduce((a, b) => a + b, 0)
+          ).reduce((a, b) => a + b, 0)
           this.setState({
-            items: items
+            items: items,
+            total: total,
           })
         })
     }
@@ -102,6 +110,8 @@ class SaleJournal extends React.Component {
             <Menu.Item onClick={() => this.changeDay(yesterday)} active={yesterday.isSame(this.state.day, 'day') && !this.state.all}>{this.t("yesterday")}</Menu.Item>
           </Menu.Menu>
           <Menu.Menu position="right">
+            <Menu.Item>{this.t("total")}</Menu.Item>
+            <Label size="big" color={this.props.opt.theme.mainColor}>{spacedNum(this.state.total)}</Label>
             <Popup content={this.t("prevDay")} trigger= { <Menu.Item onClick={() => this.prevDay()}><Icon name="angle left"  /></Menu.Item> } />
             <Menu.Item fitted="vertically">
               {this.dayPicker()}
