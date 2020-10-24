@@ -193,9 +193,10 @@
     cost: "Сумма",
     barcode: "Штрихкод",
   },
-  "category_listEditor.form":{
-    productGroups:  "Группы товаров",
-    groupsSearch:  "Поиск группы",
+  "category_listEditor" : {
+    productGroups :  "Группы товаров",
+    groupsSearch  :  "Поиск группы",
+    all           :  "Все группы",
   },
   "category_infoEditor.form":{
     name:     "Наименование",

@@ -28,14 +28,11 @@ class CategoryListEditor extends React.Component {
     this.onCreate        = this.onCreate.bind(this)
     this.onUpdate        = this.onUpdate.bind(this)
     this.onKeyDown       = this.onKeyDown.bind(this)
-    this.onGlobalKeyDown = this.onGlobalKeyDown.bind(this)
     this.onPatternChange = this.onPatternChange.bind(this)
 
     this.closeInfoEditor = this.closeInfoEditor.bind(this)
 
     this.tableRef        = React.createRef()
-    this.patternInputRef = React.createRef()
-    this.patternInput    = inputWithRef(this.patternInputRef)
 
     this.categoryApi = props.api.category
     this.state = {
@@ -64,7 +61,17 @@ class CategoryListEditor extends React.Component {
 
   openCategory(category, idx) {
     this.setState({
-      category            : category,
+      category : category,
+    }, () => {
+      if (this.props.onCategorySelected) {
+        this.props.onCategorySelected(category)
+      }
+    })
+  }
+
+  editCategory(category, idx) {
+    this.setState({
+      category : category,
       infoEditorVisible : true,
     })
   }
@@ -73,7 +80,6 @@ class CategoryListEditor extends React.Component {
     this.setState({
       infoEditorVisible : false,
     }, () => {
-      this.patternInputRef.current.focus()
     })
   }
 
@@ -120,17 +126,9 @@ class CategoryListEditor extends React.Component {
           this.onActivate()
         } else {
           const category = this.state.items[this.state.idx]
-          this.openCategory(category ? category : emptyCategory, this.state.idx)
+          this.editCategory(category ? category : emptyCategory, this.state.idx)
         }
         break
-      }
-    }
-  }
-
-  onGlobalKeyDown(ev) {
-    switch (ev.key) {
-      case "Escape": {
-        this.patternInputRef.current.focus()
       }
     }
   }
@@ -157,31 +155,39 @@ class CategoryListEditor extends React.Component {
 
   list() {
     return (
-      <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1}>
-        <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
+      <Menu vertical fluid onKeyDown={this.onKeyDown}>
+        <Menu.Item header>
           <Icon name="sitemap" />
           {this.t("productGroups")}
-        </Header>
-        <Form width={16}>
-          <Form.Group>
-            <Form.Input
-              floated="left"
-              icon="search"
-              placeholder={this.t('groupsSearch')}
-              value={this.state.pattern}
-              control={this.patternInput}
-              onChange={this.onPatternChange}
-            />
-            <Button floated="right" icon="plus" onClick={() => this.openCategory(this.emptyCategory, -1)} />
-          </Form.Group>
-        </Form>
-        <Menu vertical fluid>
+        </Menu.Item>
+        <Menu.Item>
+          <Input
+            icon="search"
+            iconPosition="left"
+            placeholder={this.t('groupsSearch')}
+            value={this.state.pattern}
+            control={this.patternInput}
+            onChange={this.onPatternChange}
+            size="mini"
+            action={
+              <Button icon="plus" onClick={() => this.editCategory(this.emptyCategory, -1)} />
+            }
+          />
+        </Menu.Item>
+        <Menu.Item
+          active={this.state.category.id < 0}
+          onClick={() => this.openCategory(this.emptyCategory, -1)}
+        >
+          {this.t("all")}
+        </Menu.Item>
+        <div style={{ height: "400px", overflowY: "auto" }}>
           {this.state.items.map((category, idx) => (
             <Menu.Item
               key={category.id}
               active={this.state.category.id === category.id}
               color={this.props.theme.mainColor}
               onClick={() => this.openCategory(category, idx)}
+              onDoubleClick={() => this.editCategory(category, idx)}
             >
               {category.title}
               <Label size="large" color={category.balance < 0 ? "red" : "green"}>
@@ -189,8 +195,8 @@ class CategoryListEditor extends React.Component {
               </Label>
             </Menu.Item>
           ))}
-        </Menu>
-      </Segment>
+        </div>
+      </Menu>
     )
   }
 
@@ -204,4 +210,4 @@ class CategoryListEditor extends React.Component {
   }
 }
 
-export default withTranslation("category_listEditor.form")(CategoryListEditor)
+export default withTranslation("category_listEditor")(CategoryListEditor)

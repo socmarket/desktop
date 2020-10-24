@@ -22,19 +22,12 @@ class CategoryEditor extends React.Component {
 
   render() {
     return (
-      <Fragment>
-        <Grid padded className="light-focus">
-          <Grid.Column width={4}>
-            <CategoryListEditor
-              api={this.props.api}
-              theme={this.props.theme}
-              opt={this.props.opt}
-            />
-          </Grid.Column>
-          <Grid.Column width={4}>
-          </Grid.Column>
-        </Grid>
-      </Fragment>
+      <CategoryListEditor
+        api={this.props.api}
+        theme={this.props.theme}
+        opt={this.props.opt}
+        onCategorySelected={this.props.onCategorySelected}
+      />
     )
   }
 }

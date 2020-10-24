@@ -189,9 +189,10 @@
     cost: "Сумма",
     barcode: "Штрихкод",
   },
-  "category_listEditor.form":{
-    productGroups:  "Товарлар группасы",
-    groupsSearch:  "Группа издөө",
+  "category_listEditor" : {
+    productGroups : "Товарлар группасы",
+    groupsSearch  : "Группа издөө",
+    all           : "Бардык группалар",
   },
   "category_infoEditor.form":{
     name:     "Наименование",

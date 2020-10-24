@@ -209,9 +209,10 @@
     cost: "Cost",
     barcode: "Barcode",
   },
-  "category_listEditor.form":{
-    productGroups:  "Product groups",
-    groupsSearch:  "Search group",
+  "category_listEditor" : {
+    productGroups : "Product groups",
+    groupsSearch  : "Search group",
+    all           : "All groups",
   },
   "category_infoEditor.form":{
     name:     "Name",
