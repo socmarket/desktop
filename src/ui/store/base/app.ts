@@ -32,8 +32,6 @@ function auth(pin) {
 
 const loadBg = () => (dispatch, getState) => {
   const { settings: { appMode } } = getState()
-  const baseImg = import("Img/bg-base.jpg")
-  const autoImg = import("Img/bg-auto.jpg")
   switch (appMode) {
     case "base"       : return import("Style/base.css");
     case "auto/parts" : return import("Style/auto.css");
