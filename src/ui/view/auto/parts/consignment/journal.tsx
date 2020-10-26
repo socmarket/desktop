@@ -45,7 +45,7 @@ class ConsignmentJournal extends React.Component {
 
   returnConsignmentItem(id, quantity) {
     this.consignmentApi.returnConsignmentItem(id, quantity)
-      .then(_ => this.reloadJournal())
+      .then(_ => this.reloadJournal(this.state.day, this.state.all))
   }
 
   changeDay(day) {
@@ -54,7 +54,7 @@ class ConsignmentJournal extends React.Component {
         day: day,
         all: false,
       }, () => {
-        this.reloadJournal(day, this.state.false)
+        this.reloadJournal(day, false)
       })
     }
   }

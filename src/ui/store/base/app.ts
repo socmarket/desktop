@@ -2,16 +2,32 @@ import sha256 from 'crypto-js/sha256';
 
 function auth(pin) {
   return function (dispatch, getState, { api }) {
+    const { app: { user }, settings: { cashierPinHash, managerPinHash, adminPinHash } } = getState()
+    const hash = sha256(pin) + ""
+    switch (user) {
+      case "cashier":
+        if (hash === cashierPinHash)
+          return dispatch({
+            type: "APP_AUTH_OK",
+          })
+        break
+      case "manager":
+        if (hash === managerPinHash)
+          return dispatch({
+            type: "APP_AUTH_OK",
+          })
+        break
+      case "admin":
+        if (hash === adminPinHash)
+          return dispatch({
+            type: "APP_AUTH_OK",
+          })
+        break
+    }
+    return dispatch({
+      type: "APP_AUTH_FAIL",
+    })
   }
-}
-
-function setBg(url) {
-  const bg = document.querySelectorAll("#root")[0]
-  console.log(bg)
-  bg.style.backgroundImage = `url(${url.default})`;
-  bg.style.backgroundPosition = "center center";
-  bg.style.backgroundRepeat = "no-repeat";
-  bg.style.backgroundSize = "cover";
 }
 
 const loadBg = () => (dispatch, getState) => {
@@ -98,9 +114,9 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage    : "productEditor",
+  activePage    : "saleCheckEditor",
   user          : "admin",
-  unlocked      : true,
+  unlocked      : false,
   authenticated : false,
   lastError     : "",
   online        : false,

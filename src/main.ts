@@ -47,8 +47,7 @@ function setupUpdater(win) {
     platform = "osx"
   }
 
-  const url = `${UPDATES_HOST}/update/${platform}/${app.getVersion()}/beta/`
-
+  const url = `https://${UPDATES_HOST}/update/${platform}/${app.getVersion()}/beta/`
   autoUpdater.setFeedURL({ url })
 
   setInterval(() => {

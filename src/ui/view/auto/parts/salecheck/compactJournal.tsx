@@ -40,7 +40,7 @@ class SaleJournal extends React.Component {
   reloadJournal(day, all) {
     if (day) {
       this.saleCheckApi
-        .selectSaleJournal(day.format("YYYY-MM-DD"), all)
+        .selectSaleJournal(day.utc().format("YYYY-MM-DD"), all)
         .then(items => {
           const total = items.map(d =>
             d.items
@@ -60,7 +60,7 @@ class SaleJournal extends React.Component {
       day: day,
       all: false,
     }, () => {
-      this.reloadJournal(day, this.state.false)
+      this.reloadJournal(day, false)
     })
   }
 
@@ -83,7 +83,7 @@ class SaleJournal extends React.Component {
   returnSaleCheckItem(id, quantity) {
     this.saleCheckApi
       .returnSaleCheckItem(id, quantity)
-      .then(_ => this.reloadJournal())
+      .then(_ => this.reloadJournal(this.state.day, this.state.all))
   }
 
   dayPicker() {
