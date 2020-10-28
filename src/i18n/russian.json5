@@ -160,12 +160,15 @@
     openingError: "Ошибка открытия",
     currency: "Валюта",
   },
-  "client_jornal.form": {
-    settlementWith: "Расчёт с ",
-    number:          "#",
-    dateTime:        "Дата/Время",
-    amount:          "Сумма",
-    whoToWhom:       "Кто кому",
+  "client_journal" : {
+    settlementWith : "Расчёт с ",
+    number         : "#",
+    dateTime       : "Дата/Время",
+    amount         : "Сумма",
+    whoToWhom      : "Кто кому",
+    moneyOut       : "долг",
+    moneyIn        : "отдал",
+    sale           : "продажа",
   },
   "currency_exchangeRateEditor.form":{
     exchangeRates: "Курсы валют",

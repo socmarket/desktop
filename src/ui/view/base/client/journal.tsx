@@ -127,7 +127,10 @@ class ClientJournal extends React.Component {
       kind         : this.t(item.kind),
     }))
     return (
-      <Segment raised color={this.props.theme.mainColor} onKeyDown={this.onKeyDown} tabIndex={-1} style={{ flex: "1 1 auto", overflow: "auto"}}>
+      <Segment raised color={this.props.theme.mainColor}
+        onKeyDown={this.onKeyDown}
+        tabIndex={-1}
+      >
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
           <Icon name="exchange" />
           {this.t("settlementWith") + this.props.client.name}
@@ -152,30 +155,31 @@ class ClientJournal extends React.Component {
             <Button type="button" icon="minus" onClick={this.onMoneyOut} />
           </Form.Group>
         </Form>
-        <table
-          className="ui compact celled selectable table"
-          ref={this.props.innerRef}
-          tabIndex={1000}
-        >
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell textAlign="center" >{this.t("number")}    </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >{this.t("dateTime")}  </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >{this.t("amount")}    </Table.HeaderCell>
-              <Table.HeaderCell textAlign="center" >{this.t("whoToWhom")} </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            { items.map((item, ridx) => (
-              <Table.Row key={ridx} active={ridx === this.state.idx} onClick={() => this.onRowOpen(item.id, ridx)}>
-                <Table.Cell textAlign="right">{ridx+1}</Table.Cell>
-                <Table.Cell textAlign="left" >{item.registeredAt}</Table.Cell>
-                <Table.Cell textAlign="right">{item.amount}</Table.Cell>
-                <Table.Cell textAlign="left" >{item.kind}</Table.Cell>
+        <div style={{ height: "70vh", overflowY: "auto" }}>
+          <Table
+            className="ui compact celled selectable table"
+            tabIndex={1000}
+          >
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell textAlign="center" >{this.t("number")}    </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center" >{this.t("dateTime")}  </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center" >{this.t("amount")}    </Table.HeaderCell>
+                <Table.HeaderCell textAlign="center" >{this.t("whoToWhom")} </Table.HeaderCell>
               </Table.Row>
-            ))}
-          </Table.Body>
-        </table>
+            </Table.Header>
+            <Table.Body>
+              { items.map((item, ridx) => (
+                <Table.Row key={ridx} active={ridx === this.state.idx} onClick={() => this.onRowOpen(item.id, ridx)}>
+                  <Table.Cell textAlign="right">{ridx+1}</Table.Cell>
+                  <Table.Cell textAlign="left" >{item.registeredAt}</Table.Cell>
+                  <Table.Cell textAlign="right">{item.amount}</Table.Cell>
+                  <Table.Cell textAlign="left" >{item.kind}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
       </Segment>
     )
   }
@@ -185,4 +189,4 @@ class ClientJournal extends React.Component {
   }
 }
 
-export default withTranslation("client_jornal.form"  , { withRef: true })(React.forwardRef((props, ref) => <ClientJournal innerRef={ref} {...props} />))
+export default (withTranslation("client_journal", { withRef: true })(React.forwardRef((props, ref) => <ClientJournal innerRef={ref} {...props} />)))

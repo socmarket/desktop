@@ -206,7 +206,7 @@ class ClientEditor extends React.Component {
             <Button floated="right" icon="plus" onClick={() => this.openClient(this.emptyClient, -1)} />
           </Form.Group>
         </Form>
-        <Menu vertical fluid>
+        <Menu vertical fluid style={{ height: "70vh", overflowY: "auto" }}>
           {this.state.items.map((client, idx) => (
             <Menu.Item
               key={client.id}
@@ -244,7 +244,7 @@ class ClientEditor extends React.Component {
     return (
       <DTable
         titleIcon="cart"
-        title={this.t("chek")`: ${this.state.saleCheck.cost} - ${this.state.saleCheck.cash} - ${this.state.saleCheck.discount}`}
+        title={this.t("chek") + `: ${this.state.saleCheck.cost} - ${this.state.saleCheck.cash} - ${this.state.saleCheck.discount}`}
         color={this.props.theme.mainColor}
         items={this.state.saleCheck.items}
         columns={[
@@ -283,4 +283,4 @@ class ClientEditor extends React.Component {
   }
 }
 
-export default (withTranslation("client_editor.form")(ClientEditor))
+export default withTranslation("client_editor.form")(ClientEditor)
