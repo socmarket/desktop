@@ -21,8 +21,7 @@ from
   salecheck
   left join client on client.id = salecheck.clientId
 where
-  $all 
-  or date(salecheck.soldAt, 'localtime') = $day
+  ($all or date(salecheck.soldAt, 'localtime') = $day) and ($noSaleCheckId or salecheck.id = $saleCheckId)
 order by
   salecheck.soldAt desc
 limit 2000

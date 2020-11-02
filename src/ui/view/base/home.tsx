@@ -12,7 +12,7 @@ import BaseProductEditor      from "View/base/product/editor"
 import BaseProductImporter    from "View/base/product/importer"
 import BaseSaleCheckEditor    from "View/base/salecheck/editor"
 import BaseSaleJournal        from "View/base/salecheck/journal"
-import BaseCompactSaleJournal from "View/base/salecheck/compactJournal"
+import BaseCompactSaleJournal from "View/base/salecheck/journal/compact"
 import BaseConsignmentEditor  from "View/base/consignment/editor"
 import BaseConsignmentJournal from "View/base/consignment/journal"
 

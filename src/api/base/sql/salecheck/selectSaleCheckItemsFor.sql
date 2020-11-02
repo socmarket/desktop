@@ -19,12 +19,15 @@ select
   salecheckitem.currencyId                                 as currencyId,
   product.barcode                                          as barcode,
   product.oemNo                                            as oemNo,
+  product.brand                                            as brand,
   product.title                                            as productTitle,
+  category.title                                           as categoryTitle,
   unit.notation                                            as unitNotation,
   coalesce(ret.quantity / 100.00, 0)                       as retQuantity
 from
   salecheckitem
   left join product on product.id = salecheckitem.productId
+  left join category on category.id = product.categoryId
   left join unit on unit.id = salecheckitem.unitId
   left join (
     select saleCheckItemId, sum(quantity) as quantity

@@ -13,6 +13,7 @@ import { withTranslation } from "react-i18next"
 const sales = [
   "saleCheckEditor",
   "saleJournal",
+  "compactSaleJournal",
 ]
 
 const products = [
@@ -92,15 +93,9 @@ class MainMenu extends React.Component {
               />
               <Dropdown.Item
                 icon="list layout"
-                active={this.props.app.activePage === "saleJournal"}
-                onClick={() => this.props.openSaleJournal()}
-                text={this.t("salesList")}
-              />
-              <Dropdown.Item
-                icon="list layout"
                 active={this.props.app.activePage === "compactSaleJournal"}
                 onClick={() => this.props.openCompactSaleJournal()}
-                text={this.t("salesListCompact")}
+                text={this.t("salesList")}
               />
             </Dropdown.Menu>
           </Dropdown>

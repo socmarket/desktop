@@ -83,17 +83,18 @@ export default function initSaleCheckApi(db) {
           return db.exec("rollback")
         })
     },
-    selectSaleJournal: (day, all) => {
+    selectSaleJournal: async (day, all, saleCheck) => {
+      const saleChecks = await db.select(selectSaleChecksSql, { $all: all, $day: day, $noSaleCheckId: true, $saleCheckId: 0 });
+      const filtered   = await db.select(selectSaleChecksSql, { $all: all, $day: day, $noSaleCheckId: !saleCheck, $saleCheckId: saleCheck ? saleCheck.saleCheck.id : 0 });
+      const withItems  = await Promise.all(
+                           filtered.map(saleCheck =>
+                             db.select(selectSaleCheckItemsForSql, { $saleCheckId: saleCheck.id })
+                               .then(items => ({ saleCheck: saleCheck, items: items }))
+                         ));
+      return { list: saleChecks, items: withItems }
+    },
+    selectSaleCheckList: (day, all) => {
       return db.select(selectSaleChecksSql, { $all: all, $day: day })
-        .then(items => {
-          return Promise.all(
-            items.map(saleCheck =>
-              db.select(selectSaleCheckItemsForSql, { $saleCheckId: saleCheck.id })
-                .then(items => ({ saleCheck: saleCheck, items: items }))
-            )
-          )
-        })
-        .then(items => groupBy(x => x.saleCheck.soldAtDate, items, x => x.saleCheck.soldAt))
     },
     returnSaleCheckItem: (saleCheckItemId, quantity) => {
       return db.selectOne("select id, quantity from salecheckreturn where saleCheckItemId = ?", [ saleCheckItemId ])
