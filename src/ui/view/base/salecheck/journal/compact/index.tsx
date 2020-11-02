@@ -91,12 +91,6 @@ class SaleJournal extends React.Component {
     })
   }
 
-  returnSaleCheckItem(id, quantity) {
-    this.saleCheckApi
-      .returnSaleCheckItem(id, quantity)
-      .then(_ => this.reloadJournal())
-  }
-
   dayPicker() {
     return (
       <SingleDatePicker
@@ -132,6 +126,7 @@ class SaleJournal extends React.Component {
               theme={this.props.theme}
               items={this.state.items}
               height={this.state.containerHeight}
+              onReturnItem={() => this.reloadJournal()}
             />
           </div>
         </Grid.Column>
