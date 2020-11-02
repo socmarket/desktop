@@ -38,7 +38,7 @@ class SaleCheckList extends React.Component {
       >
         <Header as="h4" style={{ marginBottom: 0 }}>{saleCheck.soldAtDate} {saleCheck.soldAtTime}</Header>
         {maxText(saleCheck.clientName, 15)}
-        <strong style={{ float: "right" }}>{saleCheck.cost}</strong>
+        <strong style={{ float: "right" }}>{spacedNum(saleCheck.cost - saleCheck.discount)} ({spacedNum(saleCheck.discount)})</strong>
       </Menu.Item>
     )
   }
