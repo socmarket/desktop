@@ -6,7 +6,7 @@ import { withTranslation } from "react-i18next"
 import {
   Container, Grid, Form, Input, Table,
   Button, Segment, Image, Label, Menu,
-  Popup, Icon,
+  Popup, Icon, Dimmer,
 } from "semantic-ui-react"
 
 import {
@@ -16,6 +16,34 @@ import {
 import ItemList      from "./itemList"
 import SaleCheckList from "./saleCheckList"
 
+import BaseSaleCheckEditor      from "View/base/salecheck/editor"
+import AutoPartsSaleCheckEditor from "View/auto/parts/salecheck/editor"
+
+class SaleCheckEditor extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    switch (this.props.opt.appMode) {
+      case "base"      : return (<BaseSaleCheckEditor     
+        api={this.props.api}
+        theme={this.props.opt.theme}
+        opt={this.props.opt}
+        saleCheckId={this.props.saleCheckId}
+        onCancel={this.props.onCancel}
+        onSave={this.props.onSave}
+      />)
+      case "auto/parts": return (<AutoPartsSaleCheckEditor
+        api={this.props.api}
+        theme={this.props.opt.theme}
+        opt={this.props.opt}
+        saleCheckId={this.props.saleCheckId}
+        onCancel={this.props.onCancel}
+        onSave={this.props.onSave}
+      />)
+    }
+  }
+}
 
 class SaleJournal extends React.Component {
 
@@ -28,8 +56,9 @@ class SaleJournal extends React.Component {
       all   : false,
       list  : [],
       items : [],
-      selectedSaleCheck: null,
+      selectedSaleCheck: false,
       containerHeight: 500,
+      showSaleCheckEditor: false,
     }
     this.t = this.props.t
   }
@@ -42,16 +71,20 @@ class SaleJournal extends React.Component {
   }
 
   reloadJournal() {
-    this.saleCheckApi
-      .selectSaleJournal(this.state.day.utc().format("YYYY-MM-DD"), this.state.all, this.state.selectedSaleCheck)
-      .then(({ list, items }) => {
-        const total = items.map(i => i.saleCheck.cost - i.saleCheck.discount).reduce((a, b) => a + b, 0)
-        this.setState({
-          list : list,
-          items: items,
-          total: total,
+    this.setState({
+      showSaleCheckEditor: false,
+    }, () => {
+      this.saleCheckApi
+        .selectSaleJournal(this.state.day.utc().format("YYYY-MM-DD"), this.state.all, this.state.selectedSaleCheck)
+        .then(({ list, items }) => {
+          const total = items.map(i => i.saleCheck.cost - i.saleCheck.discount).reduce((a, b) => a + b, 0)
+          this.setState({
+            list : list,
+            items: items,
+            total: total,
+          })
         })
-      })
+    })
   }
 
   onSaleCheckSelected(saleCheck, items) {
@@ -63,6 +96,7 @@ class SaleJournal extends React.Component {
   onNoSaleCheckSelected() {
     this.setState({
       selectedSaleCheck: null,
+      showSaleCheckEditor: false,
     }, () => this.reloadJournal())
   }
 
@@ -101,6 +135,24 @@ class SaleJournal extends React.Component {
         onFocusChange={({focused}) => this.setState({ dayPickerFocused: focused })}
       />
     )
+  }
+
+  openSaleCheck() {
+    this.saleCheckApi
+      .openSaleCheck(this.state.selectedSaleCheck.saleCheck.id)
+      .then(_ => {
+        this.setState({
+          showSaleCheckEditor: true,
+        })
+      })
+  }
+
+  hideSaleCheckEditor() {
+    this.setState({
+      showSaleCheckEditor: false,
+    }, () => {
+      this.reloadJournal()
+    })
   }
 
   renderWithList() {
@@ -151,16 +203,27 @@ class SaleJournal extends React.Component {
           </Menu.Menu>
           <Menu.Menu position="right">
             <Menu.Item>{this.t("total")}</Menu.Item>
-            <Label size="big" color={this.props.opt.theme.mainColor}>{spacedNum(this.state.total)}</Label>
+            <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.total)}</Button></Menu.Item>
+            { this.state.selectedSaleCheck && 
+              <Menu.Item onClick={() => this.openSaleCheck()} icon="edit"></Menu.Item>
+            }
             <Popup content={this.t("prevDay")} trigger= { <Menu.Item onClick={() => this.prevDay()}><Icon name="angle left"  /></Menu.Item> } />
-            <Menu.Item fitted="vertically">
-              {this.dayPicker()}
-            </Menu.Item>
+            <Menu.Item fitted="vertically">{this.dayPicker()}</Menu.Item>
             <Popup content={this.t("nextDay")} trigger= { <Menu.Item onClick={() => this.nextDay()}><Icon name="angle right" /></Menu.Item> } />
           </Menu.Menu>
         </Menu>
         <div style={{ flex: "1 1 auto", margin: 15, marginTop: 0 }} id="salecheck-container">
-          {this.renderWithList()}
+          { this.state.showSaleCheckEditor &&
+            <SaleCheckEditor
+              api={this.props.api}
+              theme={this.props.opt.theme}
+              opt={this.props.opt}
+              saleCheckId={this.state.selectedSaleCheck.saleCheck.id}
+              onCancel={() => this.hideSaleCheckEditor()}
+              onSave={() => this.hideSaleCheckEditor()}
+            />
+          }
+          { this.state.showSaleCheckEditor || this.renderWithList() }
         </div>
       </Fragment>
     )

@@ -7,7 +7,7 @@ insert into salecheckitem(
   unitId,
   currencyId
 ) select 
-  $saleCheckId,
+  $currentSaleCheckId,
   productId,
   quantity,
   price,
@@ -15,3 +15,5 @@ insert into salecheckitem(
   unitId,
   currencyId
 from currentsalecheck
+where
+  saleCheckId = $saleCheckId

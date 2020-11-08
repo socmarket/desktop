@@ -4,13 +4,15 @@ insert into currentsalecheck(
   price,
   originalPrice,
   unitId,
-  currencyId
+  currencyId,
+  saleCheckId
 ) values (
   $productId,
   round($quantity * 100),
   round($price * 100),
   round($price * 100),
   $unitId,
-  $currencyId
+  $currencyId,
+  $saleCheckId
 )
-on conflict(productId) do update set quantity = excluded.quantity + currentsalecheck.quantity
+on conflict(productId, saleCheckId) do update set quantity = excluded.quantity + currentsalecheck.quantity

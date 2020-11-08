@@ -240,6 +240,7 @@
     saleCheckList   : "Продажи",
     allItems        : "Все чеки вместе",
     category        : "Группа",
+    modifySaleCheck : "Изменить",
   },
   "salecheck_itemEditor.form":{
     price:    "Цена",
@@ -289,6 +290,9 @@
     closeReceipt: "Закрыть чек",
     currentReceipt: "Текущий чек",
     client: "Клиент",
+    receiptNo       : "Чек #",
+    saveChanges     : "Сохранить изменения",
+    cancelSave      : "Отмена",
   },
   "product_picker.form":  {
     noPrice:  " (нет цены)",

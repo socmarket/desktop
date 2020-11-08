@@ -1,10 +1,12 @@
-import selectCurrentSaleCheckItemsSql from "./sql/salecheck/selectCurrentSaleCheckItems.sql"
-import insertCurrentSaleCheckItemSql  from "./sql/salecheck/insertCurrentSaleCheckItem.sql"
-import updateCurrentSaleCheckItemSql  from "./sql/salecheck/updateCurrentSaleCheckItem.sql"
-import deleteCurrentSaleCheckItemSql  from "./sql/salecheck/deleteCurrentSaleCheckItem.sql"
-import closeCurrentSaleCheckSql       from "./sql/salecheck/closeCurrentSaleCheck.sql"
-import selectSaleChecksSql            from "./sql/salecheck/selectSaleChecks.sql"
-import selectSaleCheckItemsForSql     from "./sql/salecheck/selectSaleCheckItemsFor.sql"
+import selectSaleCheckSql         from "./sql/salecheck/selectSaleCheck.sql"
+import selectSaleCheckItemsSql    from "./sql/salecheck/selectSaleCheckItems.sql"
+import insertSaleCheckItemSql     from "./sql/salecheck/insertSaleCheckItem.sql"
+import updateSaleCheckItemSql     from "./sql/salecheck/updateSaleCheckItem.sql"
+import deleteSaleCheckItemSql     from "./sql/salecheck/deleteSaleCheckItem.sql"
+import openSaleCheckSql           from "./sql/salecheck/openSaleCheck.sql"
+import closeSaleCheckSql          from "./sql/salecheck/closeSaleCheck.sql"
+import selectSaleChecksSql        from "./sql/salecheck/selectSaleChecks.sql"
+import selectSaleCheckItemsForSql from "./sql/salecheck/selectSaleCheckItemsFor.sql"
 
 import { groupBy } from "../util"
 
@@ -12,44 +14,69 @@ import X from "xlsx"
 
 export default function initSaleCheckApi(db) {
   return {
-    selectCurrentSaleCheck: () => (
-      db.select(selectCurrentSaleCheckItemsSql)
-        .then(rows => {
-          if (rows) {
-            const cost  = rows.map(x => x.cost ).reduce((a, b) => a + b, 0)
-            const total = rows.map(x => x.total).reduce((a, b) => a + b, 0)
-            return {
-              cost     : cost,
-              discount : cost - total,
-              total    : total,
-              items    : rows,
+    openSaleCheck: (saleCheckId) => {
+      return db
+        .exec("delete from currentsalecheck where saleCheckId = $saleCheckId", { $saleCheckId: saleCheckId })
+        .then(_ => db.exec(openSaleCheckSql, { $saleCheckId: saleCheckId }))
+    },
+    selectSaleCheck: (saleCheckId) => {
+      function selectItems() {
+        return db.select(selectSaleCheckItemsSql, { $saleCheckId: saleCheckId })
+          .then(rows => {
+            if (rows) {
+              const cost  = rows.map(x => x.cost ).reduce((a, b) => a + b, 0)
+              const total = rows.map(x => x.total).reduce((a, b) => a + b, 0)
+              return {
+                cost     : cost,
+                discount : cost - total,
+                total    : total,
+                items    : rows,
+              }
+            } else {
+              return {
+                cost     : 0,
+                discount : 0,
+                total    : 0,
+                items    : [],
+              }
             }
-          } else {
-            return {
-              cost     : 0,
-              discount : 0,
-              total    : 0,
-              items    : [],
-            }
-          }
-        })
-    ),
-    insertCurrentSaleCheckItem: (item) => {
-      return db.exec(insertCurrentSaleCheckItemSql, {
+          })
+      }
+      if (saleCheckId < 0) {
+        return selectItems()
+      } else {
+        return db
+          .selectOne(selectSaleCheckSql, { $id: saleCheckId })
+          .then(({ clientId, cash, discount, soldAt, soldAtDate, soldAtTime }) => {
+            return selectItems().then(items => ({
+              ...items,
+              clientId: clientId,
+              cash: cash,
+              extraDiscount: discount,
+              soldAt: soldAt,
+              soldAtDate: soldAtDate,
+              soldAtTime: soldAtTime,
+            }))
+          })
+      }
+    },
+    insertSaleCheckItem: (item) => {
+      return db.exec(insertSaleCheckItemSql, {
         $productId     : item.productId,
         $quantity      : item.quantity,
         $price         : item.price,
         $unitId        : 1,
         $currencyId    : 1,
+        $saleCheckId   : item.saleCheckId,
       })
     },
-    deleteCurrentSaleCheckItem: (item) => {
-      return db.exec(deleteCurrentSaleCheckItemSql, {
+    deleteSaleCheckItem: (item) => {
+      return db.exec(deleteSaleCheckItemSql, {
         $id : item.id
       })
     },
-    updateCurrentSaleCheckItem: (item) => (
-      db.exec(updateCurrentSaleCheckItemSql, {
+    updateSaleCheckItem: (item) => (
+      db.exec(updateSaleCheckItemSql, {
         $id         : item.id,
         $productId  : item.productId,
         $quantity   : item.quantity,
@@ -58,30 +85,57 @@ export default function initSaleCheckApi(db) {
         $currencyId : item.currencyId,
       })
     ),
-    clearCurrentSaleCheck: () => {
-      return db.exec("delete from currentsalecheck")
+    clearSaleCheck: (saleCheckId) => {
+      return db.exec("delete from currentsalecheck where saleCheckId = $saleCheckId", { $saleCheckId: saleCheckId })
     },
-    closeCurrentSaleCheck: ({ total, extraDiscount, cash, clientId }) => {
+    closeSaleCheck: ({ total, extraDiscount, cash, clientId, saleCheckId }) => {
       const change = +cash - (total - extraDiscount)
-      return Promise.resolve()
-        .then(_ => db.exec("begin"))
-        .then(_ => db.exec("insert into salecheck(cash, discount, change, clientId) values(?, ?, ?, ?)", [
-          cash * 100,
-          extraDiscount * 100,
-          change * 100,
-          clientId
-        ]))
-        .then(_ => db.selectOne("select id as saleCheckId from salecheck where id in (select max(id) from salecheck)"))
-        .then(({ saleCheckId }) => {
-          return db.exec(closeCurrentSaleCheckSql, { $saleCheckId: saleCheckId })
-            .then(_ => db.exec("update salecheck set closed = true where id = ?", [ saleCheckId ]))
-            .then(_ => db.exec("delete from currentsalecheck"))
-        })
-        .then(_ => db.exec("commit"))
-        .catch(err => {
-          console.log(err)
-          return db.exec("rollback")
-        })
+      function updateSaleCheck() {
+        return Promise.resolve()
+          .then(_ => db.exec("begin"))
+          .then(_ => db.exec("update salecheck set cash = ?, discount = ?, change = ?, clientId =? where id = ?", [
+            cash * 100,
+            extraDiscount * 100,
+            change * 100,
+            clientId,
+            saleCheckId
+          ]))
+          .then(_ => db.exec("delete from salecheckitem where saleCheckId = ?", [ saleCheckId ]))
+          .then(_ => db.exec(closeSaleCheckSql, { $saleCheckId: saleCheckId, $currentSaleCheckId: saleCheckId }))
+          .then(_ => db.exec("update salecheck set closed = true where id = ?", [ saleCheckId ]))
+          .then(_ => db.exec("delete from currentsalecheck where saleCheckId = ?", [ saleCheckId ]))
+          .then(_ => db.exec("commit"))
+          .catch(err => {
+            console.log(err)
+            return db.exec("rollback")
+          })
+      }
+      function createSaleCheck() {
+        return Promise.resolve()
+          .then(_ => db.exec("begin"))
+          .then(_ => db.exec("insert into salecheck(cash, discount, change, clientId) values(?, ?, ?, ?)", [
+            cash * 100,
+            extraDiscount * 100,
+            change * 100,
+            clientId
+          ]))
+          .then(_ => db.selectOne("select id as newSaleCheckId from salecheck where id in (select max(id) from salecheck)"))
+          .then(({ newSaleCheckId }) => {
+            return db.exec(closeSaleCheckSql, { $saleCheckId: -1, $currentSaleCheckId: newSaleCheckId })
+              .then(_ => db.exec("update salecheck set closed = true where id = ?", [ newSaleCheckId ]))
+              .then(_ => db.exec("delete from currentsalecheck where saleCheckId = -1"))
+          })
+          .then(_ => db.exec("commit"))
+          .catch(err => {
+            console.log(err)
+            return db.exec("rollback")
+          })
+      }
+      if (saleCheckId < 0) {
+        return createSaleCheck()
+      } else {
+        return updateSaleCheck()
+      }
     },
     selectSaleJournal: async (day, all, saleCheck) => {
       const saleChecks = await db.select(selectSaleChecksSql, { $all: all, $day: day, $noSaleCheckId: true, $saleCheckId: 0 });
