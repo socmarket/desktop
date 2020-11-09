@@ -104,6 +104,8 @@ class SaleJournal extends React.Component {
     this.setState({
       day: day,
       all: false,
+      selectedSaleCheck: null,
+      showSaleCheckEditor: false,
     }, () => {
       this.reloadJournal()
     })
@@ -120,6 +122,8 @@ class SaleJournal extends React.Component {
   showAll() {
     this.setState({
       all: true,
+      selectedSaleCheck: null,
+      showSaleCheckEditor: false,
     }, () => {
       this.reloadJournal()
     })
