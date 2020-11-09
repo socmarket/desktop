@@ -48,7 +48,7 @@ const asDateBadge = (date, color) => (
 )
 
 const spacedNum = (x) => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-const maxText = (x, maxN) => x.toString().substr(0, maxN - 2) + ".."
+const maxText = (x, maxN) => x ? x.toString().substr(0, maxN - 2) + ".." : ""
 
 export {
   mround,

@@ -10,14 +10,12 @@ import {
 }                    from "Util"
 
 import React, { Fragment } from "react"
-import { connect } from "react-redux"
-import { Translation } from 'react-i18next'
 import {
-  Header, Grid, Table, Form, Input, Select,
+  Header, Grid, Form, Input,
   Button, Segment, Icon, Modal,
 } from "semantic-ui-react"
 import moment from "moment"
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next"
 
 class SaleCheckEditor extends React.Component {
 
@@ -80,25 +78,34 @@ class SaleCheckEditor extends React.Component {
       clientId            : props.opt.defaultClientId || 1,
       item                : this.emptyItem,
       clearConfirmVisible : false,
+      saleCheckId         : this.props.saleCheckId || -1,
     }
     this.t = this.props.t
   }
 
   componentDidMount() {
-    this.reloadCurrentSaleCheck()
+    this.reloadSaleCheck()
       .then(_ => this.productPickerRef.current.focus())
   }
 
-  reloadCurrentSaleCheck() {
-    return this.saleCheckApi.selectCurrentSaleCheck()
+  reloadSaleCheck() {
+    return this.saleCheckApi
+      .selectSaleCheck(this.state.saleCheckId)
       .then(saleCheck => {
-        this.setState({
-          ...saleCheck,
-          cash                : "",
-          extraDiscount       : 0,
-          clientId            : this.props.opt.defaultClientId || 1,
-          clearConfirmVisible : false,
-        })
+        if (this.state.saleCheckId < 0) {
+          this.setState({
+            ...saleCheck,
+            cash                : "",
+            extraDiscount       : 0,
+            clientId            : this.props.opt.defaultClientId || 1,
+            clearConfirmVisible : false,
+          })
+        } else {
+          this.setState({
+            ...saleCheck,
+            clearConfirmVisible : false,
+          })
+        }
       })
   }
 
@@ -111,12 +118,13 @@ class SaleCheckEditor extends React.Component {
       .then(priceRow => priceRow ? priceRow.price : 0)
       .then(price => {
         this.saleCheckApi
-          .insertCurrentSaleCheckItem({
-            productId  : product.id,
-            quantity   : 1,
-            price      : price,
+          .insertSaleCheckItem({
+            saleCheckId : this.state.saleCheckId,
+            productId   : product.id,
+            quantity    : 1,
+            price       : price,
           })
-          .then(_ => this.reloadCurrentSaleCheck())
+          .then(_ => this.reloadSaleCheck())
       })
   }
 
@@ -174,9 +182,20 @@ class SaleCheckEditor extends React.Component {
     } else if ((this.state.cash + "").length === 0) {
       this.cashInputRef.current.focus()
     } else {
-      this.saleCheckApi.closeCurrentSaleCheck(this.state)
-        .then(_ => this.reloadCurrentSaleCheck())
+      this.saleCheckApi.closeSaleCheck(this.state, this.state.saleCheckId)
+        .then(_ => this.reloadSaleCheck())
         .then(_ => this.productPickerRef.current.focus())
+        .then(_ => {
+          if (this.props.onSave) {
+            this.props.onSave()
+          }
+        })
+    }
+  }
+
+  onCancel() {
+    if (this.props.onCancel) {
+      this.props.onCancel()
     }
   }
 
@@ -189,8 +208,8 @@ class SaleCheckEditor extends React.Component {
 
   onDeleteItem(item, idx) {
     this.saleCheckApi
-      .deleteCurrentSaleCheckItem(item)
-      .then(_ => this.reloadCurrentSaleCheck())
+      .deleteSaleCheckItem(item)
+      .then(_ => this.reloadSaleCheck())
   }
 
   onItemEditorClose() {
@@ -203,7 +222,7 @@ class SaleCheckEditor extends React.Component {
     this.setState({
       itemEditorVisible: false,
     }, () => {
-      this.reloadCurrentSaleCheck()
+      this.reloadSaleCheck()
         .then(_ => this.tableRef.current.focus())
     })
   }
@@ -257,8 +276,8 @@ class SaleCheckEditor extends React.Component {
   }
 
   onConfirmClearCheck() {
-    this.saleCheckApi.clearCurrentSaleCheck()
-      .then(_ => this.reloadCurrentSaleCheck())
+    this.saleCheckApi.clearSaleCheck(this.state.saleCheckId)
+      .then(_ => this.reloadSaleCheck())
   }
 
   clearConfirmDialog() {
@@ -303,14 +322,14 @@ class SaleCheckEditor extends React.Component {
         color={this.props.theme.mainColor}
         items={this.state.items}
         columns={[
-          { key: "productTitle"  , title: this.t("product")       ,                             },
-          { key: "originalPrice" , title: this.t("originalPrice") , align: "right"              },
-          { key: "price"         , title: this.t("price")         , align: "right", positive: 1 },
-          { key: "quantity"      , title: this.t("quantity")      , align: "right", positive: 1 },
-          { key: "unitTitle"     , title: this.t("unitTitle")     ,                             },
-          { key: "cost"          , title: this.t("cost")          , align: "right"              },
-          { key: "total"         , title: this.t("totalWithtDiscount")  , align: "right", positive: 1 },
-          { key: "productBarcode", title: this.t("barcode")       ,                             },
+          { key: "productTitle"  , title: this.t("product")            ,                             },
+          { key: "originalPrice" , title: this.t("originalPrice")      , align: "right"              },
+          { key: "price"         , title: this.t("price")              , align: "right", positive: 1 },
+          { key: "quantity"      , title: this.t("quantity")           , align: "right", positive: 1 },
+          { key: "unitTitle"     , title: this.t("unitTitle")          ,                             },
+          { key: "cost"          , title: this.t("cost")               , align: "right"              },
+          { key: "total"         , title: this.t("totalWithtDiscount") , align: "right", positive: 1 },
+          { key: "productBarcode", title: this.t("barcode")            ,                             },
         ]}
         menu={{
           header: {
@@ -335,8 +354,12 @@ class SaleCheckEditor extends React.Component {
     return (
       <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
-          <Icon name="clipboard list" />
-          {this.t("currentReceipt")}
+          {this.state.saleCheckId < 0 && this.t("currentReceipt")}
+          {this.state.saleCheckId > 0 && this.t("receiptNo") + this.state.saleCheckId}
+          {this.state.saleCheckId > 0 && <Fragment>
+            <br />
+            {this.state.soldAtDate} {this.state.soldAtTime}
+          </Fragment>}
         </Header>
         <Grid padded>
           <Grid.Row>
@@ -397,7 +420,14 @@ class SaleCheckEditor extends React.Component {
               control={this.cashInput}
             />
           </Form.Group>
-          <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{this.t("closeReceipt")} (Shift + Enter)</Button>
+          { this.state.saleCheckId > 0 &&
+            <Button floated="left" onClick={() => this.onCancel()}>
+              {this.t("cancelSave")}
+            </Button>
+          }
+          <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>
+            {this.state.saleCheckId < 0 ? this.t("closeReceipt") : this.t("saveChanges")} (Shift + Enter)
+          </Button>
         </Form>
       </Segment>
     )

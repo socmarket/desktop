@@ -71,7 +71,7 @@ class SaleCheckItem extends React.Component {
 
   onUpdate() {
     this.saleCheckApi
-      .updateCurrentSaleCheckItem(this.state)
+      .updateSaleCheckItem(this.state)
       .then(_ => {
         if (this.state.originalPrice < this.state.price) {
           return this.priceApi.setPrice(this.state)
