@@ -67,6 +67,7 @@ export default async function migrate(db) {
     { key: "20200809A.ts", fun: require("./steps/20200809A.ts").default },
     { key: "20200903A.ts", fun: require("./steps/20200903A.ts").default },
     { key: "20201104A.ts", fun: require("./steps/20201104A.ts").default },
+    { key: "20201110A.ts", fun: require("./steps/20201110A.ts").default },
   ];
   const steps = files.sort((a, b) => a.key.localeCompare(b.key))
   return init(db, steps);

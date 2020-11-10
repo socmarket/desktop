@@ -2,6 +2,8 @@ import selectSaleCheckSql         from "./sql/salecheck/selectSaleCheck.sql"
 import selectSaleCheckItemsSql    from "./sql/salecheck/selectSaleCheckItems.sql"
 import insertSaleCheckItemSql     from "./sql/salecheck/insertSaleCheckItem.sql"
 import updateSaleCheckItemSql     from "./sql/salecheck/updateSaleCheckItem.sql"
+import setReturnSaleCheckIdSql    from "./sql/salecheck/setReturnSaleCheckId.sql"
+import updateSaleCheckReturnsSql  from "./sql/salecheck/updateSaleCheckReturns.sql"
 import deleteSaleCheckItemSql     from "./sql/salecheck/deleteSaleCheckItem.sql"
 import openSaleCheckSql           from "./sql/salecheck/openSaleCheck.sql"
 import closeSaleCheckSql          from "./sql/salecheck/closeSaleCheck.sql"
@@ -100,10 +102,12 @@ export default function initSaleCheckApi(db) {
             clientId,
             saleCheckId
           ]))
+          .then(_ => db.exec(setReturnSaleCheckIdSql, { $saleCheckId: saleCheckId }))
           .then(_ => db.exec("delete from salecheckitem where saleCheckId = ?", [ saleCheckId ]))
           .then(_ => db.exec(closeSaleCheckSql, { $saleCheckId: saleCheckId, $currentSaleCheckId: saleCheckId }))
           .then(_ => db.exec("update salecheck set closed = true where id = ?", [ saleCheckId ]))
           .then(_ => db.exec("delete from currentsalecheck where saleCheckId = ?", [ saleCheckId ]))
+          .then(_ => db.exec(updateSaleCheckReturnsSql, { $saleCheckId: saleCheckId }))
           .then(_ => db.exec("commit"))
           .catch(err => {
             console.log(err)
