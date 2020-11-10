@@ -283,4 +283,4 @@ class ClientEditor extends React.Component {
   }
 }
 
-export default withTranslation("client_editor.form")(ClientEditor)
+export default withTranslation("clientEditor")(ClientEditor)

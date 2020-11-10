@@ -150,4 +150,4 @@ class CurrencyInfoEditor extends React.Component {
   }
 }
 
-export default (withTranslation("currency_infoEditor.form")(CurrencyInfoEditor))
+export default (withTranslation("currencyForm")(CurrencyInfoEditor))

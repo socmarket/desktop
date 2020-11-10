@@ -109,4 +109,4 @@ class ItemList extends React.Component {
 
 }
 
-export default (withTranslation("salecheck_journal")(ItemList))
+export default (withTranslation("saleCheckJournal")(ItemList))

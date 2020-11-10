@@ -125,7 +125,7 @@ class UnitInfoEditor extends React.Component {
   render() {
     const header =
       this.state.id ?
-        (this.state.id > 0 ? this.unitDesc() : this.t("new_unit_registration")) :
+        (this.state.id > 0 ? this.unitDesc() : this.t("newUnitRegistration")) :
         this.t("opening_error")
     return (
       <Modal
@@ -145,4 +145,4 @@ class UnitInfoEditor extends React.Component {
   }
 }
 
-export default withTranslation("unit_infoEditor.form")(UnitInfoEditor)
+export default withTranslation("unitForm")(UnitInfoEditor)

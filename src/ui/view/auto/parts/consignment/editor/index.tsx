@@ -242,9 +242,9 @@ class ConsignmentEditor extends React.Component {
   clearConfirmDialog() {
     return (
       <Modal color="red" size="mini" dimmer="inverted" open onClose={() => this.setState({ clearConfirmVisible: false })}>
-        <Modal.Header>{this.t("clearConsignment")}</Modal.Header>
+        <Modal.Header>{this.t("clearConsignmentQ")}</Modal.Header>
         <Modal.Content>
-          <p>{this.t("clearConsignmentList")}</p>
+          <p>{this.t("clearConsignmentQDesc")}</p>
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={() => this.setState({ clearConfirmVisible: false })}>{this.t("no")}</Button>
@@ -297,7 +297,7 @@ class ConsignmentEditor extends React.Component {
           items: [
             { title: this.t("saveToExcel")  , description: this.t("saveToExcelDesc") , icon: "file excel", onClick: this.onExportToExcel },
             { divider: true },
-            { title: this.t("clearList"), description: this.t("clearListDesc"),        onClick: this.onWantClearList },
+            { title: this.t("clearConsignment"), description: this.t("clearConsignmentDesc"),        onClick: this.onWantClearList },
           ]
         }}
         onOpenRow={this.onOpenItem}
@@ -315,7 +315,7 @@ class ConsignmentEditor extends React.Component {
           {this.state.consignmentId > 0 && this.t("consignmentNo") + this.state.consignmentId}
           {this.state.consignmentId > 0 && <Fragment>
             <br />
-            {this.state.consignmentAtDate} {this.state.consignmentAtTime}
+            {this.state.acceptedAtDate} {this.state.acceptedAtTime}
           </Fragment>}
         </Header>
         <Grid padded>
@@ -349,7 +349,7 @@ class ConsignmentEditor extends React.Component {
             </Button>
           }
           <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>
-            {this.state.consignmentId < 0 ? this.t("closeReceipt") : this.t("saveChanges")} (Shift + Enter)
+            {this.state.consignmentId < 0 ? this.t("acceptConsignment") : this.t("saveChanges")} (Shift + Enter)
           </Button>
         </Form>
       </Segment>
@@ -388,4 +388,4 @@ class ConsignmentEditor extends React.Component {
   }
 }
 
-export default (withTranslation("consignment_editor")(ConsignmentEditor))
+export default (withTranslation("consignmentEditor")(ConsignmentEditor))

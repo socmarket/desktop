@@ -212,4 +212,4 @@ class SaleCheckItem extends React.Component {
   }
 }
 
-export default (withTranslation("salecheck_itemEditor.form")(SaleCheckItem))
+export default (withTranslation("saleCheckItemEditor")(SaleCheckItem))

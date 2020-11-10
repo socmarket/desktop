@@ -240,4 +240,4 @@ class SaleJournal extends React.Component {
 
 }
 
-export default (withTranslation("salecheck_journal")(SaleJournal))
+export default (withTranslation("saleCheckJournal")(SaleJournal))

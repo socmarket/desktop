@@ -228,4 +228,4 @@ class SupplierEditor extends React.Component {
   }
 }
 
-export default withTranslation("supplier_editor.form")(SupplierEditor)
+export default withTranslation("supplierEditor")(SupplierEditor)

@@ -3,14 +3,14 @@ import MainMenu from "./menu"
 import AutoPartsProductEditor      from "View/auto/parts/product/editor"
 import AutoPartsProductImporter    from "View/auto/parts/product/importer"
 import AutoPartsSaleCheckEditor    from "View/auto/parts/salecheck/editor"
-import AutoPartsCompactSaleJournal from "View/auto/parts/salecheck/journal/compact"
+import AutoPartsSaleCheckJournal   from "View/auto/parts/salecheck/journal"
 import AutoPartsConsignmentEditor  from "View/auto/parts/consignment/editor"
 import AutoPartsConsignmentJournal from "View/auto/parts/consignment/journal"
 
 import BaseProductEditor      from "View/base/product/editor"
 import BaseProductImporter    from "View/base/product/importer"
 import BaseSaleCheckEditor    from "View/base/salecheck/editor"
-import BaseCompactSaleJournal from "View/base/salecheck/journal/compact"
+import BaseSaleCheckJournal   from "View/base/salecheck/journal"
 import BaseConsignmentEditor  from "View/base/consignment/editor"
 import BaseConsignmentJournal from "View/base/consignment/journal"
 
@@ -65,14 +65,14 @@ class SaleCheckEditor extends React.Component {
   }
 }
 
-class CompactSaleJournal extends React.Component {
+class SaleCheckJournal extends React.Component {
   constructor(props) {
     super(props)
   }
   render() {
     switch (this.props.opt.appMode) {
-      case "base"      : return (<BaseCompactSaleJournal      api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
-      case "auto/parts": return (<AutoPartsCompactSaleJournal api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+      case "base"      : return (<BaseSaleCheckJournal      api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+      case "auto/parts": return (<AutoPartsSaleCheckJournal api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
     }
   }
 }
@@ -106,8 +106,8 @@ const ViewMap = {
   "productImporter"    : (props) => <ProductImporter    api={props.api} theme={props.opt.theme} opt={props.opt} />,
 
   "saleCheckEditor"    : (props) => <SaleCheckEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,
-  "compactSaleJournal" : (props) => <CompactSaleJournal api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "consignmentEditor"  : (props) => <ConsignmentEditor  api={props.api} theme={props.opt.theme} opt={props.opt} />,
+  "saleCheckJournal"   : (props) => <SaleCheckJournal   api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "consignmentJournal" : (props) => <ConsignmentJournal api={props.api} theme={props.opt.theme} opt={props.opt} />,
 
   "baseClientEditor"    : (props) => <BaseClientEditor    api={props.api} theme={props.opt.theme} opt={props.opt} />,

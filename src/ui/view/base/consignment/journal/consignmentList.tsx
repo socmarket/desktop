@@ -60,4 +60,4 @@ class ConsignmentList extends React.Component {
 
 }
 
-export default (withTranslation("consignment_journal")(ConsignmentList))
+export default (withTranslation("consignmentJournal")(ConsignmentList))

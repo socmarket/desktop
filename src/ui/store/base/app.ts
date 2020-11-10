@@ -48,10 +48,7 @@ const AppActions = {
     type: "APP_OPEN_SALE_CHECK_EDITOR",
   }),
   openSaleJournal: () => ({
-    type: "APP_OPEN_SALE_JOURNAL",
-  }),
-  openCompactSaleJournal: () => ({
-    type: "APP_OPEN_COMPACT_SALE_JOURNAL",
+    type: "APP_OPEN_SALE_CHECK_JOURNAL",
   }),
   openConsignmentEditor: () => ({
     type: "APP_OPEN_CONSIGNMENT_EDITOR",
@@ -127,10 +124,8 @@ function AppReducer (state = {
       return Object.assign({}, state, { activePage: "productImporter" })
     case "APP_OPEN_SALE_CHECK_EDITOR":
       return Object.assign({}, state, { activePage: "saleCheckEditor" })
-    case "APP_OPEN_SALE_JOURNAL":
-      return Object.assign({}, state, { activePage: "saleJournal" })
-    case "APP_OPEN_COMPACT_SALE_JOURNAL":
-      return Object.assign({}, state, { activePage: "compactSaleJournal" })
+    case "APP_OPEN_SALE_CHECK_JOURNAL":
+      return Object.assign({}, state, { activePage: "saleCheckJournal" })
     case "APP_OPEN_CONSIGNMENT_EDITOR":
       return Object.assign({}, state, { activePage: "consignmentEditor" })
     case "APP_OPEN_CONSIGNMENT_JOURNAL":

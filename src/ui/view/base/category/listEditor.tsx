@@ -210,4 +210,4 @@ class CategoryListEditor extends React.Component {
   }
 }
 
-export default withTranslation("category_listEditor")(CategoryListEditor)
+export default withTranslation("categoryList")(CategoryListEditor)

@@ -235,4 +235,4 @@ class ConsignmentJournal extends React.Component {
 
 }
 
-export default (withTranslation("consignment_journal")(ConsignmentJournal))
+export default (withTranslation("consignmentJournal")(ConsignmentJournal))

@@ -210,4 +210,4 @@ class PriceEditor extends React.Component {
   }
 }
 
-export default (withTranslation("price_editor.form")(PriceEditor))
+export default (withTranslation("priceEditor")(PriceEditor))

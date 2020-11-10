@@ -295,4 +295,4 @@ class ConsignmentItem extends React.Component {
   }
 }
 
-export default (withTranslation("consignment_itemEditor.form")(ConsignmentItem))
+export default (withTranslation("consignmentItemEditor")(ConsignmentItem))

@@ -206,4 +206,4 @@ class CurrencyListEditor extends React.Component {
   }
 }
 
-export default (withTranslation("currency_listEditor.form")(CurrencyListEditor))
+export default (withTranslation("currencyList")(CurrencyListEditor))

@@ -283,9 +283,9 @@ class SaleCheckEditor extends React.Component {
   clearConfirmDialog() {
     return (
       <Modal color="red" size="mini" dimmer="inverted" open onClose={() => this.setState({ clearConfirmVisible: false })}>
-        <Modal.Header>{this.t("clearChek")}</Modal.Header>
+        <Modal.Header>{this.t("clearCheckQ")}</Modal.Header>
         <Modal.Content>
-          <p>{this.t("clearCart")}</p>
+          <p>{this.t("clearCheckQDesc")}</p>
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={() => this.setState({ clearConfirmVisible: false })}>{this.t("no")}</Button>
@@ -337,9 +337,9 @@ class SaleCheckEditor extends React.Component {
           },
           items: [
             { title: this.t("printCheck")   , description: ""                         , icon: "print"     , onClick: this.onPrintCheck },
-            { title: this.t("saveToExcel")  , description: this.t("saveToExcelDiscr") , icon: "file excel", onClick: this.onExportToExcel },
+            { title: this.t("saveToExcel")  , description: this.t("saveToExcelDesc") , icon: "file excel", onClick: this.onExportToExcel },
             { divider: true },
-            { title: this.t("clearChek"), description: this.t("clearChekDiscr"),        onClick: this.onWantClearCheck },
+            { title: this.t("clearCheck")   , description: this.t("clearCheckDesc")                       , onClick: this.onWantClearCheck },
           ]
         }}
         onOpenRow={this.onOpenItem}
@@ -465,4 +465,4 @@ class SaleCheckEditor extends React.Component {
   }
 }
 
-export default (withTranslation("salecheck_editor.form")(SaleCheckEditor))
+export default (withTranslation("saleCheckEditor")(SaleCheckEditor))

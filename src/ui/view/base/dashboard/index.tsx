@@ -338,4 +338,4 @@ class Dashboard extends React.Component {
 
 }
 
-export default (withTranslation("dashboard_index.form")(Dashboard))
+export default (withTranslation("dashboard")(Dashboard))

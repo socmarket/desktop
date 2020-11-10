@@ -204,4 +204,4 @@ class UnitListEditor extends React.Component {
   }
 }
 
-export default withTranslation("unit_listEditor.form")(UnitListEditor)
+export default withTranslation("unitList")(UnitListEditor)

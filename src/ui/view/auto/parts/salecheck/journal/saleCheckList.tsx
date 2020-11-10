@@ -60,4 +60,4 @@ class SaleCheckList extends React.Component {
 
 }
 
-export default (withTranslation("salecheck_journal")(SaleCheckList))
+export default (withTranslation("saleCheckJournal")(SaleCheckList))

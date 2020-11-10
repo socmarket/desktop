@@ -393,4 +393,4 @@ class ProductForm extends React.Component {
   }
 }
 
-export default (withTranslation("product_form.form")(ProductForm))
+export default (withTranslation("productForm")(ProductForm))

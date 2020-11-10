@@ -157,4 +157,4 @@ class ClientInfoEditor extends React.Component {
   }
 }
 
-export default withTranslation("currency_exchangeRateEditor.form")(ClientInfoEditor)
+export default withTranslation("clientForm")(ClientInfoEditor)

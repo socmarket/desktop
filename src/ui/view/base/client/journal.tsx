@@ -189,4 +189,4 @@ class ClientJournal extends React.Component {
   }
 }
 
-export default (withTranslation("client_journal", { withRef: true })(React.forwardRef((props, ref) => <ClientJournal innerRef={ref} {...props} />)))
+export default (withTranslation("clientJournal", { withRef: true })(React.forwardRef((props, ref) => <ClientJournal innerRef={ref} {...props} />)))

@@ -179,4 +179,4 @@ const stateMap = (state) => {
   }
 }
 
-export default connect(stateMap, { ...SettingsActions, ...AppActions })(withTranslation("settings_service.form")(SettingsEditor))
+export default connect(stateMap, { ...SettingsActions, ...AppActions })(withTranslation("settingsService")(SettingsEditor))
