@@ -52,6 +52,7 @@ class SaleJournal extends React.Component {
     this.saleCheckApi = props.api.saleCheck
     this.state = {
       total : 0,
+      discount : 0,
       day   : moment(),
       all   : false,
       list  : [],
@@ -78,10 +79,12 @@ class SaleJournal extends React.Component {
         .selectSaleJournal(this.state.day.utc().format("YYYY-MM-DD"), this.state.all, this.state.selectedSaleCheck)
         .then(({ list, items }) => {
           const total = items.map(i => i.saleCheck.cost - i.saleCheck.discount).reduce((a, b) => a + b, 0)
+          const discount = items.map(i => i.saleCheck.discount).reduce((a, b) => a + b, 0)
           this.setState({
             list : list,
             items: items,
             total: total,
+            discount: discount,
           })
         })
     })
@@ -208,6 +211,8 @@ class SaleJournal extends React.Component {
           <Menu.Menu position="right">
             <Menu.Item>{this.t("total")}</Menu.Item>
             <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.total)}</Button></Menu.Item>
+            <Menu.Item>{this.t("discount")}</Menu.Item>
+            <Menu.Item><Button>{spacedNum(this.state.discount)}</Button></Menu.Item>
             { this.state.selectedSaleCheck && 
               <Menu.Item onClick={() => this.openSaleCheck()} icon="edit"></Menu.Item>
             }
