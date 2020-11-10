@@ -183,7 +183,7 @@ class MainMenu extends React.Component {
         <Menu.Menu position="right">
           <Menu.Item>
             <Icon name="paint brush" />
-            <Dropdown text={this.t("paintBrush")}>
+            <Dropdown>
               <Dropdown.Menu>
                 { Object.keys(this.props.opt.themes).map(name => (
                   <Dropdown.Item
@@ -198,20 +198,17 @@ class MainMenu extends React.Component {
           </Menu.Item>
           <Menu.Item>
             <Icon name="language" />
-            <Dropdown text={this.t("languageTitle")}>
+            <Dropdown>
               <Dropdown.Menu>
                 <Dropdown.Item
-                  icon=""
                   onClick={() => this.props.changeLanguage("ru")}
                   text="Русский"
                 />
                 <Dropdown.Item
-                  icon=""
                   onClick={() => this.props.changeLanguage("en")}
                   text="English"
                 />
                 <Dropdown.Item
-                  icon=""
                   onClick={() => this.props.changeLanguage("ky")}
                   text="Кыргызча"
                 />
