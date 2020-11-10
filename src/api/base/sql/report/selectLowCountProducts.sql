@@ -24,7 +24,7 @@ from
       ) as inQuantity,
       (select coalesce(sum(quantity) / 100.00, 0)
         from currentsalecheck
-        where productId = t.productId
+        where productId = t.productId and saleCheckId = -1
       ) as outReservedQuantity
     from
       (

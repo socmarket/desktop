@@ -31,7 +31,7 @@ from
       (select
         coalesce(round(sum(quantity) / 100.00, 2), 0)
         from currentsalecheck
-        where productId = product.id
+        where productId = product.id and saleCheckId = -1
       ) as outReservedQuantity,
       (select
         coalesce(round(price.price / 100.00, 2), 0.0) as price
