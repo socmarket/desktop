@@ -18,7 +18,6 @@ from
   consignment
   left join supplier on supplier.id = consignment.supplierId
 where
-  $all 
-  or date(consignment.acceptedAt, 'localtime') = $day
+  ($all or date(consignment.acceptedAt, 'localtime') = $day) and ($noConsignmentId or consignment.id = $consignmentId)
 order by
   consignment.acceptedAt desc

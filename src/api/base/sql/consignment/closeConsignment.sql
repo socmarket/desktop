@@ -6,10 +6,12 @@ insert into consignmentitem(
   unitId,
   currencyId
 ) select 
-  $consignmentId,
+  $currentConsignmentId,
   productId,
   quantity,
   price,
   unitId,
   currencyId
 from currentconsignment
+where
+  consignmentId = $consignmentId

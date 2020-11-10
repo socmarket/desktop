@@ -69,23 +69,32 @@ class ConsignmentEditor extends React.Component {
       lastUsedCurrencyId  : props.opt.defaultCurrencyId || 1,
       item                : this.emptyItem,
       clearConfirmVisible : false,
+      consignmentId       : this.props.consignmentId || -1,
     }
     this.t = this.props.t
   }
 
   componentDidMount() {
-    this.reloadCurrentConsignment()
+    this.reloadConsignment()
       .then(_ => this.productPickerRef.current.focus())
   }
 
-  reloadCurrentConsignment() {
-    return this.consignmentApi.selectCurrentConsignment()
+  reloadConsignment() {
+    return this.consignmentApi
+      .selectConsignment(this.state.consignmentId)
       .then(consignment => {
-        this.setState({
-          ...consignment,
-          supplierId      : this.props.opt.defaultSupplierId || 1,
-          clearConfirmVisible : false,
-        })
+        if (this.state.consignmentId < 0) {
+          this.setState({
+            ...consignment,
+            supplierId      : this.props.opt.defaultSupplierId || 1,
+            clearConfirmVisible : false,
+          })
+        } else {
+          this.setState({
+            ...consignment,
+            clearConfirmVisible : false,
+          })
+        }
       })
   }
 
@@ -94,14 +103,15 @@ class ConsignmentEditor extends React.Component {
       .then(price => {
         console.log(price)
         return this.consignmentApi
-          .insertCurrentConsignmentItem({
-            productId  : product.id,
-            quantity   : 1,
-            price      : price,
-            currencyId : this.state.lastUsedCurrencyId,
-            unitId     : product.unitId,
+          .insertConsignmentItem({
+            consignmentId : this.state.consignmentId,
+            productId     : product.id,
+            quantity      : 1,
+            price         : price,
+            currencyId    : this.state.lastUsedCurrencyId,
+            unitId        : product.unitId,
           })
-          .then(_ => this.reloadCurrentConsignment())
+          .then(_ => this.reloadConsignment())
           .then(_ => {
             const idx = this.state.items.findIndex(x => x.productId === product.id)
             return this.setState({
@@ -152,9 +162,14 @@ class ConsignmentEditor extends React.Component {
     } else if (!this.state.supplierId || this.state.supplierId < 0) {
       this.supplierPickerRef.current.focus()
     } else {
-      this.consignmentApi.closeCurrentConsignment(this.state)
-        .then(_ => this.reloadCurrentConsignment())
+      this.consignmentApi.closeConsignment(this.state)
+        .then(_ => this.reloadConsignment())
         .then(_ => this.productPickerRef.current.focus())
+        .then(_ => {
+          if (this.props.onSave) {
+            this.props.onSave()
+          }
+        })
     }
   }
 
@@ -167,8 +182,8 @@ class ConsignmentEditor extends React.Component {
 
   onDeleteItem(item, idx) {
     this.consignmentApi
-      .deleteCurrentConsignmentItem(item)
-      .then(_ => this.reloadCurrentConsignment())
+      .deleteConsignmentItem(item)
+      .then(_ => this.reloadConsignment())
   }
 
   onItemEditorClose() {
@@ -182,7 +197,7 @@ class ConsignmentEditor extends React.Component {
       itemEditorVisible  : false,
       lastUsedCurrencyId : item.currencyId,
     }, () => {
-      this.reloadCurrentConsignment()
+      this.reloadConsignment()
         .then(_ => this.productPickerRef.current.focus())
     })
   }
@@ -214,16 +229,22 @@ class ConsignmentEditor extends React.Component {
   }
 
   onConfirmClearList() {
-    this.consignmentApi.clearCurrentConsignment()
-      .then(_ => this.reloadCurrentConsignment())
+    this.consignmentApi.clearConsignment(this.state.consignmentId)
+      .then(_ => this.reloadConsignment())
+  }
+
+  onCancel() {
+    if (this.props.onCancel) {
+      this.props.onCancel()
+     }
   }
 
   clearConfirmDialog() {
     return (
       <Modal color="red" size="mini" dimmer="inverted" open onClose={() => this.setState({ clearConfirmVisible: false })}>
-        <Modal.Header>{this.t("clearCurrentConsignment")}</Modal.Header>
+        <Modal.Header>{this.t("clearConsignment")}</Modal.Header>
         <Modal.Content>
-          <p>{this.t("clearCurrentConsignmentList")}</p>
+          <p>{this.t("clearConsignmentList")}</p>
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={() => this.setState({ clearConfirmVisible: false })}>{this.t("no")}</Button>
@@ -290,8 +311,12 @@ class ConsignmentEditor extends React.Component {
     return (
       <Segment textAlign="left" color={this.props.theme.mainColor} raised clearing>
         <Header as="h2" dividing color={this.props.theme.mainColor} textAlign="center">
-          <Icon name="warehouse" />
-          {this.t("warehouseAcceptance")}
+          {this.state.consignmentId < 0 && this.t("warehouseAcceptance")}
+          {this.state.consignmentId > 0 && this.t("consignmentNo") + this.state.consignmentId}
+          {this.state.consignmentId > 0 && <Fragment>
+            <br />
+            {this.state.consignmentAtDate} {this.state.consignmentAtTime}
+          </Fragment>}
         </Header>
         <Grid padded>
           <Grid.Row>
@@ -318,7 +343,14 @@ class ConsignmentEditor extends React.Component {
               onPick={this.onSupplierChange}
             />
           </Form.Field>
-          <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>{this.t("acceptConsignment")} (Shift + Enter)</Button>
+          { this.state.consignmentId > 0 &&
+            <Button floated="left" onClick={() => this.onCancel()}>
+              {this.t("cancelSave")}
+            </Button>
+          }
+          <Button floated="right" color={this.props.theme.mainColor} onClick={this.onActivate}>
+            {this.state.consignmentId < 0 ? this.t("closeReceipt") : this.t("saveChanges")} (Shift + Enter)
+          </Button>
         </Form>
       </Segment>
     )

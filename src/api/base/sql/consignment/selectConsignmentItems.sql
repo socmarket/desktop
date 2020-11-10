@@ -39,3 +39,5 @@ from
   left join currency on currency.id = c.currencyId
   left join product  on product.id  = c.productId
   left join consignmentprice on consignmentprice.productId = product.id
+where
+  consignmentId = $consignmentId
