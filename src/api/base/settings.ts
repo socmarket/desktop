@@ -3,7 +3,7 @@ import upsertOptionSql from "./sql/settings/upsertOption.sql"
 import sha256 from 'crypto-js/sha256';
 
 const defaultSettings = {
-  appMode                           : "auto/parts",
+  appMode                           : "base",
   defaultClientId                   : 1,
   defaultSupplierId                 : 1,
   defaultCurrencyId                 : 1,
