@@ -51,12 +51,14 @@ class SaleJournal extends React.Component {
     super(props)
     this.saleCheckApi = props.api.saleCheck
     this.state = {
-      total : 0,
-      discount : 0,
-      day   : moment(),
-      all   : false,
-      list  : [],
-      items : [],
+      itemCount  : 0,
+      totalCount : 0,
+      totalCost  : 0,
+      discount   : 0,
+      day        : moment(),
+      all        : false,
+      list       : [],
+      items      : [],
       selectedSaleCheck: false,
       containerHeight: 500,
       showSaleCheckEditor: false,
@@ -78,13 +80,19 @@ class SaleJournal extends React.Component {
       this.saleCheckApi
         .selectSaleJournal(this.state.day.utc().format("YYYY-MM-DD"), this.state.all, this.state.selectedSaleCheck)
         .then(({ list, items }) => {
-          const total = items.map(i => i.saleCheck.cost - i.saleCheck.discount).reduce((a, b) => a + b, 0)
+          const itemCount = items.map(i => i.items.length).reduce((a, b) => a + b, 0)
+          const totalCount = items
+            .map(i => i.items.map(ii => ii.quantity - ii.retQuantity).reduce((a, b) => a + b, 0))
+            .reduce((a, b) => a + b, 0)
+          const totalCost = items.map(i => i.saleCheck.cost - i.saleCheck.discount).reduce((a, b) => a + b, 0)
           const discount = items.map(i => i.saleCheck.discount).reduce((a, b) => a + b, 0)
           this.setState({
-            list : list,
-            items: items,
-            total: total,
-            discount: discount,
+            list       : list,
+            items      : items,
+            itemCount  : itemCount,
+            totalCount : totalCount,
+            totalCost  : totalCost,
+            discount   : discount,
           })
         })
     })
@@ -209,8 +217,12 @@ class SaleJournal extends React.Component {
             <Menu.Item onClick={() => this.changeDay(yesterday)} active={yesterday.isSame(this.state.day, "day") && !this.state.all}>{this.t("yesterday")}</Menu.Item>
           </Menu.Menu>
           <Menu.Menu position="right">
-            <Menu.Item>{this.t("total")}</Menu.Item>
-            <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.total)}</Button></Menu.Item>
+            <Menu.Item>{this.t("itemCount")}</Menu.Item>
+            <Menu.Item><Button>{spacedNum(this.state.itemCount)}</Button></Menu.Item>
+            <Menu.Item>{this.t("totalCount")}</Menu.Item>
+            <Menu.Item><Button>{spacedNum(this.state.totalCount)}</Button></Menu.Item>
+            <Menu.Item>{this.t("totalCost")}</Menu.Item>
+            <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.totalCost)}</Button></Menu.Item>
             <Menu.Item>{this.t("discount")}</Menu.Item>
             <Menu.Item><Button>{spacedNum(this.state.discount)}</Button></Menu.Item>
             { this.state.selectedSaleCheck && 
@@ -240,4 +252,4 @@ class SaleJournal extends React.Component {
 
 }
 
-export default (withTranslation("salecheck_journal")(SaleJournal))
+export default (withTranslation("saleCheckJournal")(SaleJournal))

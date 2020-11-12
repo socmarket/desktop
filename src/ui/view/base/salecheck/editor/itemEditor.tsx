@@ -92,7 +92,13 @@ class SaleCheckItem extends React.Component {
   form() {
     return (
       <Form size="large" width={16} onKeyDown={this.onKeyDown}>
-        <Message header={this.state.productBarcode} content={this.state.productTitle + ": " + this.state.productBrand} />
+        <Message>
+          <Header>
+            {this.state.productTitle} / {this.state.categoryTitle}
+          </Header>
+          {this.state.productBrand} <br />
+          {this.state.productBarcode}
+        </Message>
         <Form.Group>
           <Form.Input
             autoFocus

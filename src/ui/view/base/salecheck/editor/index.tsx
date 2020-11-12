@@ -465,4 +465,4 @@ class SaleCheckEditor extends React.Component {
   }
 }
 
-export default (withTranslation("salecheckEditor")(SaleCheckEditor))
+export default (withTranslation("saleCheckEditor")(SaleCheckEditor))

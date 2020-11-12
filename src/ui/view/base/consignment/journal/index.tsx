@@ -51,11 +51,13 @@ class ConsignmentJournal extends React.Component {
     super(props)
     this.consignmentApi = props.api.consignment
     this.state = {
-      total : 0,
-      day   : moment(),
-      all   : false,
-      list  : [],
-      items : [],
+      itemCount  : 0,
+      totalCount : 0,
+      totalCost  : 0,
+      day        : moment(),
+      all        : false,
+      list       : [],
+      items      : [],
       selectedConsignment: false,
       containerHeight: 500,
       showConsignmentEditor: false,
@@ -77,11 +79,17 @@ class ConsignmentJournal extends React.Component {
       this.consignmentApi
         .selectConsignmentJournal(this.state.day.utc().format("YYYY-MM-DD"), this.state.all, this.state.selectedConsignment)
         .then(({ list, items }) => {
-          const total = items.map(i => i.consignment.cost).reduce((a, b) => a + b, 0)
+          const itemCount = items.map(i => i.items.length).reduce((a, b) => a + b, 0)
+          const totalCount = items
+            .map(i => i.items.map(ii => ii.quantity - ii.retQuantity).reduce((a, b) => a + b, 0))
+            .reduce((a, b) => a + b, 0)
+          const totalCost = items.map(i => i.consignment.cost).reduce((a, b) => a + b, 0)
           this.setState({
-            list : list,
-            items: items,
-            total: total,
+            list       : list,
+            items      : items,
+            itemCount  : itemCount,
+            totalCount : totalCount,
+            totalCost  : totalCost,
           })
         })
     })
@@ -206,8 +214,12 @@ class ConsignmentJournal extends React.Component {
             <Menu.Item onClick={() => this.changeDay(yesterday)} active={yesterday.isSame(this.state.day, "day") && !this.state.all}>{this.t("yesterday")}</Menu.Item>
           </Menu.Menu>
           <Menu.Menu position="right">
-            <Menu.Item>{this.t("total")}</Menu.Item>
-            <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.total)}</Button></Menu.Item>
+            <Menu.Item>{this.t("itemCount")}</Menu.Item>
+            <Menu.Item><Button>{spacedNum(this.state.itemCount)}</Button></Menu.Item>
+            <Menu.Item>{this.t("totalCount")}</Menu.Item>
+            <Menu.Item><Button>{spacedNum(this.state.totalCount)}</Button></Menu.Item>
+            <Menu.Item>{this.t("totalCost")}</Menu.Item>
+            <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.totalCost)}</Button></Menu.Item>
             { this.state.selectedConsignment && 
               <Menu.Item onClick={() => this.openConsignment()} icon="edit"></Menu.Item>
             }
