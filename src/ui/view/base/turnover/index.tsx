@@ -44,7 +44,7 @@ class Turnover extends React.Component {
   turnover() {
     const data = this.state.turnover
     return (
-      <Table celled structured>
+      <Table celled structured selectable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell rowSpan={2} textAlign="center">{this.t("group")}</Table.HeaderCell>

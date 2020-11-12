@@ -299,7 +299,10 @@ class Dashboard extends React.Component {
           </Table.Header>
           <Table.Body>
             { data.map(item => (
-              <Table.Row key={item.productId}>
+              <Table.Row key={item.productId}
+                {...(item.remainingQuantity < 0 ? {negative: true} : {})}
+                {...(item.remainingQuantity == 0 ? {warning: true} : {})}
+              >
                 <Table.Cell>{item.categoryTitle}</Table.Cell>
                 <Table.Cell>{item.title}</Table.Cell>
                 <Table.Cell textAlign="right">{item.outQuantity}</Table.Cell>

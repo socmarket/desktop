@@ -27,7 +27,10 @@ class ProductList extends React.Component {
         </Table.Header>
         <Table.Body>
           { this.props.items.map((product, idx) => (
-            <Table.Row key={product.id} onClick={() => this.props.onProductOpen(product, idx)}>
+            <Table.Row key={product.id} onClick={() => this.props.onProductOpen(product, idx)}
+              {...(product.quantity < 0 ? {negative: true} : {})}
+              {...(product.quantity == 0 ? {warning: true} : {})}
+            >
               <Table.Cell textAlign="right">{idx + this.props.offset + 1}</Table.Cell>
               <Table.Cell style={{whiteSpace: "nowrap"}}>{product.title}</Table.Cell>
               <Table.Cell>{product.brand}</Table.Cell>
