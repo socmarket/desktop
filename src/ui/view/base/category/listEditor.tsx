@@ -154,6 +154,9 @@ class CategoryListEditor extends React.Component {
   }
 
   list() {
+    const totalProductCount = this.state.items
+      .map(c => c.productCount)
+      .reduce((a, b) => a + b, 0)
     return (
       <Menu vertical fluid onKeyDown={this.onKeyDown}>
         <Menu.Item header>
@@ -179,6 +182,9 @@ class CategoryListEditor extends React.Component {
           onClick={() => this.openCategory(this.emptyCategory, -1)}
         >
           {this.t("all")}
+          <Label color={this.props.opt.theme.mainColor}>
+            {totalProductCount}
+          </Label>
         </Menu.Item>
         <div style={{ height: "400px", overflowY: "auto" }}>
           {this.state.items.map((category, idx) => (
