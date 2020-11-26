@@ -1,4 +1,15 @@
 {
+  "auth" : {
+    connecting       : "Ожидание сети...",
+    authToContinue   : "Для работы с облаком необходима регистрация",
+    msisdn           : "Номер телефона",
+    sendCode         : "Выслать код",
+    resendCode       : "Выслать код повторно",
+    canSendCodeAfter : "Запросить код повторно можно через ",
+    seconds          : "секунд",
+    codeReqError     : "Ошибка запроса кода",
+    code             : "Код из СМС",
+  },
   "door" : {
     cashier      : "Кассир",
     manager      : "Менеджер",

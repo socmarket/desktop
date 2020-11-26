@@ -211,6 +211,10 @@ class MainMenu extends React.Component {
                   onClick={() => this.props.changeLanguage("ky")}
                   text="Кыргызча"
                 />
+                <Dropdown.Item
+                  onClick={() => this.props.changeLanguage("tr")}
+                  text="Türkçe"
+                />
               </Dropdown.Menu>
             </Dropdown>
           </Menu.Item>

@@ -4,6 +4,7 @@ import { SettingsActions } from "Store/base/settings"
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import { Button, Form, Grid, Header, Image, Message, Segment, Label, Table } from "semantic-ui-react"
+import { withTranslation } from "react-i18next"
 
 
 class Auth extends React.Component {
@@ -15,6 +16,7 @@ class Auth extends React.Component {
     this.onSendCode     = this.onSendCode.bind(this)
     this.onVerify       = this.onVerify.bind(this)
     this.onTick         = this.onTick.bind(this)
+    this.t = this.props.t
     this.serverApi   = props.api.server
     this.settingsApi = props.api.settings
     this.state = {
@@ -108,9 +110,7 @@ class Auth extends React.Component {
           <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>SOC</Label>
           <Label color="green" size="big" style={{ padding: 5, margin: 0 }}>Market</Label>
           <Label color={theme.mainColor}  size="big" style={{ padding: 5, margin: 0 }}>2C</Label>
-          <Header as="h2" color="teal" textAlign="center">
-            Зарегистрируйтесь чтобы продолжить работу
-          </Header>
+          <Header as="h2" color="teal" textAlign="center">{this.t("authToContinue")}</Header>
           <Form size="large" error={this.state.error}>
             { !this.state.codeSent &&
               <Fragment>
@@ -118,17 +118,17 @@ class Auth extends React.Component {
                   fluid
                   icon="phone"
                   iconPosition="left"
-                  placeholder="Телефон"
+                  placeholder={this.t("msisdn")}
                   type="input"
                   value={this.state.msisdn}
                   onChange={this.onMsisdnChange}
                 />
                 { online &&
                   <Button disabled={this.state.msisdn === "" || this.state.waiting} onClick={this.onSendCode}>
-                    Отправить код
+                    {this.t("sendCode")}
                   </Button>
                 }
-                { !online && <Button disabled>Ожидание сети...</Button> }
+                { !online && <Button disabled>{this.t("connecting")}</Button> }
               </Fragment>
             }
             { this.state.codeSent &&
@@ -137,7 +137,7 @@ class Auth extends React.Component {
                   fluid
                   icon="code"
                   iconPosition="left"
-                  placeholder="Код из СМС"
+                  placeholder={this.t("code")}
                   type="input"
                   value={this.state.code}
                   onChange={this.onCodeChange}
@@ -146,14 +146,15 @@ class Auth extends React.Component {
                 { online &&
                   <Button
                     disabled={this.state.msisdn === "" || this.state.waiting}
-                    onClick={this.onSendCode} >Отправить код еще раз
+                    onClick={this.onSendCode} >
+                    {this.t("resendCode")}
                   </Button>
                 }
-                { !online && <Button disabled>Ожидание сети...</Button> }
+                { !online && <Button disabled>{this.t("connecting")}</Button> }
               </Fragment>
             }
-            { this.state.waiting && <Message>Запросить код повторно можно через {this.state.timeout} секунд.</Message> }
-            { this.state.error && <Message error>Ошибка запроса кода</Message> }
+            { this.state.waiting && <Message>{this.t("canSendCodeAfter")} {this.state.timeout} {this.t("seconds")}.</Message> }
+            { this.state.error && <Message error>{this.t("codeReqError")}</Message> }
           </Form>
         </Grid.Column>
       </Grid>
@@ -165,7 +166,7 @@ class Auth extends React.Component {
       <Table>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Номер</Table.HeaderCell>
+            <Table.HeaderCell>{this.t("msisdn")}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -210,4 +211,4 @@ const stateMap = (state) => {
   }
 }
 
-export default connect(stateMap, { ...AppActions, ...SettingsActions })(Auth)
+export default connect(stateMap, { ...AppActions, ...SettingsActions })(withTranslation("auth")(Auth))
