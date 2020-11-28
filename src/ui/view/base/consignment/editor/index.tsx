@@ -101,7 +101,6 @@ class ConsignmentEditor extends React.Component {
   onProductPick(product) {
     this.consignmentApi.selectLastConsignmentPrice(product.id)
       .then(price => {
-        console.log(price)
         return this.consignmentApi
           .insertConsignmentItem({
             consignmentId : this.state.consignmentId,

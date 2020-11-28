@@ -172,12 +172,16 @@ export default function initConsignmentApi(db) {
       const hdr = header.map(x => [[ x ]])
       const data = hdr
         .concat(
-          [[ "Товар", "Кол-во", "Ед.изм.", "Штрихкод", ]],
+          [[ "#", "Товар", "Цена покупки", "Кол-во", "Ед.изм.", "Сумма", "Цена продажи", "Штрихкод", "", ]],
         ).concat(
-          items.map(item => [
+          items.map((item, idx) => [
+            idx + 1,
             item.productTitle,
+            item.price,
             item.quantity,
             item.unitTitle,
+            item.cost,
+            item.salePrice,
             item.productBarcode,
           ])
         )

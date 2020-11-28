@@ -324,23 +324,29 @@ export default function initProductApi(db) {
         )
     },
     exportAllToExcel: (file, header) => {
-      return db.select(selectProductsForExportSql)
+      return db.select(selectProductBySearchSql, {
+          $barcode: "",
+          $key0   : "",
+          $key1   : "",
+          $key2   : "",
+          $limit  : 99999999,
+          $offset : 0,
+        })
         .then(items => {
           const hdr = header.map(x => [[ x ]])
           const data = hdr
             .concat(
-              [[ "Товар", "Бренд", "Штрихкод", "OEM", "Серийник", "Модель", "Движок", "Категория", "Полка" ]]
+              [[ "Товар", "Бренд", "Штрихкод", "Категория", "Полка", "Остаток", "Ед.изм", "Цена продажи" ]]
             ).concat(
               items.map(item => [
                 item.title,
                 item.brand,
                 item.barcode,
-                item.oemNo,
-                item.serial,
-                item.model,
-                item.engine,
                 item.categoryTitle,
                 item.coord,
+                item.quantity,
+                item.unitNotation,
+                item.price,
               ])
             )
           const wb = X.utils.book_new()
