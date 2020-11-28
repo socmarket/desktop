@@ -38,3 +38,5 @@ from
   ) as ret on ret.consignmentItemId = consignmentitem.id
 where
   consignmentitem.consignmentId = $consignmentId
+order by
+  consignmentitem.id asc

@@ -36,3 +36,5 @@ from
   ) as ret on ret.saleCheckItemId = salecheckitem.id
 where
   salecheckitem.saleCheckId = $saleCheckId
+order by
+  salecheckitem.id asc

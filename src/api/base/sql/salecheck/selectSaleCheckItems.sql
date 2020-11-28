@@ -41,3 +41,5 @@ from
   left join category on category.id  = product.categoryId
 where
   saleCheckId = $saleCheckId
+order by
+  c.id asc

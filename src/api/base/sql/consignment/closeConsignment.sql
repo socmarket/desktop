@@ -15,3 +15,5 @@ insert into consignmentitem(
 from currentconsignment
 where
   consignmentId = $consignmentId
+order by
+  currentconsignment.id asc

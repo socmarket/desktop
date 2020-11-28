@@ -17,3 +17,5 @@ insert into currentsalecheck(
 from salecheckitem
 where
   saleCheckId = $saleCheckId
+order by
+  salecheckitem.id asc

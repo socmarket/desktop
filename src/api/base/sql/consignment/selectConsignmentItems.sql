@@ -41,3 +41,5 @@ from
   left join consignmentprice on consignmentprice.productId = product.id
 where
   consignmentId = $consignmentId
+order by
+  c.id asc
