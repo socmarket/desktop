@@ -30,7 +30,8 @@ from
               left join consignment on consignment.id = consignmentitem.consignmentId
             where
               consignment.acceptedAt <= salecheck.soldAt and
-              consignmentitem.productId == salecheckitem.productId
+              consignmentitem.productId == salecheckitem.productId and
+              consignmentitem.quantity > 0
           ) as netprice,
           coalesce(salecheck.discount, 0) / 100.00 as discount,
           coalesce(cash, 0) / 100.00 as cash
@@ -43,6 +44,7 @@ from
             group by saleCheckItemId
           ) as ret on ret.saleCheckItemId = salecheckitem.id
         where
+          salecheckitem.quantity > 0 and
           date(salecheck.soldAt) between $start and $end
       ) t
     group by

@@ -28,9 +28,10 @@ export default function initSaleCheckApi(db) {
             if (rows) {
               const cost  = rows.map(x => x.cost ).reduce((a, b) => a + b, 0)
               const total = rows.map(x => x.total).reduce((a, b) => a + b, 0)
+              const discount = rows.map(x => x.discount).reduce((a, b) => a + b, 0)
               return {
                 cost     : cost,
-                discount : cost - total,
+                discount : discount,
                 total    : total,
                 items    : rows,
               }

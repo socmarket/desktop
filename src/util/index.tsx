@@ -47,7 +47,18 @@ const asDateBadge = (date, color) => (
   <Label color={color} size="large">{moment.utc(date).fromNow()}</Label>
 )
 
-const spacedNum = (x) => x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") : ""
+const spacedNum = (x) => {
+  if (x) {
+    const str = mround(x).toString()
+    if (str.length > 3) {
+      return str.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    } else {
+      return str
+    }
+  } else {
+    return "0"
+  }
+}
 const maxText = (x, maxN) => {
   if (x) {
     const y = x.toString()

@@ -19,6 +19,8 @@ from
         from consignmentreturn
         group by consignmentItemId
       ) as ret on ret.consignmentItemId = consignmentitem.id
+    where
+      consignmentitem.quantity > 0
     group by
       productId
   ) t
@@ -33,6 +35,8 @@ from
         from salecheckreturn
         group by saleCheckItemId
       ) as ret on ret.saleCheckItemId = saleCheckitem.id
+    where
+      salecheckitem.quantity > 0
     group by productId
   ) sold on sold.productId = t.productId
   left join product  on product.id = t.productId
