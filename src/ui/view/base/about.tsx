@@ -3,7 +3,7 @@ import { AppActions }    from "Store/base/app"
 import { connect } from "react-redux"
 import React, { Fragment } from "react"
 import { withTranslation } from 'react-i18next'
-import { Modal, Divider, Grid, Header, Segment, Label } from "semantic-ui-react"
+import { Modal, Divider, Grid, Header, Segment, Label, Button } from "semantic-ui-react"
 
 const INTERVAL = 5000
 
@@ -13,6 +13,7 @@ class AboutDialog extends React.Component {
     super(props)
     this.checkHealth = this.checkHealth.bind(this)
     this.serverApi = this.props.api.server
+    this.updaterApi = this.props.api.updater
     this.t = this.props.t
     this.state = {
       error: false,
@@ -50,6 +51,7 @@ class AboutDialog extends React.Component {
 
   componentDidMount() {
     this.checkHealth()
+    this.updaterApi.checkForUpdates()
   }
 
   componentWillUnmount() {

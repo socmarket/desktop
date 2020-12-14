@@ -49,10 +49,11 @@
     calculations          : "Расчёты",
   },
   "about" : {
-    version    : "Версия",
-    build      : "Сборка",
-    buildDate  : "Дата сборки",
-    apiVersion : "Версия API",
+    version         : "Версия",
+    build           : "Сборка",
+    buildDate       : "Дата сборки",
+    apiVersion      : "Версия API",
+    checkForUpdates : "Проверить обновления",
   },
   "productPicker" : {
     noPrice : " (нет цены)",

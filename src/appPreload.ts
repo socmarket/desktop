@@ -24,6 +24,10 @@ function initApp(isDev) {
     preview        : json => ipcRenderer.send("pp-print-preview", json),
   }
 
+  api.updater = {
+    checkForUpdates: () => ipcRenderer.send("updater-check-for-updates"),
+  }
+
   contextBridge.exposeInMainWorld("api", api)
 }
 

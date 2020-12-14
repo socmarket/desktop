@@ -91,6 +91,10 @@ function setupUpdater(appWin) {
   const url = `http://${UPDATES_HOST}/update/${platform}/${app.getVersion()}/beta/`
   autoUpdater.setFeedURL({ url })
 
+  ipcMain.on("updater-check-for-updates", (ev, opts) => {
+    autoUpdater.checkForUpdates()
+  })
+
   setInterval(() => {
     autoUpdater.checkForUpdates()
   }, 300000)
@@ -100,11 +104,11 @@ function setupUpdater(appWin) {
   })
 
   autoUpdater.on("update-available", (event, arg) => {
-    sendMsg(appWin, { msg: "update-available", arg: arg })
+    sendMsg(appWin, { msg: "update-available" })
   })
 
   autoUpdater.on("update-not-available", (event, arg) => {
-    sendMsg(appWin, { msg: "update-not-available", arg: arg })
+    sendMsg(appWin, { msg: "update-not-available" })
   })
 
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
