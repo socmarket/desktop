@@ -21,7 +21,6 @@ class SaleCheck extends React.Component {
   }
 
   table() {
-    console.log(this.props)
     return (
       <Segment>
         <Header as="h2" dividing textAlign="left">

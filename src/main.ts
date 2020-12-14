@@ -59,7 +59,11 @@ function createMainWindow() {
   })
 
   appWin.on("closed", () => {
-    printPreviewWin.close()
+    try {
+      printPreviewWin.close()
+    } catch (e) {
+      console.log(e)
+    }
   })
 
   return appWin
