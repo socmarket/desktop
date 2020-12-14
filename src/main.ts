@@ -43,6 +43,12 @@ function createMainWindow() {
   printPreviewWin.loadURL(PRINT_PREVIEW_WIN_WEBPACK_ENTRY)
   printPreviewWin.setMenuBarVisibility(false)
 
+  let printPreviewDestroyed = false
+
+  printPreviewWin.webContents.on("destroyed", () => {
+    printPreviewDestroyed = true
+  })
+
   appWin.webContents.on("did-finish-load", () => {
     appWin.maximize()
   })
@@ -60,7 +66,9 @@ function createMainWindow() {
 
   appWin.on("closed", () => {
     try {
-      printPreviewWin.close()
+      if (!printPreviewDestroyed) {
+        printPreviewWin.close()
+      }
     } catch (e) {
       console.log(e)
     }
