@@ -2,22 +2,26 @@ import os from "os"
 import path from "path"
 import proc from "process"
 import { format as formatUrl } from "url"
-import { app, BrowserWindow, autoUpdater, ipcMain, dialog } from "electron"
+import { app, BrowserWindow, autoUpdater, ipcMain, dialog, shell } from "electron"
 
 let mainWindow = null
 const isDev = process.env.NODE_ENV !== "production"
 
 function createMainWindow() {
-  let webp = {
-    preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    contextIsolation: true
+
+  const appWinOpts = {
+    preload: APP_WIN_PRELOAD_WEBPACK_ENTRY,
+    contextIsolation: true,
   }
 
-  let win = new BrowserWindow({
-    width: 800,
-    height: 600,
+  const printPreviewWinOpts = {
+    preload: PRINT_PREVIEW_WIN_PRELOAD_WEBPACK_ENTRY,
+    contextIsolation: true,
+  }
+
+  const appWin = new BrowserWindow({
     show: false,
-    webPreferences: webp
+    webPreferences: appWinOpts,
   })
 
   if (isDev) {
@@ -25,23 +29,48 @@ function createMainWindow() {
     installExtension(REACT_DEVELOPER_TOOLS)
         .then((name) => console.log(`Added Extension:  ${name}`))
         .catch((err) => console.log('An error occurred: ', err))
-    win.webContents.openDevTools()
+    appWin.webContents.openDevTools()
   }
 
-  win.maximize()
-  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
-  win.setMenuBarVisibility(false)
-  win.show()
+  appWin.loadURL(APP_WIN_WEBPACK_ENTRY)
+  appWin.setMenuBarVisibility(false)
 
-  return win
+  const printPreviewWin = new BrowserWindow({
+    show: false,
+    webPreferences: printPreviewWinOpts,
+  })
+
+  printPreviewWin.loadURL(PRINT_PREVIEW_WIN_WEBPACK_ENTRY)
+  printPreviewWin.setMenuBarVisibility(false)
+
+  appWin.webContents.on("did-finish-load", () => {
+    appWin.maximize()
+  })
+
+  ipcMain.on("pp-print-preview", (ev, msg) => {
+    printPreviewWin.webContents.send("pp-print-preview", {
+      wcId: printPreviewWin.webContents.id,
+      msg: msg,
+    })
+  })
+
+  ipcMain.on("pp-use-settings", (ev, opts) => {
+    printPreviewWin.webContents.send("pp-use-settings", opts)
+  })
+
+  appWin.on("closed", () => {
+    printPreviewWin.close()
+  })
+
+  return appWin
 }
 
 function sendMsg(win, msg) {
   win.webContents.send("async-msg", msg)
 }
 
-function setupUpdater(win) {
-  let platform = process.arch === "x64" ? "win64" : "win32"
+function setupUpdater(appWin) {
+  const platform = process.arch === "x64" ? "win64" : "win32"
 
   if (process.platform === "darwin") {
     platform = "osx"
@@ -55,15 +84,15 @@ function setupUpdater(win) {
   }, 300000)
 
   autoUpdater.on("checking-for-update", (event) => {
-    sendMsg(win, { msg: "checking-for-update" })
+    sendMsg(appWin, { msg: "checking-for-update" })
   })
 
   autoUpdater.on("update-available", (event, arg) => {
-    sendMsg(win, { msg: "update-available", arg: arg })
+    sendMsg(appWin, { msg: "update-available", arg: arg })
   })
 
   autoUpdater.on("update-not-available", (event, arg) => {
-    sendMsg(win, { msg: "update-not-available", arg: arg })
+    sendMsg(appWin, { msg: "update-not-available", arg: arg })
   })
 
   autoUpdater.on("update-downloaded", (event, releaseNotes, releaseName) => {
@@ -74,14 +103,14 @@ function setupUpdater(win) {
       message: process.platform === 'win32' ? releaseNotes : releaseName,
       detail: 'Появились обновления для SocMarket. Перезапустите программу чтобы применить их.'
     }
-    sendMsg(win, { msg: "update-downloaded", releaseNotes: releaseNotes, releaseName: releaseName })
+    sendMsg(appWin, { msg: "update-downloaded", releaseNotes: releaseNotes, releaseName: releaseName })
     dialog.showMessageBox(dialogOpts).then((returnValue) => {
       if (returnValue.response === 0) autoUpdater.quitAndInstall()
     })
   })
 
   autoUpdater.on("error", (event, msg) => {
-    sendMsg(win, { msg: "update-error", msg: msg })
+    sendMsg(appWin, { msg: "update-error", msg: msg })
   })
 }
 

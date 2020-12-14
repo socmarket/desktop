@@ -279,6 +279,8 @@
     price: "Со скид",
     barcode: "Штрихкод",
     printCheck: "Печатать чек",
+    printA4            : "Печать",
+    printA4Desc        : "Печать счёт-фактуры",
     cost: "Сумма",
     discount: "Скидка",
     totalWithtDiscount: "Со скид",

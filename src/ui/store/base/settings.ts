@@ -82,7 +82,10 @@ const reloadSettings = () => (dispatch, getState, { api }) => {
   return api.settings
     .getSettings()
     .then(settings => dispatch(evSettingsReloaded(settings)))
-    .then(({ settings }) => i18next.changeLanguage(settings.language))
+    .then(({ settings }) => {
+      i18next.changeLanguage(settings.language)
+      api.printPreview.changeSettings(settings)
+    })
 }
 
 const changeTheme = (themeName) => (dispatch, getState, { api }) => {

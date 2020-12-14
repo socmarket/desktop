@@ -9,7 +9,7 @@ import { initReactI18next } from "react-i18next"
 i18next
   .use(initReactI18next)
   .init({
-    lng: "tr",
+    lng: "ru",
     debug: process.env.NODE_ENV === "development",
     resources: {
       en: english,

@@ -16,7 +16,7 @@ class StartPage extends React.Component {
   }
 
   render() {
-    return ViewSelector[this.props.app.unlocked](api)
+    return ViewSelector[this.props.app.unlocked](this.props.api)
   }
 }
 

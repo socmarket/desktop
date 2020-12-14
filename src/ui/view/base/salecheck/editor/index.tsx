@@ -47,6 +47,7 @@ class SaleCheckEditor extends React.Component {
     this.onGlobalKeyDown       = this.onGlobalKeyDown.bind(this)
     this.onActivate            = this.onActivate.bind(this)
     this.onPrintCheck          = this.onPrintCheck.bind(this)
+    this.onPrintA4             = this.onPrintA4.bind(this)
     this.onWantClearCheck      = this.onWantClearCheck.bind(this)
     this.onExportToExcel       = this.onExportToExcel.bind(this)
     this.onConfirmClearCheck   = this.onConfirmClearCheck.bind(this)
@@ -65,6 +66,7 @@ class SaleCheckEditor extends React.Component {
     this.priceApi     = props.api.price
     this.printerApi   = props.api.printer
     this.saleCheckApi = props.api.saleCheck
+    this.printPreviewApi = props.api.printPreview
 
     this.state = {
       items               : [],
@@ -92,6 +94,7 @@ class SaleCheckEditor extends React.Component {
     return this.saleCheckApi
       .selectSaleCheck(this.state.saleCheckId)
       .then(saleCheck => {
+        console.log(saleCheck)
         if (this.state.saleCheckId < 0) {
           this.setState({
             ...saleCheck,
@@ -249,6 +252,28 @@ class SaleCheckEditor extends React.Component {
       })
   }
 
+  onPrintA4() {
+    this.printPreviewApi.preview({
+      view: "SaleCheck",
+      data: {
+        check: {
+          id            : this.state.saleCheckId,
+          items         : this.state.items,
+          totalCost     : mround(this.state.total - this.state.extraDiscount),
+          extraDiscount : this.state.extraDiscount,
+          soldAtDate    : this.state.soldAtDate,
+          soldAtTime    : this.state.soldAtTime,
+          printedAt     : moment().format("DD-MM-YYYY HH:mm"),
+        },
+        logo : [
+          this.props.opt.logoLine1,
+          this.props.opt.logoLine2,
+          this.props.opt.logoLine3,
+        ],
+      }
+    })
+  }
+
   onWantClearCheck() {
     this.setState({
       clearConfirmVisible: true,
@@ -336,10 +361,11 @@ class SaleCheckEditor extends React.Component {
             title: this.t("currentReceipt"),
           },
           items: [
-            { title: this.t("printCheck")   , description: ""                         , icon: "print"     , onClick: this.onPrintCheck },
-            { title: this.t("saveToExcel")  , description: this.t("saveToExcelDesc") , icon: "file excel", onClick: this.onExportToExcel },
+            { title: this.t("printCheck")   , description: ""                       , icon: "file text" , onClick: this.onPrintCheck },
+            { title: this.t("printA4")      , description: this.t("printA4Desc")    , icon: "print"     , onClick: this.onPrintA4 },
+            { title: this.t("saveToExcel")  , description: this.t("saveToExcelDesc"), icon: "file excel", onClick: this.onExportToExcel },
             { divider: true },
-            { title: this.t("clearCheck")   , description: this.t("clearCheckDesc")                      , onClick: this.onWantClearCheck },
+            { title: this.t("clearCheck")   , description: this.t("clearCheckDesc")                     , onClick: this.onWantClearCheck },
           ]
         }}
         onOpenRow={this.onOpenItem}

@@ -12,10 +12,18 @@ module.exports = {
           entryPoints: [
             {
               js: "./src/app.tsx",
-              html: "./src/index.html",
-              name: "main_window",
+              html: "./src/app.html",
+              name: "app_win",
               preload: {
-                js: "./src/preload.ts",
+                js: "./src/appPreload.ts",
+              },
+            },
+            {
+              js: "./src/printPreview.tsx",
+              html: "./src/printPreview.html",
+              name: "print_preview_win",
+              preload: {
+                js: "./src/printPreviewPreload.ts",
               },
             }
           ]

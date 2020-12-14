@@ -23,6 +23,7 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
     alias: {
+      Root: path.resolve("src"),
       Api: path.resolve("src/api"),
       Ui: path.resolve("src/ui"),
       Util: path.resolve("src/util"),
@@ -31,6 +32,7 @@ module.exports = {
       View: path.resolve("src/ui/view"),
       Store: path.resolve("src/ui/store"),
       Style: path.resolve("src/ui/style"),
+      PrintPreview: path.resolve("src/ui/view/printPreview"),
     }
   },
   module: {

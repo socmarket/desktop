@@ -284,6 +284,8 @@
     price: "İndirimli Fiyat",
     barcode: "Barkod",
     printCheck: "Fiş yazdırın",
+    printA4            : "Print A4",
+    printA4Desc        : "Print A4",
     cost: "Maliyet",
     discount: "İndirim",
     totalWithtDiscount: "Toplam",

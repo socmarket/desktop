@@ -201,6 +201,13 @@ class SaleJournal extends React.Component {
     )
   }
 
+  print() {
+    this.props.api.printPreview.preview({
+      view: "SaleCheckJournal",
+      data: { items: this.state.items },
+    })
+  }
+
   render() {
     const today     = moment()
     const yesterday = moment().subtract(1, "day")
@@ -222,7 +229,7 @@ class SaleJournal extends React.Component {
             <Menu.Item>{this.t("totalCount")}</Menu.Item>
             <Menu.Item><Button>{spacedNum(this.state.totalCount)}</Button></Menu.Item>
             <Menu.Item>{this.t("totalCost")}</Menu.Item>
-            <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.totalCost)}</Button></Menu.Item>
+            <Menu.Item><Button color={this.props.opt.theme.mainColor} onClick={() => this.print()}>{spacedNum(this.state.totalCost)}</Button></Menu.Item>
             <Menu.Item>{this.t("discount")}</Menu.Item>
             <Menu.Item><Button>{spacedNum(this.state.discount)}</Button></Menu.Item>
             { this.state.selectedSaleCheck && 
