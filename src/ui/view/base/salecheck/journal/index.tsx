@@ -50,6 +50,7 @@ class SaleJournal extends React.Component {
   constructor(props) {
     super(props)
     this.saleCheckApi = props.api.saleCheck
+    this.printPreviewApi = props.api.printPreview
     this.state = {
       itemCount  : 0,
       totalCount : 0,
@@ -201,10 +202,21 @@ class SaleJournal extends React.Component {
     )
   }
 
-  print() {
-    this.props.api.printPreview.preview({
+  onPrintPreview() {
+    this.printPreviewApi.preview({
       view: "SaleCheckJournal",
-      data: { items: this.state.items },
+      data: {
+        report: {
+          items     : this.state.items,
+          totalCost : this.state.totalCost,
+          printedAt : moment().format("DD-MM-YYYY HH:mm"),
+        },
+        logo : [
+          this.props.opt.logoLine1,
+          this.props.opt.logoLine2,
+          this.props.opt.logoLine3,
+        ],
+      },
     })
   }
 
@@ -229,7 +241,8 @@ class SaleJournal extends React.Component {
             <Menu.Item>{this.t("totalCount")}</Menu.Item>
             <Menu.Item><Button>{spacedNum(this.state.totalCount)}</Button></Menu.Item>
             <Menu.Item>{this.t("totalCost")}</Menu.Item>
-            <Menu.Item><Button color={this.props.opt.theme.mainColor} onClick={() => this.print()}>{spacedNum(this.state.totalCost)}</Button></Menu.Item>
+            <Menu.Item><Button color={this.props.opt.theme.mainColor}>{spacedNum(this.state.totalCost)}</Button></Menu.Item>
+            <Menu.Item onClick={() => this.onPrintPreview()}><Icon name="print" /></Menu.Item>
             <Menu.Item>{this.t("discount")}</Menu.Item>
             <Menu.Item><Button>{spacedNum(this.state.discount)}</Button></Menu.Item>
             { this.state.selectedSaleCheck && 

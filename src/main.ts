@@ -4,6 +4,8 @@ import proc from "process"
 import { format as formatUrl } from "url"
 import { app, BrowserWindow, autoUpdater, ipcMain, dialog, shell } from "electron"
 
+app.allowRendererProcessReuse = false;
+
 let mainWindow = null
 const isDev = process.env.NODE_ENV !== "production"
 

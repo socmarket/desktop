@@ -7,6 +7,7 @@ import {
   numberInputWithRef,
   ifNumberF,
   spacedNum,
+  mround,
 }                    from "Util"
 
 import React, { Fragment } from "react"
@@ -50,6 +51,7 @@ class ConsignmentEditor extends React.Component {
     this.onActivate          = this.onActivate.bind(this)
     this.onWantClearList     = this.onWantClearList.bind(this)
     this.onExportToExcel     = this.onExportToExcel.bind(this)
+    this.onPrintA4           = this.onPrintA4.bind(this)
     this.onConfirmClearList  = this.onConfirmClearList.bind(this)
 
     this.productPickerRef      = React.createRef()
@@ -58,8 +60,9 @@ class ConsignmentEditor extends React.Component {
 
     this.activateLock = React.createRef(false)
 
-    this.fileApi        = props.api.file
-    this.consignmentApi = props.api.consignment
+    this.fileApi         = props.api.file
+    this.consignmentApi  = props.api.consignment
+    this.printPreviewApi = props.api.printPreview
 
     this.state = {
       items               : [],
@@ -207,6 +210,27 @@ class ConsignmentEditor extends React.Component {
     })
   }
 
+  onPrintA4() {
+    this.printPreviewApi.preview({
+      view: "Consignment",
+      data: {
+        consignment: {
+          id             : this.state.consignmentId,
+          items          : this.state.items,
+          cost           : this.state.cost,
+          acceptedAtDate : this.state.acceptedAtDate,
+          acceptedAtTime : this.state.acceptedAtTime,
+          printedAt      : moment().format("DD-MM-YYYY HH:mm"),
+        },
+        logo : [
+          this.props.opt.logoLine1,
+          this.props.opt.logoLine2,
+          this.props.opt.logoLine3,
+        ],
+      }
+    })
+  }
+
   onExportToExcel() {
     const dt = moment().format("YYYY-MM-DD-HH-ss")
     return this.fileApi.saveFile("consignment-" + dt + ".xlsx", [ "xls", "xlsx" ])
@@ -295,6 +319,7 @@ class ConsignmentEditor extends React.Component {
           },
           items: [
             { title: this.t("saveToExcel")  , description: this.t("saveToExcelDesc") , icon: "file excel", onClick: this.onExportToExcel },
+            { title: this.t("printA4")      , description: this.t("printA4Desc")     , icon: "print"     , onClick: this.onPrintA4 },
             { divider: true },
             { title: this.t("clearConsignment"), description: this.t("clearConsignmentDesc"),        onClick: this.onWantClearList },
           ]

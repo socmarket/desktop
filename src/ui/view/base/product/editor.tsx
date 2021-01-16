@@ -43,6 +43,7 @@ class ProductEditor extends React.Component {
     this.onPrevPage       = this.onPrevPage.bind(this)
     this.onNextPage       = this.onNextPage.bind(this)
     this.onExportToExcel  = this.onExportToExcel.bind(this)
+    this.onPrintPreview   = this.onPrintPreview.bind(this)
 
     this.newProduct       = this.newProduct.bind(this)
     this.openProductForm  = this.openProductForm.bind(this)
@@ -53,6 +54,7 @@ class ProductEditor extends React.Component {
 
     this.fileApi    = props.api.file
     this.productApi = props.api.product
+    this.printPreviewApi = props.api.printPreview
 
     this.state = {
       product: {
@@ -125,6 +127,26 @@ class ProductEditor extends React.Component {
             )
         }
       })
+  }
+
+  onPrintPreview() {
+    this.productApi.find("", 99999999, 0).then(items => {
+      const dt = moment().format("YYYY-MM-DD-HH-ss")
+      this.printPreviewApi.preview({
+        view: "Stocks",
+        data: {
+          report: {
+            items: items,
+            printedAt: dt,
+          },
+          logo : [
+            this.props.opt.logoLine1,
+            this.props.opt.logoLine2,
+            this.props.opt.logoLine3,
+          ],
+        }
+      })
+    })
   }
 
   updateList() {
@@ -252,6 +274,7 @@ class ProductEditor extends React.Component {
             <Popup content={this.t("nextPage")} trigger= { <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item> } />
             <Menu.Menu position="right">
               <Popup content={this.t("saveToExcel")} trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
+              <Popup content={this.t("printPreview")} trigger= { <Menu.Item onClick={this.onPrintPreview}><Icon name="print" /></Menu.Item> } />
               <Popup content={this.t("newProduct")}  trigger= { <Menu.Item onClick={this.newProduct}>     <Icon name="plus" />      </Menu.Item> } />
             </Menu.Menu>
           </Menu>

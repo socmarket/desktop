@@ -1,10 +1,10 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import moment from "moment"
 import { ru, fr } from "date-fns/locale"
 import { ResponsivePie } from "@nivo/pie"
 import { ResponsiveBar } from "@nivo/bar"
-import { Menu, Container, Grid, Form, Input, Table, Button, Segment, Image, Label, Statistic } from "semantic-ui-react"
+import { Menu, Container, Grid, Form, Input, Table, Button, Segment, Image, Label, Statistic, Icon } from "semantic-ui-react"
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from "react-dates"
 import { withTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.reportApi = props.api.report
+    this.printPreviewApi = props.api.printPreview
     this.state = {
       start : moment().subtract(14, "days"),
       end   : moment(),
@@ -76,6 +77,20 @@ class Dashboard extends React.Component {
     }
   }
 
+  onPrintProfitByDayA4() {
+    this.printPreviewApi.preview({
+      view: "ProfitByDay",
+      data: {
+        report: this.state.profitByDay,
+        logo : [
+          this.props.opt.logoLine1,
+          this.props.opt.logoLine2,
+          this.props.opt.logoLine3,
+        ],
+      }
+    })
+  }
+
   profitByDayMenu() {
     const summary = this.state.profitByDay.summary
     return (
@@ -103,6 +118,9 @@ class Dashboard extends React.Component {
             focusedInput={this.state.focusedInput}
             onFocusChange={focusedInput => this.setState({ focusedInput })}
           />
+        </Menu.Item>
+        <Menu.Item>
+          <Button icon="print" onClick={() => this.onPrintProfitByDayA4()}></Button>
         </Menu.Item>
         <Menu.Item fitted="vertically">
           <Statistic size="tiny">
@@ -189,7 +207,9 @@ class Dashboard extends React.Component {
     return (
       <Segment raised>
         {this.profitByDayMenu()}
-        <Label color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>{this.t("profitByDay")}</Label>
+        <Label size="large" color="blue" floating style={{ top: "5%", right: "2%", left: "unset" }}>
+          {this.t("profitByDay")}
+        </Label>
         <Grid>
           <Grid.Row style={{ height: 300, minHeight: 300, maxHeight: 300 }}>
             <Grid.Column width={6} style={{ height: "100%" }}>
