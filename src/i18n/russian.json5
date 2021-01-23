@@ -366,6 +366,8 @@
     price              : "Цена",
     sellPrice          : "Продажа",
     costPrice          : "Покупка",
+    inventory          : "Инвентаризация",
+    printedAt          : "Напечатано",
   },
   "categoryList" : {
     productGroups :  "Группы товаров",

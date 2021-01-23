@@ -128,13 +128,14 @@ class Inventory extends React.Component {
   }
 
   onPrintPreview() {
-    this.inventoryApi.find("", 99999999, 0).then(items => {
-      const dt = moment().format("YYYY-MM-DD-HH-ss")
+    this.inventoryApi.find(this.state.inventoryId, this.state.showOnlyCorrections, "", 99999999, 0).then(({ items, totals }) => {
+      const dt = moment().format("YYYY-MM-DD HH:mm")
       this.printPreviewApi.preview({
-        view: "Stocks",
+        view: "Inventory",
         data: {
           report: {
             items: items,
+            totals: totals,
             printedAt: dt,
           },
           logo : [
@@ -216,7 +217,7 @@ class Inventory extends React.Component {
       this.inventoryApi.upsertInventoryItem({
         inventoryId: this.state.inventoryId,
         productId: this.state.product.id,
-        productTitle, this.state.product.title,
+        productTitle: this.state.product.title,
         quantity: this.state.product.quantity,
         actualQuantity: this.state.itemEditor.actualQuantity,
         sellPrice: this.state.itemEditor.sellPrice,
@@ -483,7 +484,9 @@ class Inventory extends React.Component {
                     <Menu.Item onClick={() => this.setState({ showConfirmation: true })}><Icon name="save" /></Menu.Item> } />
 
                   <Menu.Menu position="right">
+                    {/*
                     <Popup content={this.t("saveToExcel")} trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
+                    */}
                     <Popup content={this.t("printPreview")} trigger= { <Menu.Item onClick={this.onPrintPreview}><Icon name="print" /></Menu.Item> } />
                   </Menu.Menu>
                 </Menu>

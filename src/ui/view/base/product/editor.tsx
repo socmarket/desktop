@@ -131,7 +131,7 @@ class ProductEditor extends React.Component {
 
   onPrintPreview() {
     this.productApi.find("", 99999999, 0).then(items => {
-      const dt = moment().format("YYYY-MM-DD-HH-ss")
+      const dt = moment().format("YYYY-MM-DD HH:mm")
       this.printPreviewApi.preview({
         view: "Stocks",
         data: {

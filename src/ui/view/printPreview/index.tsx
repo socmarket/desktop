@@ -6,6 +6,7 @@ import Consignment      from "PrintPreview/base/consignment"
 import SaleCheckJournal from "PrintPreview/base/saleCheck/journal"
 import ProfitByDay      from "PrintPreview/base/profitByDay"
 import Stocks           from "PrintPreview/base/stocks"
+import Inventory        from "PrintPreview/base/inventory"
 
 const renderView = (view, data) => {
   switch (view) {
@@ -15,6 +16,7 @@ const renderView = (view, data) => {
     case "SaleCheckJournal" : return (<SaleCheckJournal {...data} />)
     case "ProfitByDay"      : return (<ProfitByDay {...data} />)
     case "Stocks"           : return (<Stocks {...data} />)
+    case "Inventory"        : return (<Inventory {...data} />)
   }
 }
 
@@ -38,7 +40,7 @@ class PrintPreview extends React.Component {
           view: pack.msg.view,
           data: pack.msg.data,
         }, () => {
-          this.props.api.pcPrinter.printToPdf(pack.wcId)
+          setTimeout(() => this.props.api.pcPrinter.printToPdf(pack.wcId), 1000)
         })
       }
     })
