@@ -44,6 +44,9 @@ const AppActions = {
   openProductEditor: () => ({
     type: "APP_OPEN_PRODUCT_EDITOR",
   }),
+  openInventory: () => ({
+    type: "APP_OPEN_INVENTORY",
+  }),
   openSaleCheckEditor: () => ({
     type: "APP_OPEN_SALE_CHECK_EDITOR",
   }),
@@ -109,9 +112,9 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage    : "saleCheckEditor",
+  activePage    : "inventory",
   user          : "admin",
-  unlocked      : false,
+  unlocked      : true,
   authenticated : false,
   lastError     : "",
   online        : false,
@@ -120,6 +123,8 @@ function AppReducer (state = {
   switch (action.type) {
     case "APP_OPEN_PRODUCT_EDITOR":
       return Object.assign({}, state, { activePage: "productEditor" })
+    case "APP_OPEN_INVENTORY":
+      return Object.assign({}, state, { activePage: "inventory" })
     case "APP_OPEN_PRODUCT_IMPORTER":
       return Object.assign({}, state, { activePage: "productImporter" })
     case "APP_OPEN_SALE_CHECK_EDITOR":

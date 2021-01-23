@@ -6,6 +6,10 @@ import initProductApi, {
   ProductApi,
 } from "./base/product"
 
+import initInventoryApi, {
+  InventoryApi,
+} from "./base/inventory"
+
 import initSettingsApi, {
   SettingsApi,
 } from "./base/settings"
@@ -75,6 +79,7 @@ export function initApi(db, usb) {
     file: initFileApi(db),
     server: initServerApi(db),
     product: initProductApi(db),
+    inventory: initInventoryApi(db),
     migrateDb: () => db.migrate(),
   }
 }

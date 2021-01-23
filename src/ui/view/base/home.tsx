@@ -7,6 +7,7 @@ import AutoPartsSaleCheckJournal   from "View/auto/parts/salecheck/journal"
 import AutoPartsConsignmentEditor  from "View/auto/parts/consignment/editor"
 import AutoPartsConsignmentJournal from "View/auto/parts/consignment/journal"
 
+import BaseInventory          from "View/base/inventory"
 import BaseProductEditor      from "View/base/product/editor"
 import BaseProductImporter    from "View/base/product/importer"
 import BaseSaleCheckEditor    from "View/base/salecheck/editor"
@@ -28,6 +29,17 @@ import BaseAdminService    from "View/base/settings/service"
 
 import React, { Fragment } from "react"
 import { connect } from "react-redux"
+
+class Inventory extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+  render() {
+    switch (this.props.opt.appMode) {
+      case "base"      : return (<BaseInventory api={this.props.api} theme={this.props.opt.theme} opt={this.props.opt} />)
+    }
+  }
+}
 
 class ProductEditor extends React.Component {
   constructor(props) {
@@ -102,6 +114,7 @@ class ConsignmentJournal extends React.Component {
 }
 
 const ViewMap = {
+  "inventory"          : (props) => <Inventory          api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "productEditor"      : (props) => <ProductEditor      api={props.api} theme={props.opt.theme} opt={props.opt} />,
   "productImporter"    : (props) => <ProductImporter    api={props.api} theme={props.opt.theme} opt={props.opt} />,
 

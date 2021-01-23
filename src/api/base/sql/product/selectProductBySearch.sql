@@ -1,6 +1,6 @@
 select
   *,
-  inQuantity - outQuantity - outReservedQuantity as quantity
+  inQuantity - outQuantity - outReservedQuantity + correctedQuantity as quantity
 from
   (
     select
@@ -33,6 +33,11 @@ from
         from currentsalecheck
         where productId = product.id and saleCheckId = -1
       ) as outReservedQuantity,
+      (select
+        coalesce(round(sum(actualQuantity - quantity) / 100.00, 2), 0)
+        from inventoryitem
+        where productId = product.id
+      ) as correctedQuantity,
       (select
         coalesce(round(price.price / 100.00, 2), 0.0) as price
         from

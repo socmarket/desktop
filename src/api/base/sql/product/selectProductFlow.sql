@@ -53,6 +53,24 @@ from (
   union all
 
   select
+    createdat                                as opAt,
+    round((inventoryitem.actualQuantity -
+        inventoryitem.quantity) / 100, 2)    as amount,
+    unit.notation                            as units,
+    round(inventoryitem.costPrice / 100, 2)  as price,
+    currency.notation                        as currency,
+    'inventory'                              as op
+  from
+    inventoryitem
+    left join inventory on inventory.id = inventoryitem.inventoryId
+    left join unit on unit.id = inventoryitem.unitId
+    left join currency on currency.id = inventoryitem.currencyId
+  where
+    productId = $productId
+
+  union all
+
+  select
     updatedAt                             as opAt,
     null                                  as amount,
     ''                                    as units,

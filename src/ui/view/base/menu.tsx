@@ -22,6 +22,7 @@ const products = [
   "consignmentJournal",
   "baseCategoryEditor",
   "baseUnitEditor",
+  "inventory",
 ]
 
 const calcs = [
@@ -120,6 +121,12 @@ class MainMenu extends React.Component {
                 active={this.props.app.activePage === "productEditor"}
                 onClick={() => this.props.openProductEditor()}
                 text={this.t("productsDescription")}
+              />
+              <Dropdown.Item
+                icon="clipboard check"
+                active={this.props.app.activePage === "inventory"}
+                onClick={() => this.props.openInventory()}
+                text={this.t("inventoryDescription")}
               />
               <Dropdown.Item
                 icon="file excel"
