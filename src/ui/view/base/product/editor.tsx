@@ -259,26 +259,6 @@ class ProductEditor extends React.Component {
   render() {
     return (
       <Fragment>
-        <Container style={{ marginLeft: 10, marginRight: 10, padding: 10 }}>
-          <Menu icon>
-            <Menu.Item>
-              {this.filterInput({
-                autoFocus: true,
-                icon     : "search",
-                style    : { width: 300 },
-                value    : this.state.search.pattern,
-                onChange : this.onFilterChange,
-              })}
-            </Menu.Item>
-            <Popup content={this.t("prevPage")} trigger= { <Menu.Item onClick={this.onPrevPage}><Icon name="angle left"  /></Menu.Item> } />
-            <Popup content={this.t("nextPage")} trigger= { <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item> } />
-            <Menu.Menu position="right">
-              <Popup content={this.t("saveToExcel")} trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
-              <Popup content={this.t("printPreview")} trigger= { <Menu.Item onClick={this.onPrintPreview}><Icon name="print" /></Menu.Item> } />
-              <Popup content={this.t("newProduct")}  trigger= { <Menu.Item onClick={this.newProduct}>     <Icon name="plus" />      </Menu.Item> } />
-            </Menu.Menu>
-          </Menu>
-        </Container>
         <Container
           fluid
           style={{
@@ -300,6 +280,24 @@ class ProductEditor extends React.Component {
                 />
               </Grid.Column>
               <Grid.Column width={13}>
+                <Menu icon>
+                  <Menu.Item>
+                    {this.filterInput({
+                      autoFocus: true,
+                      icon     : "search",
+                      style    : { width: 300 },
+                      value    : this.state.search.pattern,
+                      onChange : this.onFilterChange,
+                    })}
+                  </Menu.Item>
+                  <Popup content={this.t("prevPage")} trigger= { <Menu.Item onClick={this.onPrevPage}><Icon name="angle left"  /></Menu.Item> } />
+                  <Popup content={this.t("nextPage")} trigger= { <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item> } />
+                  <Menu.Menu position="right">
+                    <Popup content={this.t("saveToExcel")} trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
+                    <Popup content={this.t("printPreview")} trigger= { <Menu.Item onClick={this.onPrintPreview}><Icon name="print" /></Menu.Item> } />
+                    <Popup content={this.t("newProduct")}  trigger= { <Menu.Item onClick={this.newProduct}>     <Icon name="plus" />      </Menu.Item> } />
+                  </Menu.Menu>
+                </Menu>
                 {this.list()}
               </Grid.Column>
             </Grid.Row> 
