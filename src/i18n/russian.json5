@@ -443,6 +443,7 @@
     group     : "Группа",
     purchased : "Куплено",
     sold      : "Продано",
+    inventory : "Инвентаризация",
     total     : "Всего",
     quantity  : "Кол-во",
     amount    : "Сумма",

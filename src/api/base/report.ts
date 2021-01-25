@@ -74,8 +74,10 @@ export default function initReportApi(db: Database): ReportApi {
             items       : items,
             inQuantity  : items.map(x => x.inQuantity ).reduce((a, b) => a + b, 0),
             outQuantity : items.map(x => x.outQuantity).reduce((a, b) => a + b, 0),
+            invQuantity : items.map(x => x.invQuantity).reduce((a, b) => a + b, 0),
             inCost      : items.map(x => x.inCost     ).reduce((a, b) => a + b, 0),
             outCost     : items.map(x => x.outCost    ).reduce((a, b) => a + b, 0),
+            invCost     : items.map(x => x.invCost    ).reduce((a, b) => a + b, 0),
             total       : items.map(x => x.total      ).reduce((a, b) => a + b, 0),
           }
         })

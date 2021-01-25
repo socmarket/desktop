@@ -2,9 +2,14 @@ select
   category.title                                       as categoryTitle,
   round(sum(quantity))                                 as inQuantity,
   round(sum(coalesce(soldQuantity, 0)))                as outQuantity,
+  round(sum(coalesce(invQuantity, 0)))                 as invQuantity,
   round(sum(cost))                                     as inCost,
   round(sum(coalesce(soldQuantity, 0) * price))        as outCost,
-  round(sum(cost - coalesce(soldQuantity, 0) * price)) as total
+  round(sum(coalesce(invPrice * invQuantity, 0)))      as invCost,
+  round(
+    sum(cost - coalesce(soldQuantity, 0) * price)
+    + sum(coalesce(invPrice * invQuantity, 0))
+  )                                                    as total
 from
   (
     select
@@ -39,6 +44,15 @@ from
       salecheckitem.quantity > 0
     group by productId
   ) sold on sold.productId = t.productId
+  left join (
+    select
+      productId,
+      sum(actualQuantity - quantity) / 100.00 as invQuantity,
+      sum(costPrice) / 100.00 as invPrice
+    from
+      inventoryitem
+    group by productId
+  ) inv on inv.productId = t.productId
   left join product  on product.id = t.productId
   left join category on category.id = product.categoryId
 group by

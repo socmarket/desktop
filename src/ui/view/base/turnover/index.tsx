@@ -50,9 +50,12 @@ class Turnover extends React.Component {
             <Table.HeaderCell rowSpan={2} textAlign="center">{this.t("group")}</Table.HeaderCell>
             <Table.HeaderCell colSpan={2} textAlign="center">{this.t("purchased")}</Table.HeaderCell>
             <Table.HeaderCell colSpan={2} textAlign="center">{this.t("sold")}</Table.HeaderCell>
+            <Table.HeaderCell colSpan={2} textAlign="center">{this.t("inventory")}</Table.HeaderCell>
             <Table.HeaderCell rowSpan={2} textAlign="center">{this.t("total")}</Table.HeaderCell>
           </Table.Row>
           <Table.Row>
+            <Table.HeaderCell textAlign="center">{this.t("quantity")}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="center">{this.t("amount")}</Table.HeaderCell>
             <Table.HeaderCell textAlign="center">{this.t("quantity")}</Table.HeaderCell>
             <Table.HeaderCell textAlign="center">{this.t("amount")}</Table.HeaderCell>
             <Table.HeaderCell textAlign="center">{this.t("quantity")}</Table.HeaderCell>
@@ -66,6 +69,8 @@ class Turnover extends React.Component {
             <Table.HeaderCell textAlign="right">{spacedNum(data.inCost     )}</Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.outQuantity)}</Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.outCost    )}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="right">{spacedNum(data.invQuantity)}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="right">{spacedNum(data.invCost    )}</Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.total      )}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -77,6 +82,8 @@ class Turnover extends React.Component {
               <Table.Cell textAlign="right">{spacedNum(item.inCost     )}</Table.Cell>
               <Table.Cell textAlign="right">{spacedNum(item.outQuantity)}</Table.Cell>
               <Table.Cell textAlign="right">{spacedNum(item.outCost    )}</Table.Cell>
+              <Table.Cell textAlign="right">{spacedNum(item.invQuantity)}</Table.Cell>
+              <Table.Cell textAlign="right">{spacedNum(item.invCost    )}</Table.Cell>
               <Table.Cell textAlign="right">{spacedNum(item.total      )}</Table.Cell>
             </Table.Row>
           ))}
