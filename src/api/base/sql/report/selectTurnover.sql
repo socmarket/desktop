@@ -11,7 +11,8 @@ select
     + sum(coalesce(invPrice * invQuantity, 0))
   )                                                    as total
 from
-  (
+  (select * from product) product
+  left join (
     select
       productId                                                                     as productId,
       sum(consignmentitem.quantity - coalesce(ret.quantity, 0))           / 100.00  as quantity,
@@ -28,7 +29,7 @@ from
       consignmentitem.quantity > 0
     group by
       productId
-  ) t
+  ) t on t.productId = product.id
   left join (
     select
       productId,
@@ -43,7 +44,7 @@ from
     where
       salecheckitem.quantity > 0
     group by productId
-  ) sold on sold.productId = t.productId
+  ) sold on sold.productId = product.id
   left join (
     select
       productId,
@@ -52,8 +53,7 @@ from
     from
       inventoryitem
     group by productId
-  ) inv on inv.productId = t.productId
-  left join product  on product.id = t.productId
+  ) inv on inv.productId = product.id
   left join category on category.id = product.categoryId
 group by
   category.id
