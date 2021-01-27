@@ -115,30 +115,32 @@ export default function initInventoryApi(db) {
         return updateInventory()
       }
     },
-    exportAllToExcel: (file, header) => {
-      return db.select(selectProductBySearchSql, {
-          $barcode: "",
-          $key0   : "",
-          $key1   : "",
-          $key2   : "",
-          $limit  : 99999999,
-          $offset : 0,
-        })
-        .then(items => {
+    exportAllToExcel: (file, header, inventoryId, showOnlyCorrections) => {
+      const query = showOnlyCorrections ?
+        selectProductBySearchSql.replace("EXTRA_CONDITION", "diffQuantity <> 0") :
+          selectProductBySearchSql.replace("EXTRA_CONDITION", "1 = 1")
+      return db.select(query, {
+        $barcode     : "",
+        $key0        : "",
+        $key1        : "",
+        $key2        : "",
+        $limit       : 99999999,
+        $offset      : 0,
+        $inventoryId : inventoryId,
+      }).then(items => {
           const hdr = header.map(x => [[ x ]])
           const data = hdr
             .concat(
-              [[ "Товар", "Бренд", "Штрихкод", "Категория", "Полка", "Остаток", "Ед.изм", "Цена продажи" ]]
+              [[ "#", "Товар", "Штрихкод", "Учёт", "Факт", "Ед.изм", "Покупка" ]]
             ).concat(
-              items.map(item => [
+              items.map((item, idx) => [
+                idx + 1,
                 item.title,
-                item.brand,
                 item.barcode,
-                item.categoryTitle,
-                item.coord,
                 item.quantity,
+                "",
                 item.unitNotation,
-                item.price,
+                item.costPrice,
               ])
             )
           const wb = X.utils.book_new()
@@ -147,12 +149,12 @@ export default function initInventoryApi(db) {
             "!ref": `A1:I${data.length+1}`,
             "!merges": hdr.map((h, idx) => ({
               s: {c: 0, r: idx},
-              e: {c: 8, r: idx},
+              e: {c: 6, r: idx},
             }))
           }
-          X.utils.book_append_sheet(wb, ws, "Описания товаров")
+          X.utils.book_append_sheet(wb, ws, "Инвентаризация")
           X.writeFile(wb, file.path);
-        })
+      })
     },
   }
 }

@@ -108,8 +108,8 @@ class Inventory extends React.Component {
   }
 
   onExportToExcel() {
-    const dt = moment().format("YYYY-MM-DD-HH-ss")
-    return this.fileApi.saveFile("prod-" + dt + ".xlsx", [ "xls", "xlsx" ])
+    const dt = moment().format("YYYY-MM-DD-HH-mm")
+    return this.fileApi.saveFile("inventory-" + dt + ".xlsx", [ "xls", "xlsx" ])
       .then(file => {
         if (file) {
           return this.inventoryApi
@@ -121,7 +121,9 @@ class Inventory extends React.Component {
                 this.props.opt.logoLine3,
                 this.t("makedIn"),
                 dt,
-              ]
+              ],
+              this.state.inventoryId,
+              this.state.showOnlyCorrections,
             )
         }
       })
@@ -484,9 +486,7 @@ class Inventory extends React.Component {
                     <Menu.Item onClick={() => this.setState({ showConfirmation: true })}><Icon name="save" /></Menu.Item> } />
 
                   <Menu.Menu position="right">
-                    {/*
                     <Popup content={this.t("saveToExcel")} trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
-                    */}
                     <Popup content={this.t("printPreview")} trigger= { <Menu.Item onClick={this.onPrintPreview}><Icon name="print" /></Menu.Item> } />
                   </Menu.Menu>
                 </Menu>
