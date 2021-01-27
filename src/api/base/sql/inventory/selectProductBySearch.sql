@@ -58,14 +58,25 @@ from (
               setAt desc
             limit 1
           ) as lastSellPrice,
-          (select
-            coalesce(round(price / 100.00, 2), 0.0) as price
+          (
+            select price
             from
-              consignmentitem
-            where
-              productId = product.id
-            order by
-              id desc
+              (
+                  select coalesce(round(price / 100.00, 2), 0.0) as price, acceptedAt as dt
+                  from consignmentitem
+                  left join consignment on consignment.id = consignmentitem.consignmentId
+                  where productId = product.id
+                union all
+                  select coalesce(round(costPrice / 100.00, 2), 00) as price, createdAt as dt
+                  from inventoryitem
+                  left join inventory on inventory.id = inventoryitem.inventoryId
+                  where productId = product.id
+                union all
+                  select coalesce(round(costPrice / 100.00, 2), 00) as price, current_timestamp as dt
+                  from currentinventory
+                  where productId = product.id
+              )
+            order by dt desc
             limit 1
           ) as lastCostPrice,
           (select currencyId from price where productId = product.id order by setAt desc limit 1) as sellPriceCurrencyId,
