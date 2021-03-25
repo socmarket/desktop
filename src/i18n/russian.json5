@@ -417,6 +417,7 @@
     opening_error       : "Ошибка открытия",
     unit                : "Единица измерения",
     newUnitRegistration : "Регистрация новой единицы измерения",
+    askQuantity         : "Запрашивать кол-во при добавлении",
   },
   "dashboard" : {
     startDate   : "Начало",
@@ -556,7 +557,7 @@
     checkTitle1        : "Заголовок чека #1",
     checkTitle2        : "Заголовок чека #2",
     checkTitle3        : "Заголовок чека #3",
-    showPurchasePrices : "Показывать закупочные цены в кассеs",
+    showPurchasePrices : "Показывать закупочные цены в кассе",
   },
   "settingsService" : {
     base            : "Базовая",

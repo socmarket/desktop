@@ -45,8 +45,8 @@ class SaleCheckItem extends React.Component {
   }
 
   componentDidMount() {
-    this.priceInputRef.current.focus()
-    this.priceInputRef.current.select()
+    this.quantityInputRef.current.focus()
+    this.quantityInputRef.current.select()
     this.consignmentApi
       .productHistory(this.props.item.productId)
       .then(history => this.setState({
@@ -83,7 +83,7 @@ class SaleCheckItem extends React.Component {
   }
 
   onKeyDown(ev) {
-    if (ev.key === "Enter" && ev.shiftKey) {
+    if (ev.key === "Enter") {
       ev.preventDefault()
       this.onUpdate()
     }

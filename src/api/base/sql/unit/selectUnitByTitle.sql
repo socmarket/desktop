@@ -1,7 +1,8 @@
 select
   unit.id,
   unit.title,
-  unit.notation
+  unit.notation,
+  unit.askQuantity
 from
   unit
 where

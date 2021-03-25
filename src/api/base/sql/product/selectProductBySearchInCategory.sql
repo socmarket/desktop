@@ -7,6 +7,7 @@ from
       product.*,
       unit.notation as unitNotation,
       unit.title as unitTitle,
+      unit.askQuantity as unitAskQuantity,
       category.title as categoryTitle,
       (select
         coalesce(sum(consignmentitem.quantity - coalesce(ret.quantity, 0)) / 100.00, 0)

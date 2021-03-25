@@ -20,17 +20,18 @@ import { withTranslation } from "react-i18next"
 class SaleCheckEditor extends React.Component {
 
   emptyItem = {
-    id             : -1,
-    productId      : -1,
-    productTitle   : "",
-    productBarcode : "",
-    unitId         : -1,
-    unitTitle      : "",
-    currencyId     : -1,
-    currencyTitle  : "",
-    price          : 0,
-    quantity       : 0,
-    cost           : 0,
+    id              : -1,
+    productId       : -1,
+    productTitle    : "",
+    productBarcode  : "",
+    unitId          : -1,
+    unitTitle       : "",
+    unitAskQuantity : 0,
+    currencyId      : -1,
+    currencyTitle   : "",
+    price           : 0,
+    quantity        : 0,
+    cost            : 0,
   }
 
   constructor(props) {
@@ -94,7 +95,6 @@ class SaleCheckEditor extends React.Component {
     return this.saleCheckApi
       .selectSaleCheck(this.state.saleCheckId)
       .then(saleCheck => {
-        console.log(saleCheck)
         if (this.state.saleCheckId < 0) {
           this.setState({
             ...saleCheck,
@@ -124,10 +124,19 @@ class SaleCheckEditor extends React.Component {
           .insertSaleCheckItem({
             saleCheckId : this.state.saleCheckId,
             productId   : product.id,
+            unitId      : product.unitId,
             quantity    : 1,
             price       : price,
           })
           .then(_ => this.reloadSaleCheck())
+          .then(_ => {
+            if (product.unitAskQuantity > 0) {
+              this.setState({
+                item: this.state.items[this.state.items.length - 1],
+                itemEditorVisible: true,
+              })
+            }
+          })
       })
   }
 
@@ -218,7 +227,7 @@ class SaleCheckEditor extends React.Component {
   onItemEditorClose() {
     this.setState({
       itemEditorVisible: false,
-    }, () => this.tableRef.current.focus())
+    }, () => this.productPickerRef.current.focus())
   }
 
   onItemUpdate(item) {
@@ -226,7 +235,7 @@ class SaleCheckEditor extends React.Component {
       itemEditorVisible: false,
     }, () => {
       this.reloadSaleCheck()
-        .then(_ => this.tableRef.current.focus())
+        .then(_ => this.productPickerRef.current.focus())
     })
   }
 

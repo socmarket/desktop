@@ -1,2 +1,2 @@
-insert into unit(title, titleLower, notation, notationLower)
-values($title, $titleLower, $notation, $notationLower)
+insert into unit(title, titleLower, notation, notationLower, askQuantity)
+values($title, $titleLower, $notation, $notationLower, $askQuantity)

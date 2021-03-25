@@ -24,6 +24,7 @@ select
   )                                    as total,
 
   unit.notation                        as unitTitle,
+  unit.askQuantity                     as unitAskQuantity,
   currency.notation                    as currencyTitle,
   product.title                        as productTitle,
   product.barcode                      as productBarcode,

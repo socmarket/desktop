@@ -5,6 +5,7 @@ select
   categoryTitle,
   unitTitle,
   unitId,
+  unitAskQuantity,
   categoryId,
   inQuantity - outQuantity as quantity,
   price
@@ -13,6 +14,7 @@ from
     select
       product.*,
       unit.title as unitTitle,
+      unit.askQuantity as unitAskQuantity,
       category.title as categoryTitle,
       (select coalesce(sum(quantity), 0) from consignmentitem where productId = product.id) as inQuantity,
       (select coalesce(sum(quantity), 0) from salecheckitem where productId = product.id) as outQuantity,

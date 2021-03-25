@@ -7,7 +7,8 @@ import { connect } from "react-redux"
 import {
   Grid, Form, Input, Button,
   Segment, Message, Modal,
-  Container, Header, Divider
+  Container, Header, Divider,
+  Radio
 } from "semantic-ui-react"
 import { withTranslation } from 'react-i18next';
 
@@ -16,11 +17,12 @@ class UnitInfoEditor extends React.Component {
   constructor(props) {
     super(props)
 
-    this.onTitleChange    = this.onTitleChange.bind(this)
-    this.onNotationChange = this.onNotationChange.bind(this)
-    this.onCreate         = this.onCreate.bind(this)
-    this.onUpdate         = this.onUpdate.bind(this)
-    this.onKeyDown        = this.onKeyDown.bind(this)
+    this.onTitleChange       = this.onTitleChange.bind(this)
+    this.onNotationChange    = this.onNotationChange.bind(this)
+    this.onAskQuantityChange = this.onAskQuantityChange.bind(this)
+    this.onCreate            = this.onCreate.bind(this)
+    this.onUpdate            = this.onUpdate.bind(this)
+    this.onKeyDown           = this.onKeyDown.bind(this)
 
     this.titleInputRef = React.createRef()
     this.titleInput    = inputWithRef(this.titleInputRef)
@@ -51,6 +53,12 @@ class UnitInfoEditor extends React.Component {
   onNotationChange(ev) {
     this.setState({
       notation: ev.target.value
+    })
+  }
+
+  onAskQuantityChange(ev, { checked }) {
+    this.setState({
+      askQuantity: checked,
     })
   }
 
@@ -92,6 +100,14 @@ class UnitInfoEditor extends React.Component {
             label={this.t("reduction")}
             value={this.state.notation || ""}
             onChange={this.onNotationChange}
+          />
+        </Form.Field>
+        <Form.Field width={16}>
+          <Radio
+            label={this.t("askQuantity")}
+            toggle
+            checked={this.state.askQuantity > 0}
+            onChange={this.onAskQuantityChange}
           />
         </Form.Field>
         {this.props.unit.id < 0 &&

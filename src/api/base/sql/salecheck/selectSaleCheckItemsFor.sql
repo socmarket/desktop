@@ -23,6 +23,7 @@ select
   product.title                                            as productTitle,
   category.title                                           as categoryTitle,
   unit.notation                                            as unitNotation,
+  unit.askQuantity                                         as unitAskQuantity,
   coalesce(ret.quantity / 100.00, 0)                       as retQuantity
 from
   salecheckitem

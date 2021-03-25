@@ -68,7 +68,7 @@ export default function initSaleCheckApi(db) {
         $productId     : item.productId,
         $quantity      : item.quantity,
         $price         : item.price,
-        $unitId        : 1,
+        $unitId        : item.unitId,
         $currencyId    : 1,
         $saleCheckId   : item.saleCheckId,
       })

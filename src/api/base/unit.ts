@@ -24,6 +24,7 @@ export default function initUnitApi(db) {
         $titleLower    : (unit.title    || "").toLowerCase(),
         $notation      : unit.notation  || "",
         $notationLower : (unit.notation || "").toLowerCase(),
+        $askQuantity   : unit.askQuantity,
       })
     ),
     update: (unit) => (
@@ -34,6 +35,7 @@ export default function initUnitApi(db) {
           $titleLower    : (unit.title    || "").toLowerCase(),
           $notation      : unit.notation  || "",
           $notationLower : (unit.notation || "").toLowerCase(),
+          $askQuantity   : unit.askQuantity,
         })
         .then(_ => db.exec("delete from sync where entity = 'unit' and id = $id", { $id: unit.id }))
     ),
