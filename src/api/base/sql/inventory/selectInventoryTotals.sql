@@ -1,7 +1,9 @@
 select
-  count(id) as itemCount,
-  coalesce(sum(round((actualQuantity - quantity) / 100, 0) * round(coalesce(costPrice, 0) / 100, 0)), 0) as totalCost
+  count(i.id) as itemCount,
+  coalesce(sum(round((i.actualQuantity - i.quantity) / 100, 0) * round(coalesce(i.costPrice, 0) / 100, 0)), 0) as totalCost
 from
-  currentinventory
+  currentinventory i
+  left join product p on p.id = i.productId
 where
-  inventoryId = $inventoryId
+  not p.archived
+  and i.inventoryId = $inventoryId

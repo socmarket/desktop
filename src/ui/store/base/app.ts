@@ -112,9 +112,9 @@ const AppActions = {
 }
 
 function AppReducer (state = {
-  activePage    : "saleCheckEditor",
+  activePage    : "productEditor",
   user          : "admin",
-  unlocked      : false,
+  unlocked      : true,
   authenticated : false,
   lastError     : "",
   online        : false,

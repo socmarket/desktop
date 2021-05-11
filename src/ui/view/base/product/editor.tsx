@@ -15,7 +15,7 @@ import React, { Fragment } from "react"
 import { connect } from "react-redux"
 import {
   Grid, Container, Input, Label, Button,
-  Menu, Icon, Popup,
+  Menu, Icon, Popup, Checkbox,
 } from "semantic-ui-react"
 import moment from "moment"
 import { withTranslation } from "react-i18next"
@@ -32,6 +32,8 @@ class ProductEditor extends React.Component {
     barcode       : "",
     serial        : "",
     brand         : "",
+    orderNo       : 0,
+    archived      : false,
   }
 
   constructor(props) {
@@ -42,6 +44,7 @@ class ProductEditor extends React.Component {
     this.onFilterChange   = this.onFilterChange.bind(this)
     this.onPrevPage       = this.onPrevPage.bind(this)
     this.onNextPage       = this.onNextPage.bind(this)
+    this.onChangeArchived = this.onChangeArchived.bind(this)
     this.onExportToExcel  = this.onExportToExcel.bind(this)
     this.onPrintPreview   = this.onPrintPreview.bind(this)
 
@@ -67,6 +70,7 @@ class ProductEditor extends React.Component {
       search: {
         id: -1,
         pattern: "",
+        archived: false,
         limit: 30,
         offset: 0,
         category: { id: -1 },
@@ -90,7 +94,7 @@ class ProductEditor extends React.Component {
   }
 
   onFilterChange(ev) {
-    this.setFilter(ev.target.value, this.state.search.limit, this.state.search.offset, this.state.search.category)
+    this.setFilter(ev.target.value, this.state.search.limit, this.state.search.offset, this.state.search.category, this.state.search.archived)
   }
 
   onNextPage() {
@@ -98,7 +102,7 @@ class ProductEditor extends React.Component {
     const ofs = this.state.search.offset
     const cnt = this.state.productList.items.length
     const inc = cnt < lim ? 0 : lim
-    this.setFilter(this.state.search.pattern, lim, ofs + inc, this.state.search.category)
+    this.setFilter(this.state.search.pattern, lim, ofs + inc, this.state.search.category, this.state.search.archived)
   }
 
   onPrevPage() {
@@ -106,7 +110,11 @@ class ProductEditor extends React.Component {
     const ofs = this.state.search.offset
     const rem = this.state.productList.items.length
     const inc = ofs < lim ? ofs : lim
-    this.setFilter(this.state.search.pattern, lim, ofs - inc, this.state.search.category)
+    this.setFilter(this.state.search.pattern, lim, ofs - inc, this.state.search.category, this.state.search.archived)
+  }
+
+  onChangeArchived(ev, data) {
+    this.setFilter(this.state.search.pattern, this.state.search.limit, this.state.search.offset, this.state.search.category, data.checked)
   }
 
   onExportToExcel() {
@@ -154,6 +162,7 @@ class ProductEditor extends React.Component {
       this.productApi
         .find(
           this.state.search.pattern,
+          this.state.search.archived,
           this.state.search.limit,
           this.state.search.offset,
         )
@@ -168,6 +177,7 @@ class ProductEditor extends React.Component {
         .findInCategory(
           this.state.search.category,
           this.state.search.pattern,
+          this.state.search.archived,
           this.state.search.limit,
           this.state.search.offset,
         )
@@ -195,7 +205,7 @@ class ProductEditor extends React.Component {
     })
   }
 
-  setFilter(pattern, limit, offset, category = { id: -1 }) {
+  setFilter(pattern, limit, offset, category = { id: -1 }, archived) {
     if (this.state.search.id > 0) { clearTimeout(this.state.search.id) }
     this.setState({
       search: {
@@ -203,6 +213,7 @@ class ProductEditor extends React.Component {
         limit: limit,
         offset: offset,
         category: category,
+        archived: archived,
         id: setTimeout(
           () => {
             clearTimeout(this.state.search.id)
@@ -227,7 +238,7 @@ class ProductEditor extends React.Component {
   }
 
   onCategorySelected(category) {
-    this.setFilter(this.state.search.pattern, 30, 0, category)
+    this.setFilter(this.state.search.pattern, 30, 0, category, this.state.search.archived)
   }
 
   form() {
@@ -293,6 +304,13 @@ class ProductEditor extends React.Component {
                   <Popup content={this.t("prevPage")} trigger= { <Menu.Item onClick={this.onPrevPage}><Icon name="angle left"  /></Menu.Item> } />
                   <Popup content={this.t("nextPage")} trigger= { <Menu.Item onClick={this.onNextPage}><Icon name="angle right" /></Menu.Item> } />
                   <Menu.Menu position="right">
+                    <Popup content={this.state.search.archived ? this.t("showList") : this.t("showArchive")}
+                      trigger={
+                        <Menu.Item>
+                          <Checkbox fitted toggle checked={Boolean(this.state.search.archived)} onChange={this.onChangeArchived} />
+                        </Menu.Item>
+                      }
+                    />
                     <Popup content={this.t("saveToExcel")} trigger= { <Menu.Item onClick={this.onExportToExcel}><Icon name="file excel" /></Menu.Item> } />
                     <Popup content={this.t("printPreview")} trigger= { <Menu.Item onClick={this.onPrintPreview}><Icon name="print" /></Menu.Item> } />
                     <Popup content={this.t("newProduct")}  trigger= { <Menu.Item onClick={this.newProduct}>     <Icon name="plus" />      </Menu.Item> } />

@@ -10,7 +10,7 @@ import { connect } from "react-redux"
 import {
   Grid, Form, Input, Button, Segment,
   Message, Modal, Container, Divider,
-  Menu, Table,
+  Menu, Table, Checkbox, Popup,
 } from "semantic-ui-react"
 import { withTranslation } from 'react-i18next';
 
@@ -26,9 +26,11 @@ class ProductForm extends React.Component {
     this.onTitleChange      = this.onTitleChange.bind(this)
     this.onBrandChange      = this.onBrandChange.bind(this)
     this.onSerialChange     = this.onSerialChange.bind(this)
+    this.onOrderNoChange    = this.onOrderNoChange.bind(this)
     this.onCoordChange      = this.onCoordChange.bind(this)
     this.onUnitChange       = this.onUnitChange.bind(this)
     this.onCategoryChange   = this.onCategoryChange.bind(this)
+    this.onArchivedChange   = this.onArchivedChange.bind(this)
     this.onKeyDown          = this.onKeyDown.bind(this)
     this.onPrintLabel       = this.onPrintLabel.bind(this)
     this.onPrintCoord       = this.onPrintCoord.bind(this)
@@ -130,6 +132,12 @@ class ProductForm extends React.Component {
     })
   }
 
+  onOrderNoChange(ev) {
+    this.setState({
+      orderNo: ev.target.value,
+    })
+  }
+
   onCoordChange(ev) {
     this.setState({
       coord: ev.target.value,
@@ -153,6 +161,12 @@ class ProductForm extends React.Component {
     this.setState({
       categoryId: category.id,
       categoryTitle: category.title,
+    })
+  }
+
+  onArchivedChange(ev, data) {
+    this.setState({
+      archived: data.checked,
     })
   }
 
@@ -242,8 +256,9 @@ class ProductForm extends React.Component {
           <Form.Input width={16} label={this.t("serialN")} value={this.state.serial || ""} onChange={this.onSerialChange} />
         </Form.Group>
         <Form.Group>
+          <Form.Input width={8} label={this.t("orderNo")} value={this.state.orderNo || ""} onChange={this.onOrderNoChange} />
           <Form.Input
-            width={16}
+            width={8}
             label={this.t("location")}
             onChange={this.onCoordChange}
             value={this.state.coord || ""}
@@ -343,6 +358,7 @@ class ProductForm extends React.Component {
   }
 
   content() {
+    console.log(!!this.state.archived)
     return (
       <Grid>
         <Grid.Row>
@@ -350,6 +366,13 @@ class ProductForm extends React.Component {
             <Menu attached="top" inverted color={this.props.theme.mainColor}>
               <Menu.Item name={this.t('history')} active={this.state.activeTab === "history"} onClick={() => this.setState({ activeTab: "history" })} />
               <Menu.Item name={this.t("photos")} active={this.state.activeTab === "photos"}  onClick={() => this.setState({ activeTab: "photos" })}  />
+              <Menu.Menu position="right">
+                <Menu.Item>
+                  <Popup content={this.t("hide")}
+                    trigger={<Checkbox toggle checked={Boolean(this.state.archived)} onChange={this.onArchivedChange}/>}
+                  />
+                </Menu.Item>
+              </Menu.Menu>
             </Menu>
             <Segment attached="bottom" style={{ height: "400px", overflowY: "auto" }}>
               { this.state.activeTab === "history" && this.history() }

@@ -79,7 +79,7 @@ from (
           left join category             on category.id   = product.categoryId
           left join currentinventory inv on (inv.productId = product.id) and (inv.inventoryId = $inventoryId)
         where
-          category.id = $categoryId and (
+          category.id = $categoryId and (not product.archived) and (
             (product.barcode = $barcode)
             or (product.titleLower  like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
           )

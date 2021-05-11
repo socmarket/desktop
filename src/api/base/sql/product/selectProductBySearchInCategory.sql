@@ -54,11 +54,11 @@ from
       left join unit     on unit.id     = product.unitId
       left join category on category.id = product.categoryId
     where
-      category.id = $categoryId and (
+      product.archived = $archived and category.id = $categoryId and (
         (product.barcode = $barcode)
         or (product.titleLower  like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
       )
-    order by product.id desc
+    order by product.orderNo desc
     limit $limit
     offset $offset
   ) p

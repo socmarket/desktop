@@ -53,14 +53,15 @@ from
       product
       left join unit     on unit.id     = product.unitId
       left join category on category.id = product.categoryId
-    where
-      (product.barcode = $barcode)
-      or (product.oemNo        like '%' || $barcode || '%')
-      or (product.serial       like '%' || $barcode || '%')
-      or (product.titleLower   like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
-      or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
-      or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
-    order by product.id desc
+    where product.archived = $archived and (
+        (product.barcode = $barcode)
+        or (product.oemNo        like '%' || $barcode || '%')
+        or (product.serial       like '%' || $barcode || '%')
+        or (product.titleLower   like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
+        or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
+        or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
+      )
+    order by product.orderNo desc
     limit $limit
     offset $offset
   ) p

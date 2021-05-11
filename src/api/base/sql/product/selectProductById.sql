@@ -8,7 +8,9 @@ select
   unitAskQuantity,
   categoryId,
   inQuantity - outQuantity as quantity,
-  price
+  price,
+  orderNo,
+  archived
 from
   (
     select

@@ -90,12 +90,14 @@ from (
           left join category             on category.id   = product.categoryId
           left join currentinventory inv on (inv.productId = product.id) and (inv.inventoryId = $inventoryId)
         where
-          (product.barcode = $barcode)
-          or (product.oemNo        like '%' || $barcode || '%')
-          or (product.serial       like '%' || $barcode || '%')
-          or (product.titleLower   like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
-          or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
-          or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
+          not product.archived and (
+            (product.barcode = $barcode)
+            or (product.oemNo        like '%' || $barcode || '%')
+            or (product.serial       like '%' || $barcode || '%')
+            or (product.titleLower   like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
+            or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
+            or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
+          )
         order by product.id desc
       ) p
     ) p

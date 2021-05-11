@@ -77,6 +77,7 @@ function initDb(fileName: string): Database {
     select: async function <A> (sql: string, params: object) {
       return new Promise<A[]>((resolve, reject) => {
         db.all(sql, params, function (err: Error, rows: A[], meta) {
+          console.log(params)
           if (err) {
             console.error(err, sql, params)
             reject(err)

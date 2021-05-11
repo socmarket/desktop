@@ -17,5 +17,7 @@ set
   , oemNo       = $oemNo
   , serial      = $serial
   , coord       = $coord
+  , archived    = $archived
+  , orderNo     = $orderNo
 where
   id = $id

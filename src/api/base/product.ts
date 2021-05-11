@@ -169,19 +169,20 @@ async function importConsignmentPrice(db, item) {
 export default function initProductApi(db) {
   return {
     pick: (id: number) => db.selectOne<Product>(selectProductByIdSql, { $productId: id }),
-    find: (patternRaw, limit = 50, offset = 0) => {
+    find: (patternRaw, archived, limit = 50, offset = 0) => {
       const pattern = patternRaw.toLowerCase().trim()
       const key = pattern.split(" ").concat([ "", "", "" ])
       return db.select(selectProductBySearchSql, {
-        $barcode: patternRaw,
-        $key0   : key[0],
-        $key1   : key[1],
-        $key2   : key[2],
-        $limit  : limit,
-        $offset : offset,
+        $barcode : patternRaw,
+        $key0    : key[0],
+        $key1    : key[1],
+        $key2    : key[2],
+        $archived: archived, 
+        $limit   : limit,
+        $offset  : offset,
       })
     },
-    findInCategory: (category, patternRaw, limit = 50, offset = 0) => {
+    findInCategory: (category, patternRaw, archived, limit = 50, offset = 0) => {
       const pattern = patternRaw.toLowerCase().trim()
       const key = pattern.split(" ").concat([ "", "", "" ])
       return db.select(selectProductBySearchInCategorySql, {
@@ -190,6 +191,7 @@ export default function initProductApi(db) {
         $key0      : key[0],
         $key1      : key[1],
         $key2      : key[2],
+        $archived  : archived, 
         $limit     : limit,
         $offset    : offset,
       })
@@ -221,6 +223,8 @@ export default function initProductApi(db) {
         , $oemNo       : product.oemNo || ""
         , $serial      : product.serial || ""
         , $coord       : product.coord || ""
+        , $archived    : product.archived
+        , $orderNo     : product.orderNo || 0
       }
       if (product.id < 0) {
         return db.exec(insertProductSql, p)
