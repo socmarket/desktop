@@ -109,7 +109,7 @@ class ProductPicker extends React.Component {
   }
 
   loadOptions(pattern, cb) {
-    return this.productApi.find(pattern, 10)
+    return this.productApi.find(pattern, false, 10)
       .then(products => {
         cb(this.mkOptsFrom(products))
       })
