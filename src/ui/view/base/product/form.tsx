@@ -202,7 +202,6 @@ class ProductForm extends React.Component {
     const text = this.state.title +
       (this.state.brand.length  > 0 ? ":" + this.state.brand  : "") +
       (this.state.serial.length > 0 ? ":" + this.state.serial : "")
-    console.log(ev, size)
     const barcodeSize = size || 2
     this.printerApi.printLabel({
       barcode     : this.state.barcode,
@@ -358,7 +357,6 @@ class ProductForm extends React.Component {
   }
 
   content() {
-    console.log(!!this.state.archived)
     return (
       <Grid>
         <Grid.Row>

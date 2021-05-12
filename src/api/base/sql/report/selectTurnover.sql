@@ -11,7 +11,7 @@ select
     + sum(coalesce(invPrice * invQuantity, 0))
   )                                                    as total
 from
-  (select * from product) product
+  (select * from product where not archived) product
   left join (
     select
       productId                                                                     as productId,

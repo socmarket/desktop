@@ -49,7 +49,7 @@ from
   ) q
   left join product on product.id = q.productId
   left join category on category.id = product.categoryId
-where remainingQuantity <= 1
+where remainingQuantity <= 1 and not product.archived
 order by
   remainingQuantity asc,
   clientQuantity desc

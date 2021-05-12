@@ -39,7 +39,8 @@ from
         from
           product
         where
-          inQuantity - outQuantity - outReservedQuantity > 0
+          not archived
+          and inQuantity - outQuantity - outReservedQuantity > 0
       ) q
       left join product on product.id = q.productId
       left join category on category.id = product.categoryId

@@ -13,5 +13,7 @@ from
       productId
   ) item
   left join product on product.id = item.productId
+where
+  not product.archived
 order by
   item.quantity desc
