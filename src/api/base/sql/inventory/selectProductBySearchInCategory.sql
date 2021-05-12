@@ -74,16 +74,19 @@ from (
           inv.sellPrice      as invSellPrice,
           inv.costPrice      as invCostPrice
         from
-          product
+          (select product.* from product left join category on category.id = product.categoryId
+            where
+              category.id = $categoryId and not product.archived and (
+                (product.barcode = $barcode)
+                or (product.titleLower  like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
+              )
+            order by product.orderNo desc, product.id desc
+            limit $limit
+            offset $offset
+          ) product
           left join unit                 on unit.id       = product.unitId
           left join category             on category.id   = product.categoryId
           left join currentinventory inv on (inv.productId = product.id) and (inv.inventoryId = $inventoryId)
-        where
-          category.id = $categoryId and (not product.archived) and (
-            (product.barcode = $barcode)
-            or (product.titleLower  like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
-          )
-        order by product.id desc
       ) p
     ) p
   ) p

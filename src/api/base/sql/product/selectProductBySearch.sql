@@ -50,18 +50,20 @@ from
         limit 1
       ) as price
     from
-      product
+      (select product.* from product left join category on category.id = product.categoryId
+        where
+        product.archived = $archived and (
+          (product.barcode = $barcode)
+          or (product.oemNo        like '%' || $barcode || '%')
+          or (product.serial       like '%' || $barcode || '%')
+          or (product.titleLower   like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
+          or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
+          or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
+        )
+        order by product.orderNo desc, product.id desc
+        limit $limit
+        offset $offset
+      ) product
       left join unit     on unit.id     = product.unitId
       left join category on category.id = product.categoryId
-    where product.archived = $archived and (
-        (product.barcode = $barcode)
-        or (product.oemNo        like '%' || $barcode || '%')
-        or (product.serial       like '%' || $barcode || '%')
-        or (product.titleLower   like '%' || $key0 || '%' || $key1 || '%' || $key2 || '%')
-        or ((category.titleLower like '%' || $key0 || '%') and (product.titleLower like '%' || $key1 || '%' || $key2 || '%'))
-        or ((category.titleLower like '%' || $key0 || '%' || $key1 || '%') and (product.titleLower like '%' || $key2 || '%'))
-      )
-    order by product.orderNo desc
-    limit $limit
-    offset $offset
   ) p
