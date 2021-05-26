@@ -224,13 +224,12 @@ export default function initProductApi(db) {
         , $serial      : product.serial || ""
         , $coord       : product.coord || ""
         , $archived    : product.archived
-        , $orderNo     : product.orderNo || 0
       }
       if (product.id < 0) {
         return db.exec(insertProductSql, p)
       } else {
         return db
-          .exec(updateProductSql, { $id: product.id, ...p })
+          .exec(updateProductSql, { $id: product.id, $orderNo: product.orderNo || 0, ...p })
           .then(_ => db.exec("delete from sync where entity = 'product' and id = $id", { $id: product.id }))
       }
     },

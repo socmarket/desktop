@@ -19,8 +19,10 @@ insert into product(
   engineLower,
   oemNo,
   serial,
-  coord
-) values(
+  coord,
+  archived,
+  orderNo
+) select
   $barcode,
 
   $title,
@@ -41,5 +43,8 @@ insert into product(
   $engineLower,
   $oemNo,
   $serial,
-  $coord
-)
+  $coord,
+  $archived,
+  coalesce(max(orderNo), 0) + 1
+from
+  product
