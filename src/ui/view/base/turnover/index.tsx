@@ -71,7 +71,7 @@ class Turnover extends React.Component {
             <Table.HeaderCell textAlign="right">{spacedNum(data.outCost    )}</Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.invQuantity)}</Table.HeaderCell>
             <Table.HeaderCell textAlign="right">{spacedNum(data.invCost    )}</Table.HeaderCell>
-            <Table.HeaderCell textAlign="right">{spacedNum(data.total      )}</Table.HeaderCell>
+            <Table.HeaderCell textAlign="right">{spacedNum(data.totalCost  )}</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -84,7 +84,7 @@ class Turnover extends React.Component {
               <Table.Cell textAlign="right">{spacedNum(item.outCost    )}</Table.Cell>
               <Table.Cell textAlign="right">{spacedNum(item.invQuantity)}</Table.Cell>
               <Table.Cell textAlign="right">{spacedNum(item.invCost    )}</Table.Cell>
-              <Table.Cell textAlign="right">{spacedNum(item.total      )}</Table.Cell>
+              <Table.Cell textAlign="right">{spacedNum(item.totalCost  )}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
