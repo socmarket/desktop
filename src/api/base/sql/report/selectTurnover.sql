@@ -51,7 +51,7 @@ from
       select
         productId,
         sum(actualQuantity - quantity) / 100.00 as invQuantity,
-        sum((actualQuantity - quantity) * costPrice) / 1000.00 as invCost
+        sum((actualQuantity - quantity) * costPrice) / 10000.00 as invCost
       from
         inventoryitem
       group by productId
